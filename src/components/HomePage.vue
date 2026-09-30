@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { circuitHref, circuits } from '../circuits'
+import { lessonMeta } from '../learn/breadboard-lesson'
 
 document.title = 'معمل الدواير – اختار دايرتك'
 </script>
@@ -13,6 +14,19 @@ document.title = 'معمل الدواير – اختار دايرتك'
     </div>
   </header>
   <main class="wrap home">
+    <h2 class="home-count">🔰 لو أول مرة، ابدأ من هنا</h2>
+    <div class="kit-grid">
+      <a class="card kit-card learn-card" href="?learn=breadboard">
+        <div class="kit-icon" aria-hidden="true">{{ lessonMeta.icon }}</div>
+        <span class="tag">{{ lessonMeta.tag }}</span>
+        <h3>{{ lessonMeta.title }}</h3>
+        <p>{{ lessonMeta.summary }}</p>
+        <div class="kit-foot">
+          <span class="kit-level">{{ lessonMeta.level }}</span>
+          <span class="btn pri">ابدأ الدرس ←</span>
+        </div>
+      </a>
+    </div>
     <h2 class="home-count">{{ circuits.length }} {{ circuits.length === 1 ? 'دايرة متاحة' : 'دواير متاحة' }}</h2>
     <div class="kit-grid">
       <a v-for="c in circuits" :key="c.id" class="card kit-card" :href="circuitHref(c.id)">

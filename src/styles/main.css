@@ -349,3 +349,18 @@ body{min-height:100vh}
 main.wrap>section{border-bottom:0}
 .tabpager{display:flex;justify-content:space-between;gap:10px;padding:10px 0 30px;border-top:1px solid #161e30;margin-top:6px}
 .tabpager .btn{text-decoration:none}
+.learn-card{border-color:#174a36;background:linear-gradient(160deg,#0f1f18,var(--panel))}
+.lesson .steps-top{margin-top:4px}
+.lesson-step{margin-bottom:14px}
+.lesson-step h3{margin:0 0 6px;font-size:20px;color:var(--amber)}
+.lesson-step p{margin:0;font-size:15.5px}
+.lesson-board{margin-bottom:14px}
+.lesson-board svg{cursor:crosshair}
+#bb .lesson-mark{fill:none;stroke:#f59e0b;stroke-width:2.5;pointer-events:none}
+#bb .lesson-pick{stroke:#facc15;stroke-width:3}
+.lesson-pickinfo{font-size:14.5px;margin-bottom:24px}
+.lesson-pickinfo p{margin:6px 0 0}
+.lesson-pickinfo code{white-space:normal}
+.kit-foot .btn{white-space:nowrap;flex:none}
+.kit-foot{gap:10px}
+.guide-title{padding-top:64px}
