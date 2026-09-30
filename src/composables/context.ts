@@ -5,6 +5,8 @@ import type { Simulation } from './useSimulation'
 export interface Guide {
   step: Ref<number>
   openStep: (index: number) => void
+  tab: Ref<string>
+  openTab: (id: string) => void
 }
 
 export const CircuitKey: InjectionKey<AnyCircuit> = Symbol('circuit')

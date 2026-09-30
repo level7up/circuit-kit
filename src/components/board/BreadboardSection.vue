@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, ref } from 'vue'
+import { computed, nextTick, onDeactivated, ref } from 'vue'
 import { useCircuit, useGuide, useSim } from '../../composables/context'
 import { focusFor, stripNetMap, visibleParts, type Selection } from '../../lib/breadboard/logic'
 import { isRail } from '../../lib/breadboard/geometry'
@@ -59,6 +59,7 @@ const selectPart = (id: string, at?: { x: number; y: number; width: number }) =>
 }
 const popoverPart = computed(() => (popover.value ? board.parts.find(p => p.id === popover.value?.id) : undefined))
 const closePopover = () => { popover.value = null }
+onDeactivated(closePopover)
 const clearSelection = () => { selection.value = null; closePopover() }
 const showDetails = () => {
   closePopover()

@@ -343,3 +343,9 @@ body{min-height:100vh}
 .bbpop .opt{font-size:13px;padding:5px 10px}
 .bbpop-more{margin-top:10px;width:100%;background:none;border:1px dashed var(--line);color:var(--blue);border-radius:9px;padding:6px;cursor:pointer;font:inherit;font-size:13px}
 .bbpop-more:hover{border-color:var(--blue)}
+.guide-title{padding:26px 18px 14px}
+.guide-title h1{font-size:clamp(22px,3vw,30px);margin:6px 0 0}
+.nav a{cursor:pointer}
+main.wrap>section{border-bottom:0}
+.tabpager{display:flex;justify-content:space-between;gap:10px;padding:10px 0 30px;border-top:1px solid #161e30;margin-top:6px}
+.tabpager .btn{text-decoration:none}

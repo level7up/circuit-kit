@@ -29,7 +29,7 @@ const effect = computed(() => props.board.removal.effects[props.part.id])
 const style = computed(() => {
   const width = Math.min(WIDTH, props.areaWidth - EDGE * 2)
   const left = props.x + width + EDGE > props.areaWidth ? Math.max(EDGE, props.x - width - 12) : props.x + 12
-  return { left: left + 'px', top: props.y + 12 + 'px', width: width + 'px' }
+  return { left: left + 'px', top: Math.max(EDGE, props.y + 12) + 'px', width: width + 'px' }
 })
 
 const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') emit('close') }
