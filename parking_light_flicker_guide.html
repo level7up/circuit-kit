@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>دايرة رعشة لمبة الركن – الدليل الكامل</title>
+<style>
+:root{
+  --bg:#0b0f17;--panel:#121826;--panel2:#182033;--line:#2a3550;--text:#e7ecf5;--muted:#9aa6bd;
+  --amber:#ffb547;--amber2:#ff8a00;--red:#ff5d5d;--green:#3ddc97;--blue:#5aa9ff;--violet:#b58cff;--yellow:#ffd24d;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(1200px 600px at 85% -10%,#1b2540 0%,transparent 60%),var(--bg);color:var(--text);font-family:"Segoe UI",Tahoma,"Noto Sans Arabic",Arial,sans-serif;line-height:1.8}
+a{color:var(--blue)}
+.wrap{max-width:1180px;margin:auto;padding:0 18px}
+header.hero{padding:44px 0 30px}
+.hero-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:28px;align-items:center}
+@media(max-width:860px){.hero-grid{grid-template-columns:1fr}}
+h1{font-size:clamp(28px,4vw,44px);margin:0 0 8px;line-height:1.35}
+.grad{background:linear-gradient(90deg,var(--amber),#ffe2a1);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{color:var(--muted);font-size:17px;margin:0}
+.stats{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 16px;font-size:13px;color:var(--muted)}
+.stat b{display:block;font-size:20px;color:var(--amber)}
+.bulbbox{position:relative;height:250px;border-radius:22px;background:linear-gradient(160deg,#141c2e,#0a0f1a);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.lamp-shell{width:260px;height:130px;border-radius:80px 26px 26px 80px;border:2px solid #3a4666;background:radial-gradient(circle at 26% 50%,#222c48,#0d1220 70%);position:relative;box-shadow:inset 0 0 30px #000}
+.lamp-shell:after{content:"";position:absolute;right:18px;top:22px;width:120px;height:86px;border-radius:50%;background:radial-gradient(circle,#1d2539,#0c1120);border:1px solid #2d3858}
+.bulb{position:absolute;left:46px;top:43px;width:44px;height:44px;border-radius:50%;background:radial-gradient(circle,#fffaf0 0%,#ffd27a 38%,rgba(255,150,30,0) 72%);opacity:var(--b,.5);box-shadow:0 0 calc(var(--b,.5)*70px) calc(var(--b,.5)*26px) rgba(255,170,60,calc(var(--b,.5)*.75));z-index:2}
+.bulbcap{position:absolute;bottom:12px;left:0;right:0;text-align:center;font-size:12px;color:var(--muted)}
+.nav{position:sticky;top:0;z-index:30;background:rgba(11,15,23,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;gap:6px;overflow-x:auto;padding:10px 18px}
+.nav a{white-space:nowrap;color:var(--muted);text-decoration:none;padding:6px 13px;border-radius:999px;font-size:14px;transition:.2s}
+.nav a.on,.nav a:hover{background:var(--panel2);color:var(--text)}
+section{padding:42px 0;border-bottom:1px solid #161e30;scroll-margin-top:56px}
+h2{font-size:27px;margin:0 0 4px}
+h2 .num{color:var(--amber);margin-left:10px;font-size:.8em}
+.sub{color:var(--muted);margin:0 0 22px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px 20px}
+.card h3{margin:0 0 6px;font-size:18px}
+.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;position:relative}
+@media(max-width:860px){.flow{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.flow{grid-template-columns:1fr}}
+.flow .card{position:relative}
+.flow .ico{font-size:26px}
+.tag{display:inline-block;font-size:12px;padding:2px 9px;border-radius:999px;background:var(--panel2);color:var(--muted);margin-bottom:6px}
+.warn{border-color:#5a4214;background:#16120a}.warn h3{color:var(--amber)}
+.danger{border-color:#5a2020;background:#170c0c}.danger h3{color:var(--red)}
+.ok{border-color:#174a36;background:#0b1712}.ok h3{color:var(--green)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:860px){.two{grid-template-columns:1fr}}
+.gap{height:16px}
+.sch-grid{display:grid;grid-template-columns:1fr 310px;gap:16px}
+@media(max-width:1000px){.sch-grid{grid-template-columns:1fr}}
+.svgwrap{overflow-x:auto;background:#090d15;border:1px solid var(--line);border-radius:16px;padding:8px}
+.svgwrap svg{min-width:900px;width:100%;height:auto;display:block;direction:ltr}
+svg .w{stroke:#7d89a6;stroke-width:2;fill:none;stroke-linecap:round;transition:stroke .3s}
+svg.colored .nin{stroke:#ff9a9a}
+svg.colored .n12{stroke:var(--red)}
+svg.colored .n5{stroke:var(--amber)}
+svg.colored .nosc{stroke:var(--blue)}
+svg.colored .nN{stroke:var(--violet)}
+svg.colored .nlamp{stroke:var(--green)}
+svg .dot{fill:#cfd8ec}
+svg .gnd line{stroke:#7d89a6;stroke-width:2}
+svg .sym{stroke:#e2e8f6;stroke-width:2;fill:none;stroke-linejoin:round}
+svg .symf{fill:#e2e8f6}
+svg text{font-family:"Segoe UI",Tahoma,Arial,sans-serif;fill:#cbd5ea}
+svg .lbl{font-size:12px;font-weight:700}
+svg .sm{font-size:10.5px;fill:#8f9bb6}
+svg .pin{font-size:10.5px;fill:var(--amber);font-weight:700}
+svg .big{font-size:20px;font-weight:800;fill:var(--violet)}
+svg .comp{cursor:pointer}
+svg .comp .hit{fill:transparent}
+svg .comp:hover .sym,svg .comp.sel .sym{stroke:var(--amber)}
+svg .comp:hover .symf,svg .comp.sel .symf{fill:var(--amber)}
+svg .comp.sel .hit{fill:rgba(255,181,71,.08)}
+svg .box{fill:#141b2c;stroke:#e2e8f6;stroke-width:2}
+svg .comp:hover .box,svg .comp.sel .box{stroke:var(--amber)}
+.svgwrap.paper{background:#eef1f7;padding:10px}
+.svgwrap.paper svg{min-width:760px}
+#schTabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.flagnote{background:#10172a;border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin-bottom:10px;font-size:14px;color:#cfd7e8}
+svg.paper .pframe{fill:#ffffff;stroke:#d5dbe7;stroke-width:1.5}
+svg.paper .ptitle{fill:#eef2fb}
+svg.paper .pnum{fill:#f59e0b}
+svg.paper .pnumt{fill:#fff;font-weight:800;font-size:15px}
+svg.paper .ptt{fill:#0f172a;font-weight:800;font-size:17px}
+svg.paper .pst{fill:#64748b;font-size:13px}
+svg.paper text{fill:#1e293b}
+svg.paper .lbl{font-size:14px;fill:#1e293b}
+svg.paper .sm{fill:#64748b;font-size:12.5px}
+svg.paper .pin{fill:#ea580c;font-size:13px;font-weight:800}
+svg.paper .ref{font-size:16px;font-weight:800;fill:#0f172a}
+svg.paper .pill{fill:#f1f5f9;stroke:#cbd5e1}
+svg.paper .pilltx{fill:#334155;font-size:13px;font-weight:700}
+svg.paper .w{stroke:#475569;stroke-width:2.6}
+svg.paper .sym{stroke:#0f172a;stroke-width:2.4}
+svg.paper .symf{fill:#0f172a}
+svg.paper .dot{fill:#0f172a}
+svg.paper .gnd line{stroke:#475569;stroke-width:2.4}
+svg.paper .box{fill:#f8fafc;stroke:#0f172a}
+svg.paper.colored .nin{stroke:#f87171}
+svg.paper.colored .n12{stroke:#dc2626}
+svg.paper.colored .n5{stroke:#ea580c}
+svg.paper.colored .nosc{stroke:#2563eb}
+svg.paper.colored .nN{stroke:#7c3aed}
+svg.paper.colored .nlamp{stroke:#059669}
+svg.paper .flag text{fill:#fff;font-weight:800;font-size:14px}
+svg.paper .f12 rect{fill:#dc2626}
+svg.paper .f5 rect{fill:#ea580c}
+svg.paper .fosc rect{fill:#2563eb}
+svg.paper .fN rect{fill:#7c3aed}
+svg.paper .note{fill:#fff7ed;stroke:#fdba74}
+svg.paper .notetx{fill:#9a3412;font-size:13.5px;font-weight:700}
+svg.paper .inset{fill:#f8fafc;stroke:#94a3b8;stroke-dasharray:6 5}
+svg.paper .comp:hover .sym,svg.paper .comp.sel .sym{stroke:#f59e0b}
+svg.paper .comp:hover .symf,svg.paper .comp.sel .symf{fill:#f59e0b}
+svg.paper .comp:hover .box,svg.paper .comp.sel .box{stroke:#f59e0b}
+svg.paper .comp:hover .hit{fill:rgba(245,158,11,.07)}
+svg.paper .comp.sel .hit{fill:rgba(245,158,11,.14)}
+.info{position:sticky;top:70px;align-self:start}
+.info h3{color:var(--amber)}
+.info .val{font-family:Consolas,monospace;background:var(--panel2);padding:2px 10px;border-radius:6px;display:inline-block;margin:4px 0 8px;direction:ltr}
+.info .pol{margin-top:10px;border-right:3px solid var(--amber);padding:6px 10px;background:#16120a;border-radius:6px;font-size:14px}
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:12px;font-size:13px;color:var(--muted);align-items:center}
+.legend i{display:inline-block;width:20px;height:4px;border-radius:2px;margin-left:6px;vertical-align:middle}
+.btn{background:var(--panel2);border:1px solid var(--line);color:var(--text);padding:8px 16px;border-radius:10px;cursor:pointer;font:inherit;font-size:14px;transition:.2s}
+.btn:hover{border-color:var(--amber)}
+.btn.pri{background:linear-gradient(90deg,var(--amber2),var(--amber));color:#1a1206;border:0;font-weight:800}
+.btn:disabled{opacity:.4;cursor:default}
+.sim-grid{display:grid;grid-template-columns:330px 1fr;gap:16px}
+@media(max-width:920px){.sim-grid{grid-template-columns:1fr}}
+.ctrl label{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin:12px 0 4px}
+.ctrl label span{color:var(--blue);font-family:Consolas,monospace;direction:ltr}
+select{width:100%;background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:8px;font:inherit;font-size:14px}
+canvas#scope{width:100%;height:330px;display:block;background:#090d15;border-radius:12px;border:1px solid var(--line)}
+.simtop{display:flex;gap:16px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
+.minibulb{width:84px;height:84px;border-radius:50%;background:#10141f;border:1px solid var(--line);position:relative;flex:none}
+.minibulb .bulb{left:20px;top:20px}
+.readout{display:grid;grid-template-columns:repeat(3,auto);gap:4px 18px;font-size:13px;color:var(--muted)}
+.readout b{color:var(--text);font-family:Consolas,monospace;direction:ltr;display:inline-block}
+.pins{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:14px}
+@media(max-width:920px){.pins{grid-template-columns:1fr}}
+.pins svg{width:100%;height:auto;direction:ltr}
+.pol-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px}
+@media(max-width:860px){.pol-grid{grid-template-columns:1fr 1fr}}
+.pol-grid .card{font-size:14px}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:640px}
+th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:right;vertical-align:middle}
+th{color:var(--muted);font-weight:600;background:var(--panel2)}
+tr.grp td{background:#0f1523;color:var(--amber);font-weight:800}
+tr.off td{opacity:.4}
+td input[type=checkbox]{accent-color:var(--amber);width:18px;height:18px}
+.est{font-size:11px;color:#ffcf7a;border:1px solid #6b5220;padding:0 7px;border-radius:999px;margin-right:6px;white-space:nowrap}
+.totalbar{display:flex;justify-content:space-between;align-items:center;margin-top:14px;flex-wrap:wrap;gap:10px}
+.totalbar .t{font-size:17px}
+.totalbar b{font-size:30px;color:var(--amber)}
+.steps-top{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.sdot{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--panel2);border:1px solid var(--line);cursor:pointer;font-weight:800;font-size:14px;transition:.2s}
+.sdot.on{background:var(--amber);color:#1a1206;border-color:var(--amber)}
+.sdot.done{border-color:var(--green);color:var(--green)}
+.sdot.done.on{color:#1a1206}
+.progress{height:6px;background:var(--panel2);border-radius:99px;overflow:hidden;margin-bottom:16px}
+.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--amber2),var(--amber));width:0;transition:width .35s}
+.step h3{margin:0;font-size:22px}
+.step .meta{color:var(--muted);font-size:13px;margin-bottom:10px}
+.step ul,.step ol{padding-right:22px;margin:8px 0}
+.check{display:flex;gap:10px;align-items:flex-start;padding:7px 10px;border-radius:10px;cursor:pointer;user-select:none}
+.check:hover{background:var(--panel2)}
+.check input{margin-top:7px;accent-color:var(--amber);width:18px;height:18px;flex:none}
+.check.done span{color:var(--muted);text-decoration:line-through}
+.meas{margin-top:12px;border-right:3px solid var(--green);padding:8px 14px;background:#0b1712;border-radius:8px;font-size:14.5px}
+.meas b{color:var(--green)}
+.navbtns{display:flex;justify-content:space-between;margin-top:18px;gap:10px}
+code,.mono{font-family:Consolas,monospace;direction:ltr;unicode-bidi:isolate;background:var(--panel2);padding:1px 7px;border-radius:5px;font-size:.92em}
+.wiregrp h4{margin:0 0 4px;color:var(--amber)}
+.wcount{font-size:14px;color:var(--muted)}
+details{background:var(--panel);border:1px solid var(--line);border-radius:12px;margin-bottom:10px;padding:0 18px}
+summary{cursor:pointer;padding:14px 0;font-weight:700;list-style-position:inside}
+details[open] summary{color:var(--amber)}
+details ul{margin-top:0;padding-right:20px;color:#cfd7e8}
+.carsvg svg{width:100%;height:auto;direction:ltr;min-width:680px}
+.carsvg{overflow-x:auto}
+footer{padding:30px 0 50px;color:var(--muted);font-size:13px;text-align:center}
+.kbd{display:inline-block;padding:0 8px;border-radius:6px;border:1px solid var(--line);background:var(--panel2);font-size:13px}
+.bbwrap{--bbw:min(1560px,calc(100vw - 48px));position:relative;overflow:hidden;direction:ltr;width:var(--bbw);margin-inline:calc((100% - var(--bbw))/2);background:#10281e;border:1px solid var(--line);border-radius:16px;padding:6px}
+.bbwrap svg{display:block;width:100%;height:auto}
+.bbwrap:fullscreen{display:flex;align-items:center;justify-content:center;width:100%;margin:0;border:0;border-radius:0;padding:12px}
+.bbwrap:fullscreen svg{max-height:calc(100vh - 24px)}
+.bbmode{display:inline-flex;gap:2px;background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:3px;margin-bottom:12px}
+.bbmode button{background:none;border:0;color:var(--muted);font:inherit;font-size:14px;padding:6px 16px;border-radius:999px;cursor:pointer}
+.bbmode button.on{background:linear-gradient(90deg,var(--amber2),var(--amber));color:#1a1206;font-weight:800}
+.edu{margin-top:10px;font-size:14.5px}
+.edu>b{display:block;color:var(--amber);font-size:13px;margin-bottom:2px}
+.edu.alt{border-right:3px solid var(--blue);background:#0d1628;padding:8px 12px;border-radius:8px}
+.edu.alt>b{color:var(--blue)}
+.edu ul{margin:4px 0 0;padding-right:18px}
+.bbh3{margin:30px 0 12px;font-size:21px}
+.bbbasics{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;font-size:14px}
+.bbbasics h4,.bbcard h4{margin:0 0 4px;font-size:16px;color:var(--text)}
+.bbdict{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.bbcard{cursor:pointer;font-size:14px;transition:border-color .2s}
+.bbcard:hover,.bbcard:focus-visible{border-color:var(--amber);outline:none}
+.bbcard .ids{font-family:Consolas,monospace;font-size:12px;color:var(--muted);direction:ltr;unicode-bidi:isolate;display:inline-block}
+.bbcard p{margin:6px 0}
+.opts{display:flex;flex-direction:column;gap:5px;margin-top:6px}
+.opt{text-align:right;background:var(--panel2);border:1px solid var(--line);color:var(--text);font:inherit;font-size:13.5px;line-height:1.6;padding:6px 11px;border-radius:9px;cursor:pointer;transition:border-color .15s}
+.opt:hover{border-color:var(--amber)}
+.opt.on{border-color:var(--amber);background:#2a2110;font-weight:700}
+.res{margin-top:8px;padding:8px 11px;border-radius:9px;font-size:14px}
+.res.st-ok{background:#0b1712;border:1px solid #174a36}
+.res.st-warn{background:#16120a;border:1px solid #5a4214}
+.res.st-bad{background:#170c0c;border:1px solid #5a2020}
+.bbmini{display:block;width:100%;height:72px;margin-top:10px;background:#090d15;border:1px solid var(--line);border-radius:8px}
+.bbmini-cap{font-size:12px;color:var(--muted);margin-top:4px}
+.swapbar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;border-color:#5a4214}
+#bbSwapBar[hidden]{display:none}
+.bbcard ul{margin:2px 0 0;padding-right:18px;color:#cfd7e8}
+.bbunder{display:grid;grid-template-columns:1fr 360px;gap:16px;align-items:start}
+.bbunder>div{min-width:0}
+@media(max-width:900px){.bbunder{grid-template-columns:1fr}}
+#bb .bb-lab{font-size:8.5px;font-weight:800;fill:#1f2937;paint-order:stroke;stroke:#f1eee4;stroke-width:3px;stroke-linejoin:round}
+#bb .bb-lab-m{fill:#e2f0e8;stroke:none;font-size:9px}
+#bb .bb-lab-v{fill:#9fc3b0;stroke:none;font-size:8px;font-weight:600}
+#bb .bb-dipn{fill:#8b8b90;font-size:6.5px;text-anchor:middle}
+#bb .bb-icid{fill:#9ca3af;font-size:9px;font-weight:700;text-anchor:middle}
+#bb .bb-labg{pointer-events:none;transition:opacity .2s}
+#bb .bb-labg.dim{opacity:.16}
+#bb .bb-labg.hide,#bb.nolab #bbLab{display:none}
+#bbStages{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+#bbStageNote .btn{margin-right:8px;padding:4px 12px;font-size:13px}
+.bbnets{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.bbnl{font-size:13px;color:var(--muted);margin-left:4px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 11px;border-radius:999px;border:1px solid var(--line);background:var(--panel2);color:var(--text);cursor:pointer;font:inherit;font-size:13px;transition:.2s}
+.chip i{width:10px;height:10px;border-radius:50%;flex:none}
+.chip:hover,.chip.on{border-color:var(--amber)}
+.chip.on{background:#2a2110}
+.bbtools{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.bbtip{position:absolute;display:none;pointer-events:none;direction:rtl;z-index:5;background:rgba(11,15,23,.95);border:1px solid var(--line);border-radius:8px;padding:4px 10px;font-size:12.5px;color:var(--text);white-space:nowrap}
+.bbloc{margin-top:10px;font-size:14px}
+.bbloc ul{margin:4px 0 0;padding-right:20px}
+.bbloc ul.cols{columns:2;column-gap:18px}
+.bbmeter{display:flex;justify-content:space-between;align-items:center;gap:10px;background:#0b1712;border:1px solid #174a36;border-radius:10px;padding:8px 12px;margin:6px 0 10px;font-size:12.5px;color:var(--muted)}
+.bbmeter b{font-family:Consolas,monospace;color:var(--green);font-size:19px;direction:ltr;unicode-bidi:isolate;white-space:nowrap}
+#bb .bb-mat{fill:#143324}
+#bb .bb-matl{fill:none;stroke:#1d4431;stroke-width:1}
+#bb .bb-board{fill:#f1eee4;stroke:#cbc3ad;stroke-width:1.5}
+#bb .bb-chan{fill:#e2ddcd}
+#bb .bb-hole{fill:#3d3a33}
+#bb .bb-rl-r{stroke:#d64545;stroke-width:1.6}
+#bb .bb-rl-b{stroke:#3b6fd6;stroke-width:1.6}
+#bb .bb-rlt{font-size:8.5px;font-weight:800}
+#bb .bb-rlt-r{fill:#c0392b}
+#bb .bb-rlt-b{fill:#2f5fc4}
+#bb .bb-num{font-size:8px;fill:#958d77;text-anchor:middle}
+#bb .bs{fill:transparent;cursor:crosshair}
+#bb .bs:hover{fill:rgba(245,158,11,.22)}
+#bb .bb-hl{fill-opacity:.2;stroke-width:2.4;pointer-events:none}
+#bb #bbOut{pointer-events:none}
+#bb .bb-out-sel{fill:none;stroke:#f59e0b;stroke-width:2.2;stroke-dasharray:6 4}
+#bb .bb-out-new{fill:none;stroke:#22c55e;stroke-width:2;stroke-dasharray:5 4}
+#bb .bp{cursor:pointer;transition:opacity .2s;outline:none}
+#bb .bp.dim{opacity:.16}
+#bb .bp.hide{display:none}
+#bb .bp:focus-visible .bb-hitw{stroke:rgba(245,158,11,.45)}
+#bb .bb-hitw{fill:none;stroke:rgba(0,0,0,0);stroke-width:12;stroke-linecap:round;pointer-events:stroke}
+#bb .bb-lead{stroke:#a9afb8;stroke-width:2.2;stroke-linecap:round}
+#bb .bb-foot{fill:#7f858f}
+#bb .bb-shine{fill:#fff;opacity:.3}
+#bb .bb-res{fill:#dcc596;stroke:#ae955f;stroke-width:.8}
+#bb .bb-dio{fill:#1e1e1e}
+#bb .bb-tvs{fill:#2a2a2a}
+#bb .bb-stripe{fill:#d7d7d7}
+#bb .bb-cer{fill:#e79f37;stroke:#b0701a;stroke-width:1}
+#bb .bb-cert{font-size:6.5px;fill:#5a3a0a;text-anchor:middle;font-weight:800}
+#bb .bb-can{fill:#1f3c8f;stroke:#0f1f4d;stroke-width:1}
+#bb .bb-canstripe{fill:#cbd5e1}
+#bb .bb-cantop{fill:#d5d9e0;stroke:#98a0ab;stroke-width:.8}
+#bb .bb-canvent{stroke:#8b929c;stroke-width:1.2}
+#bb .bb-ic{fill:#1c1c1e;stroke:#000;stroke-width:1}
+#bb .bb-ict{fill:#dadada;font-size:11px;font-weight:700;text-anchor:middle;font-family:Consolas,monospace}
+#bb .bb-icpin{fill:#9ca3af;font-size:7.5px;text-anchor:middle}
+#bb .bb-notch{fill:#3a3a3d}
+#bb .bb-dot1{fill:#4a4a4e}
+#bb .bb-pin,#bb .bb-leg{fill:#bfc4cb}
+#bb .bb-tab{fill:url(#bbMetal);stroke:#7a8089}
+#bb .bb-tabhole{fill:#143324;stroke:#7a8089}
+#bb .bb-wire-o{fill:none;stroke:rgba(0,0,0,.5);stroke-width:6.6;stroke-linecap:round;stroke-linejoin:round}
+#bb .bb-wire{fill:none;stroke-width:4.6;stroke-linecap:round;stroke-linejoin:round}
+#bb .bb-wire-hi{fill:none;stroke:#fff;stroke-opacity:.3;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round}
+#bb .bb-tip{fill:#c8ccd3;stroke:#5f646c;stroke-width:.6}
+#bb .bb-adp{fill:#1f2937;stroke:#4b5563;stroke-width:1.5}
+#bb .bb-adpt{fill:#fff;font-size:15px;font-weight:800;text-anchor:middle}
+#bb .bb-adps{fill:#cbd5e1;font-size:9.5px;text-anchor:middle}
+#bb .bb-term-r{fill:#dc2626}
+#bb .bb-term-k{fill:#111}
+#bb .bb-fuse{fill:#111827;stroke:#6b7280}
+#bb .bb-fuset{fill:#fde68a;font-size:9px;font-weight:800;text-anchor:middle}
+#bb .bb-sock{fill:#262626;stroke:#000}
+#bb .bb-bulb{fill:rgba(255,255,255,.82);stroke:#cbd5e1}
+#bb .bb-chip{fill:#fde68a;stroke:#d4a017}
+#bb .bb-led{fill:rgba(255,214,90,.9);stroke:#b88a0a}
+#bb .bb-matt{fill:#cfe6d8;font-size:10.5px;font-weight:700;text-anchor:middle}
+#bbGlow{pointer-events:none}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="tag">مشروع DIY · عربية 12V</span>
+      <h1>دايرة <span class="grad">رعشة لمبة الركن</span><br>من البريد بورد لحد الفانوس</h1>
+      <p class="lead">3 مذبذبات بسرعات مختلفة بتتخلط مع بعض، فتطلع رعشة ناعمة ومش منتظمة، من غير أي برمجة. الصفحة دي فيها الرسمة التفاعلية، ومحاكي يوريك شكل الرعشة، وكل خطوة من التجربة لحد التركيب.</p>
+      <div class="stats">
+        <div class="stat"><b>~50 جنيه</b>تكلفة الدايرة</div>
+        <div class="stat"><b>12V → 5V</b>حماية وتنظيم</div>
+        <div class="stat"><b>3 مذبذبات</b>CD40106</div>
+        <div class="stat"><b>11 خطوة</b>للتنفيذ</div>
+      </div>
+    </div>
+    <div class="bulbbox">
+      <div class="lamp-shell"><div class="bulb" id="heroBulb"></div></div>
+      <div class="bulbcap">المحاكي شغال لايف بنفس قيم الدايرة ↓</div>
+    </div>
+  </div>
+</header>
+
+<nav class="nav"><div class="wrap" id="navlinks">
+  <a href="#overview">الفكرة</a>
+  <a href="#schematic">رسمة الدايرة</a>
+  <a href="#board">البريد بورد</a>
+  <a href="#sim">المحاكي</a>
+  <a href="#pinouts">الرجول والقطبية</a>
+  <a href="#bom">المكونات والتكلفة</a>
+  <a href="#steps">خطوات التنفيذ</a>
+  <a href="#wiring">قائمة التوصيلات</a>
+  <a href="#car">التركيب في العربية</a>
+  <a href="#trouble">الأعطال</a>
+</div></nav>
+
+<main class="wrap">
+
+<!-- ============ OVERVIEW ============ -->
+<section id="overview">
+  <h2><span class="num">01</span>الدايرة بتشتغل إزاي؟</h2>
+  <p class="sub">أربع مراحل ورا بعض. دوس على أي مرحلة في الرسمة تحت وهتلاقي شرح كل قطعة.</p>
+  <div class="flow">
+    <div class="card"><div class="ico">🛡️</div><span class="tag">المرحلة 1</span><h3>الحماية والباور</h3>فيوز، ودايود ضد عكس القطبية، وTVS ضد نبضات الدينامو، وبعدهم منظم 7805 يطلّع 5V ثابتة.</div>
+    <div class="card"><div class="ico">〰️</div><span class="tag">المرحلة 2</span><h3>3 مذبذبات</h3>بوابات Schmitt في CD40106. كل بوابة مع مقاومة ومكثف بتطلّع موجة مربعة بسرعة مختلفة: ~1.2، ~3، ~12 مرة في الثانية.</div>
+    <div class="card"><div class="ico">🌀</div><span class="tag">المرحلة 3</span><h3>الخلط والتنعيم</h3>مقاومات بأوزان مختلفة بتجمع الموجات في نقطة واحدة <b>N</b>، ومكثف 22µF بيحوّل القفزات لطلوع ونزول ناعم.</div>
+    <div class="card"><div class="ico">💡</div><span class="tag">المرحلة 4</span><h3>التشغيل</h3>ترانزستور TIP122 بيخلّي تيار اللمبة يمشي مع جهد النقطة N، فالسطوع بيعلى ويوطى بدل ما يولّع ويطفي.</div>
+  </div>
+  <div class="gap"></div>
+  <div class="two">
+    <div class="card warn">
+      <h3>⚠️ قبل ما تبدأ: القانون والأمان</h3>
+      نور أمامي بيرعش والعربية ماشية غالباً <b>مخالفة مرور</b>، وممكن يتلخبط مع الإشارات ويشتت العربيات اللي قدامك. الأسلم إنك تستخدم التأثير والعربية <b>راكنة</b>، أو تحط مفتاح يرجّع اللمبة ثابتة وانت سايق.
+    </div>
+    <div class="card warn">
+      <h3>🚗 عربيات CANbus والعربيات الحديثة</h3>
+      بعض العربيات بتقيس تيار لمبة الركن، وممكن تطلع لك رسالة "لمبة محروقة". وبعضها بيغذّي اللمبة بنبضات (PWM) بدل جهد ثابت. قيس الجهد على الفيشة الأول، ولو مش ثابت راجع قسم الأعطال.
+    </div>
+  </div>
+</section>
+
+<!-- ============ SCHEMATIC ============ -->
+<section id="schematic">
+  <h2><span class="num">02</span>رسمة الدايرة الكاملة</h2>
+  <p class="sub">دوس على أي قطعة في الرسمة عشان تشوف هي بتعمل إيه، وقيمتها، وإزاي تركّبها صح.</p>
+  <div class="sch-grid">
+    <div>
+      <div id="schTabs">
+        <button class="btn pri" data-t="all">الدايرة كاملة</button>
+        <button class="btn" data-t="power">① الباور والحماية</button>
+        <button class="btn" data-t="osc">② المذبذبات</button>
+        <button class="btn" data-t="mix">③ الخلط والتنعيم</button>
+        <button class="btn" data-t="drive">④ تشغيل اللمبة</button>
+      </div>
+      <div class="flagnote">💡 الدايرة مقسومة 4 أجزاء عشان تبقى واضحة. <b>المربعات الملونة</b> (<b style="color:#f87171">+12V</b>، <b style="color:#fb923c">+5V</b>، <b style="color:#60a5fa">A B C</b>، <b style="color:#a78bfa">N</b>) معناها إن كل النقط اللي عليها نفس الاسم <b>متوصلة ببعض بسلك</b>، حتى لو في جزء تاني. ورمز ⏚ = الأرضي، وكله متوصل ببعض. دوس على أي جزء من فوق عشان تكبّره.</div>
+      <div class="svgwrap paper"><svg id="sch" class="paper" viewBox="0 0 1080 1300" xmlns="http://www.w3.org/2000/svg"></svg></div>
+      <div class="legend">
+        <button class="btn" id="colorBtn">🎨 لوّن الخطوط</button>
+        <span><i style="background:var(--red)"></i>+12V محمي</span>
+        <span><i style="background:var(--amber)"></i>+5V</span>
+        <span><i style="background:var(--blue)"></i>المذبذبات</span>
+        <span><i style="background:var(--violet)"></i>النقطة N</span>
+        <span><i style="background:var(--green)"></i>اللمبة</span>
+      </div>
+    </div>
+    <div class="card info" id="info">
+      <h3>👆 دوس على أي قطعة</h3>
+      <p style="color:var(--muted);margin:0">هيظهر هنا شرح القطعة. ابدأ من <b>IN</b> على الشمال وامشي مع الكهربا لحد اللمبة.</p>
+    </div>
+  </div>
+</section>
+
+<section id="board">
+  <h2><span class="num">03</span>الدايرة على البريد بورد زي الحقيقة</h2>
+  <p class="sub">نفس الدايرة بالظبط، بس بالشكل اللي هيبقى قدامك على المكتب: كل قطعة في الخرم بتاعها. دوس على أي قطعة تعرف هي إيه ورجلها فين، أو على أي خرم تشوف كل اللي متوصل بيه.</p>
+  <div class="bbmode" id="bbMode" role="group" aria-label="نوع الشرح"><button data-m="easy" class="on">🔰 شرح للمبتدئين</button><button data-m="tech">🔧 شرح فني</button></div>
+  <div id="bbStages"></div>
+  <div class="flagnote" id="bbStageNote"></div>
+  <div class="flagnote swapbar" id="bbSwapBar" hidden></div>
+  <div class="bbwrap" id="bbWrap"><svg id="bb" viewBox="4 36 1432 442" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="الدايرة على بريد بورد"></svg><div class="bbtip" id="bbTip"></div></div>
+  <div class="bbunder">
+    <div>
+      <div class="bbnets" id="bbNets"></div>
+      <div class="bbtools">
+        <button class="btn" id="bbLampBtn"></button>
+        <button class="btn" id="bbLabels">🏷️ إخفاء الأسماء</button>
+        <button class="btn" id="bbFull">⛶ ملء الشاشة</button>
+        <button class="btn" id="bbClear">✖ إلغاء التحديد</button>
+      </div>
+      <div class="flagnote" style="margin-top:12px">📖 <b>إزاي تقرا البريد بورد:</b> كل عمود فيه 5 خرم (a لـ e) متوصلين ببعض من جوه، ونفس الكلام في (f لـ j). المجرى اللي في النص بيفصل النصين عن بعض، وعشان كده الـ IC بتركب عليه. الخطوط الطويلة فوق وتحت كل خط منهم متوصل على طوله: <b style="color:#fb923c">+5V</b> و<b style="color:#94a3b8">أرضي</b> فوق، و<b style="color:#94a3b8">أرضي</b> و<b style="color:#f87171">+12V</b> تحت.</div>
+    </div>
+    <div class="card info" id="bbInfo" style="margin-top:12px"></div>
+  </div>
+  <h3 class="bbh3">🔰 أساسيات في دقيقة (لو أول مرة)</h3>
+  <div class="bbbasics">
+    <div class="card"><h4>⚡ الكهربا زي المية</h4>الجهد (<b>فولت V</b>) = ضغط المية. التيار (<b>أمبير A</b>) = كمية المية اللي بتجري. المقاومة (<b>أوم Ω</b>) = ماسورة ضيقة بتقلل الجريان.</div>
+    <div class="card"><h4>🔁 لازم الدايرة تقفل</h4>الكهربا بتطلع من الموجب (+) وترجع للسالب (−)، اللي بنسميه "الأرضي". لو في أي حتة مقطوعة في السكة، مفيش حاجة هتشتغل.</div>
+    <div class="card"><h4>🧩 البريد بورد</h4>لوحة فيها خرم متوصلين ببعض من جوه: كل 5 خرم في نفس العمود متوصلين. بتركّب القطع فيها من غير لحام، وتجرّب وتغيّر براحتك.</div>
+    <div class="card"><h4>↔️ القطع اللي ليها اتجاه</h4>الدايود، والمكثف الأسطواني، والـ LED، والشرايح ليهم اتجاه، ولو اتركبوا بالعكس مش هيشتغلوا أو هيتحرقوا. المقاومة والمكثف الصغير (104) يتركبوا أي ناحية.</div>
+    <div class="card"><h4>🔤 الحروف والأرقام</h4><b>R</b> مقاومة، <b>C</b> مكثف، <b>D</b> دايود، <b>Q</b> ترانزستور، <b>U</b> شريحة. و<b>k</b> = ألف، و<b>M</b> = مليون، و<b>µ</b> = جزء من مليون.</div>
+  </div>
+  <h3 class="bbh3">📚 قاموس القطع: كل قطعة بتعمل إيه، وبديلها لو مش لاقيها</h3>
+  <p class="sub" style="margin-bottom:12px">دوس على أي كارت وهيوريك القطعة على البورد.</p>
+  <div class="bbdict" id="bbDict"></div>
+</section>
+
+<!-- ============ SIM ============ -->
+<section id="sim">
+  <h2><span class="num">04</span>المحاكي: شوف الرعشة قبل ما تلحم</h2>
+  <p class="sub">المحاكي بيحسب الدايرة نفسها لحظة بلحظة. غيّر القيم وشوف تأثيرها على اللمبة وعلى الموجات، وبعدين ركّب القيم اللي عجبتك.</p>
+  <div class="sim-grid">
+    <div class="card ctrl">
+      <div class="simtop">
+        <div class="minibulb"><div class="bulb" id="simBulb"></div></div>
+        <div class="readout">
+          <span>جهد N</span><b id="rN">–</b><span></span>
+          <span>تيار اللمبة</span><b id="rI">–</b><span></span>
+          <span>التنعيم τ</span><b id="rTau">–</b><span></span>
+        </div>
+      </div>
+      <label>R1 · المذبذب البطيء <span id="fA"></span></label>
+      <select id="sR1"></select>
+      <label>R2 · المذبذب المتوسط <span id="fB"></span></label>
+      <select id="sR2"></select>
+      <label>R3 · المذبذب السريع <span id="fC"></span></label>
+      <select id="sR3"></select>
+      <label>C8 · مكثف التنعيم <span id="fCn"></span></label>
+      <select id="sCn"></select>
+      <label>R7 · الحد الأدنى للإضاءة <span id="fRf"></span></label>
+      <select id="sRf"></select>
+      <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap">
+        <button class="btn pri" id="pauseBtn">⏸ إيقاف</button>
+        <button class="btn" id="resetBtn">↺ القيم الأصلية</button>
+      </div>
+      <p style="font-size:13px;color:var(--muted);margin:14px 0 0">المقاومة الأصغر = مذبذب أسرع. المكثف الأكبر = رعشة أهدى. R7 أصغر = اللمبة عمرها ما تطفي خالص.</p>
+    </div>
+    <div class="card">
+      <canvas id="scope"></canvas>
+      <p style="font-size:13px;color:var(--muted);margin:10px 0 0">آخر 3 ثواني. الخط المتقطع = 1.3V، وده الجهد اللي تحته الـ TIP122 بيقفل واللمبة تطفي. الأرقام تقريبية لأن CD40106 بيختلف من شركة لشركة.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PINOUTS ============ -->
+<section id="pinouts">
+  <h2><span class="num">05</span>الرجول والقطبية</h2>
+  <p class="sub">أغلب الأعطال بتيجي من قطعة متركبة بالمقلوب. راجع الجزء ده قبل كل مرحلة.</p>
+  <div class="pins">
+    <div class="card"><div id="dipSvg"></div></div>
+    <div class="card"><div id="to7805"></div></div>
+    <div class="card"><div id="toTip"></div></div>
+  </div>
+  <div class="pol-grid">
+    <div class="card"><h3>▶| الدايود</h3>الشريطة = <b>الكاثود</b>.<br>1N4007: الشريطة ناحية +12V.<br>P6KE18A: الشريطة على +12V والتاني على الأرضي.</div>
+    <div class="card"><h3>🔋 المكثف الكيميائي</h3>الرجل <b>الطويلة = +</b>.<br>الجنب اللي عليه شريطة فيها (−) = <b>السالب</b>.<br>لو اتعكس ممكن يسخن وينفجر.</div>
+    <div class="card"><h3>💡 الـ LED 5mm</h3>الرجل <b>الطويلة = +</b>.<br>الجنب المشطوف في الحتة البلاستيك = <b>السالب</b>.</div>
+    <div class="card"><h3>🚘 لمبة T10 LED</h3>ليها قطبية عكس اللمبة العادية. لو مانوّرتش، <b>لفّها نص لفة</b> في الفيشة.</div>
+  </div>
+</section>
+
+<!-- ============ BOM ============ -->
+<section id="bom">
+  <h2><span class="num">06</span>المكونات والتكلفة</h2>
+  <p class="sub">علّم على اللي هتشتريه والإجمالي هيتحسب لوحده. الأسعار من <a href="https://makerselectronics.com/" target="_blank">Makers Electronics</a> وقت البحث وممكن تتغير، والشحن مش محسوب.</p>
+  <div class="tablewrap"><table id="bomTable">
+    <thead><tr><th style="width:40px"></th><th>المكون</th><th>المواصفة / الاسم في السوق</th><th>العدد</th><th>سعر الوحدة</th><th>الإجمالي</th><th>لينك</th></tr></thead>
+    <tbody></tbody>
+  </table></div>
+  <div class="totalbar">
+    <div class="t">الإجمالي: <b id="bomTotal">0</b> جنيه</div>
+    <div style="font-size:13px;color:var(--muted)">حاجات <span class="est">تقديري</span> سعرها مش ظاهر على الموقع. حاجات العربية من محل قطع الغيار ومش محسوبة.</div>
+  </div>
+</section>
+
+<!-- ============ STEPS ============ -->
+<section id="steps">
+  <h2><span class="num">07</span>خطوات التنفيذ: من التجربة للتركيب</h2>
+  <p class="sub">امشي خطوة خطوة، وعلّم على كل بند وانت بتخلصه. <b>متعدّيش مرحلة قبل ما القياس بتاعها يطلع صح.</b></p>
+  <div class="steps-top" id="sdots"></div>
+  <div class="progress"><i id="sprog"></i></div>
+  <div class="card step" id="stepBox"></div>
+</section>
+
+<!-- ============ WIRING ============ -->
+<section id="wiring">
+  <h2><span class="num">08</span>قائمة التوصيلات (نقطة بنقطة)</h2>
+  <p class="sub">استخدمها وانت بتركّب على البريد بورد، ومرة تانية وانت بتلحم. علّم على كل وصلة بعد ما تتأكد منها.</p>
+  <div class="card" style="margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+    <span class="wcount" id="wcount"></span>
+    <button class="btn" id="wreset">↺ امسح العلامات</button>
+  </div>
+  <div class="two" id="wiringBox"></div>
+</section>
+
+<!-- ============ CAR ============ -->
+<section id="car">
+  <h2><span class="num">09</span>التركيب في العربية</h2>
+  <p class="sub">هتقطع السلكين اللي داخلين على فيشة لمبة الركن، وتدخّل الدايرة في النص.</p>
+  <div class="card carsvg"><div id="carSvg"></div></div>
+  <div class="gap"></div>
+  <div class="two">
+    <div class="card ok">
+      <h3>✅ ليه التوصيلة دي كويسة؟</h3>
+      الدايرة بتاخد الكهربا من <b>سلك لمبة الركن نفسه</b>، فمش هتشتغل غير لما تنوّر الأنوار. يعني مفيش سحب من البطارية والعربية مطفية، ومش محتاج مفتاح.
+    </div>
+    <div class="card warn">
+      <h3>🔁 عايز تشغّل الجنبين (يمين وشمال)؟</h3>
+      دايرة واحدة تكفي. وصّل اللمبتين <b>على التوازي</b> (الموجب مع الموجب والسالب مع السالب على الكولكتور)، وخلّي مقاومات الإميتر <b>3 × 68Ω على التوازي</b> بدل 2. الـ TIP122 هيسخن أكتر، فحطله مشتت حراري صغير <b>معزول</b>، لأن الطبق بتاعه متوصل بالكولكتور.
+    </div>
+  </div>
+</section>
+
+<!-- ============ TROUBLE ============ -->
+<section id="trouble">
+  <h2><span class="num">10</span>الأعطال وحلولها</h2>
+  <p class="sub">افتح العَرَض اللي عندك.</p>
+  <div id="troubleBox"></div>
+</section>
+
+</main>
+
+<footer>
+  صُمم كدليل تعليمي. اشتغل دايماً والقطب السالب للبطارية مفصول، واستخدم فيوز مناسب. · CD40106 · LM7805 · TIP122
+</footer>
+
+<script>
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+
+/* =================== SCHEMATIC =================== */
+function L(x1,y1,x2,y2,c='w'){return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="${c}"/>`;}
+function P(d,c='sym'){return `<path d="${d}" class="${c}"/>`;}
+function Dt(x,y){return `<circle cx="${x}" cy="${y}" r="3.6" class="dot"/>`;}
+function Tx(x,y,t,c='lbl',a='middle'){return `<text x="${x}" y="${y}" class="${c}" text-anchor="${a}">${t}</text>`;}
+function Gd(x,y){return `<g class="gnd"><line x1="${x-12}" y1="${y}" x2="${x+12}" y2="${y}"/><line x1="${x-8}" y1="${y+5}" x2="${x+8}" y2="${y+5}"/><line x1="${x-4}" y1="${y+10}" x2="${x+4}" y2="${y+10}"/></g>`;}
+function Cp(id,inner,x,y,w,h){return `<g class="comp" data-id="${id}"><rect class="hit" x="${x}" y="${y}" width="${w}" height="${h}" rx="6"/>${inner}</g>`;}
+function zig(x1,y1,x2,y2){
+  const n=6;
+  if(y1===y2){const a=x1+8,b=x2-8,s=(b-a)/n;let d=`M${x1},${y1} L${a},${y1}`;for(let i=0;i<n;i++)d+=` L${(a+s*(i+.5)).toFixed(1)},${y1+(i%2?7:-7)}`;return d+` L${b},${y1} L${x2},${y1}`;}
+  const a=y1+8,b=y2-8,s=(b-a)/n;let d=`M${x1},${y1} L${x1},${a}`;for(let i=0;i<n;i++)d+=` L${x1+(i%2?7:-7)},${(a+s*(i+.5)).toFixed(1)}`;return d+` L${x1},${b} L${x1},${y2}`;
+}
+function capV(x,y1,y2,polar){
+  const m=(y1+y2)/2;let s=L(x,y1,x,m-4,'sym')+L(x-13,m-4,x+13,m-4,'sym');
+  if(polar){s+=P(`M${x-13},${m+8} Q${x},${m} ${x+13},${m+8}`)+L(x,m+4,x,y2,'sym')+Tx(x-19,m-6,'+','pin');}
+  else{s+=L(x-13,m+4,x+13,m+4,'sym')+L(x,m+4,x,y2,'sym');}
+  return s;
+}
+function diodeH(x1,x2,y){const a=x1+12,b=x2-12;return L(x1,y,a,y,'sym')+`<path d="M${a},${y-10} L${b},${y} L${a},${y+10} Z" class="symf"/>`+L(b,y-10,b,y+10,'sym')+L(b,y,x2,y,'sym');}
+function tvsV(x,y1,y2){const b=y1+8,a=y2-8;return L(x,y1,x,b,'sym')+`<path d="M${x-10},${a} L${x+10},${a} L${x},${b} Z" class="symf"/>`+P(`M${x-14},${b+4} L${x-10},${b} L${x+10},${b} L${x+14},${b-4}`)+L(x,a,x,y2,'sym');}
+function inv(x,y,id){return P(`M${x},${y-18} L${x+45},${y} L${x},${y+18} Z`)+`<circle cx="${x+50}" cy="${y}" r="5" class="sym"/>`+P(`M${x+6},${y+5} L${x+20},${y+5} L${x+20},${y-5} M${x+12},${y+5} L${x+12},${y-5} L${x+26},${y-5}`)+Tx(x+22,y+34,id,'sm');}
+function npn(bx,by){
+  const ux=30/39.05,uy=25/39.05,px=-uy,py=ux;const tx=bx+41,ty=by+31.7,cx=tx-9*ux,cy=ty-9*uy;
+  return `<circle cx="${bx+28}" cy="${by}" r="31" class="sym" style="stroke-width:1.4"/>`+L(bx,by,bx+15,by,'sym')+`<line x1="${bx+15}" y1="${by-22}" x2="${bx+15}" y2="${by+22}" class="sym" style="stroke-width:3.5"/>`+L(bx+15,by-10,bx+45,by-35,'sym')+L(bx+15,by+10,bx+45,by+35,'sym')+`<path d="M${tx},${ty} L${(cx+4.5*px).toFixed(1)},${(cy+4.5*py).toFixed(1)} L${(cx-4.5*px).toFixed(1)},${(cy-4.5*py).toFixed(1)} Z" class="symf"/>`+Tx(bx+8,by-8,'B','pin','end')+Tx(bx+52,by-30,'C','pin','start')+Tx(bx+52,by+36,'E','pin','start');
+}
+function lampSym(x,cy){return `<circle cx="${x}" cy="${cy}" r="21" class="sym"/>`+L(x-14,cy-14,x+14,cy+14,'sym')+L(x-14,cy+14,x+14,cy-14,'sym');}
+
+function buildSchematic(){
+  let s='';
+  // IN + fuse + D1
+  s+=Cp('IN',`<circle cx="22" cy="50" r="7" class="sym"/>`+Tx(22,30,'IN')+Tx(22,78,'+12V','sm'),6,18,34,70);
+  s+=L(29,50,60,50,'w nin');
+  s+=Cp('F1',L(60,50,110,50,'sym')+`<rect x="70" y="43" width="30" height="14" rx="3" class="sym"/>`+Tx(85,33,'F1 1A'),58,22,54,44);
+  s+=L(110,50,130,50,'w nin');
+  s+=Cp('D1',diodeH(130,180,50)+Tx(155,33,'D1')+Tx(155,78,'1N4007','sm'),128,20,54,64);
+  s+=L(180,50,950,50,'w n12');
+  s+=Tx(700,40,'+12V (بعد الحماية)','sm');
+  // D2
+  s+=Dt(205,50)+L(205,50,205,78,'w n12');
+  s+=Cp('D2',tvsV(205,78,118)+Tx(188,96,'D2','lbl','end')+Tx(188,110,'P6KE18A','sm','end'),180,74,40,48);
+  s+=L(205,118,205,138,'w')+Gd(205,138);
+  // C1
+  s+=Dt(250,50)+L(250,50,250,80,'w n12');
+  s+=Cp('C1',capV(250,80,110,true)+Tx(262,92,'C1','lbl','start')+Tx(262,106,'100µF','sm','start'),232,76,60,38);
+  s+=L(250,110,250,138,'w')+Gd(250,138);
+  // C2
+  s+=Dt(305,50)+L(305,50,305,80,'w n12');
+  s+=Cp('C2',capV(305,80,110,false)+Tx(317,92,'C2','lbl','start')+Tx(317,106,'100nF','sm','start'),290,76,55,38);
+  s+=L(305,110,305,138,'w')+Gd(305,138);
+  // 7805
+  s+=Dt(365,50)+L(365,50,365,100,'w n12');
+  s+=Cp('U2',`<rect x="345" y="100" width="80" height="50" rx="6" class="box"/>`+Tx(377,130,'7805')+Tx(350,113,'IN','pin','start')+Tx(421,129,'OUT','pin','end')+Tx(385,146,'GND','pin'),345,100,80,50);
+  s+=L(385,150,385,170,'w')+Gd(385,170);
+  s+=L(425,125,850,125,'w n5');
+  s+=Tx(700,117,'+5V','sm');
+  // C3 & C7
+  s+=Dt(460,125)+L(460,125,460,148,'w n5')+Cp('C3',capV(460,148,172,false)+Tx(472,158,'C3','lbl','start')+Tx(472,172,'100nF','sm','start'),444,142,60,36)+L(460,172,460,182,'w')+Gd(460,182);
+  s+=Dt(515,125)+L(515,125,515,148,'w n5')+Cp('C7',capV(515,148,172,false)+Tx(527,158,'C7','lbl','start')+Tx(527,172,'100nF','sm','start'),499,142,60,36)+L(515,172,515,182,'w')+Gd(515,182);
+  // R7 & bus
+  s+=L(850,125,850,140,'w n5');
+  s+=Cp('R7',P(zig(850,140,850,200))+Tx(836,168,'R7','lbl','end')+Tx(836,182,'10k','sm','end'),800,138,64,64);
+  s+=L(850,200,850,460,'w nN');
+  // oscillators
+  const rows=[{y:250,g:'U1A',p:['1','2'],R:'R1',Rv:'1M',C:'C4',M:'R4',Mv:'10k'},{y:355,g:'U1B',p:['3','4'],R:'R2',Rv:'390k',C:'C5',M:'R5',Mv:'22k'},{y:460,g:'U1C',p:['5','6'],R:'R3',Rv:'100k',C:'C6',M:'R6',Mv:'47k'}];
+  rows.forEach(r=>{const y=r.y;
+    s+=L(560,y,580,y,'w nosc')+Cp(r.g,inv(580,y,r.g),578,y-22,64,62)+L(635,y,660,y,'w nosc');
+    s+=Tx(571,y-7,r.p[0],'pin')+Tx(649,y-7,r.p[1],'pin');
+    s+=L(660,y,660,y-45,'w nosc')+L(660,y-45,640,y-45,'w nosc');
+    s+=Cp(r.R,P(zig(580,y-45,640,y-45))+Tx(610,y-58,r.R+' '+r.Rv),576,y-72,68,38);
+    s+=L(580,y-45,560,y-45,'w nosc')+L(560,y-45,560,y,'w nosc');
+    s+=Dt(560,y)+Dt(660,y);
+    s+=L(560,y,530,y,'w nosc')+L(530,y,530,y+12,'w nosc');
+    s+=Cp(r.C,capV(530,y+12,y+34,true)+Tx(504,y+24,r.C,'lbl','end')+Tx(504,y+38,'1µF','sm','end'),474,y+8,72,34);
+    s+=L(530,y+34,530,y+42,'w')+Gd(530,y+42);
+    s+=L(660,y,700,y,'w nosc');
+    s+=Cp(r.M,P(zig(700,y,780,y))+Tx(740,y-13,r.M+' '+r.Mv),698,y-28,84,42);
+    s+=L(780,y,850,y,'w nN')+Dt(850,y);
+  });
+  // C8
+  s+=Dt(850,395)+L(850,395,815,395,'w nN')+L(815,395,815,405,'w nN');
+  s+=Cp('C8',capV(815,405,428,true)+Tx(790,414,'C8','lbl','end')+Tx(790,428,'22µF','sm','end'),760,398,70,34);
+  s+=L(815,428,815,434,'w')+Gd(815,434);
+  // Node N, base
+  s+=L(850,355,905,355,'w nN');
+  s+=Tx(866,342,'N','big','start');
+  s+=Cp('Q1',npn(905,355)+Tx(975,350,'Q1','lbl','start')+Tx(975,366,'TIP122','sm','start'),898,318,120,76);
+  // lamp
+  s+=Dt(950,50)+L(950,50,950,169,'w n12');
+  s+=Cp('LAMP',lampSym(950,190)+Tx(985,186,'لمبة T10','lbl','start')+Tx(985,202,'LED 12V','sm','start')+Tx(958,160,'LAMP+','pin','start')+Tx(958,236,'LAMP−','pin','start'),925,150,130,100);
+  s+=L(950,211,950,320,'w nlamp');
+  // emitter
+  s+=L(950,390,950,420,'w')+Dt(950,420)+L(920,420,980,420,'w');
+  s+=Cp('R89',P(zig(920,420,920,490))+P(zig(980,420,980,490))+Tx(995,452,'R8 ∥ R9','lbl','start')+Tx(995,468,'68Ω ×2','sm','start'),905,418,160,74);
+  s+=L(920,490,980,490,'w')+Dt(950,490)+L(950,490,950,505,'w')+Gd(950,505);
+  // notes
+  s+=`<rect x="360" y="528" width="700" height="44" rx="10" fill="#10172a" stroke="#2a3550"/>`;
+  s+=Tx(710,546,'U1 = CD40106 · pin 14 → +5V · pin 7 → GND · pins 9, 11, 13 → GND (بوابات مش مستخدمة)','sm');
+  s+=Tx(710,564,'كل رمز أرضي ⏚ = أرضي واحد مشترك = سلك الأرضي بتاع العربية (الشاسيه)','sm');
+  $('#sch').innerHTML=s;
+}
+
+const INFO={
+IN:{n:'IN – دخل الباور',v:'+12V … 14.4V',t:'ده السلك اللي كان داخل على لمبة الركن وجاي من ضفيرة العربية. بيبقى فيه كهربا بس لما تنوّر أنوار الركن.',p:'على البريد بورد: خده من أدابتر 12V. في العربية: السلك الأحمر.'},
+F1:{n:'F1 – فيوز 1A',v:'فيوز خارجي 1 أمبير',t:'أول حاجة بعد سلك العربية. لو حصل قصر في الدايرة، الفيوز هو اللي يتحرق بدل ما السلك يسيح أو ضفيرة العربية تتأذي.',p:'متحطش فيوز أكبر من 1A. لازم يكون قريب من نقطة أخد الكهربا.'},
+D1:{n:'D1 – دايود 1N4007',v:'1000V / 1A',t:'حماية من عكس القطبية: لو وصّلت الموجب مكان السالب بالغلط، الدايود مش هيعدّي تيار والدايرة تفضل سليمة. بياكل حوالي 0.7V وده مش فارق.',p:'الشريطة الرمادي (الكاثود) لازم تكون ناحية خط +12V، بعيد عن الفيوز.'},
+D2:{n:'D2 – دايود حماية TVS · P6KE18A',v:'18V / 600W',t:'بيمتص النبضات العالية اللي بتطلع من الدينامو أو من المارش. طول ما الجهد عادي هو ولا كأنه موجود، ولو زاد فجأة بيقصّه.',p:'الشريطة على +12V والطرف التاني على الأرضي. لو اتعكس هيعمل قصر والفيوز هيتحرق على طول.'},
+C1:{n:'C1 – مكثف كيميائي 100µF / 50V',v:'100µF',t:'خزان صغير بيسند الجهد ويمتص التذبذب قبل المنظم.',p:'الرجل الطويلة (+) على +12V، والجنب اللي عليه الشريطة (−) على الأرضي.'},
+C2:{n:'C2 – مكثف سيراميك 100nF (مكتوب عليه 104)',v:'100nF',t:'بيفلتر التشويش السريع على دخل الـ 7805.',p:'مالوش قطبية. حطه لازق في رجل IN ورجل GND بتوع الـ 7805.'},
+U2:{n:'U2 – منظم الجهد LM7805',v:'دخل 7–35V ← خرج 5V',t:'بيحوّل جهد العربية المتغير لـ 5V ثابتة للـ IC. الحمل عليه صغير جداً (الـ IC لوحده) فمش محتاج مشتت حراري.',p:'الكتابة قدامك والرجول لتحت: 1 = IN ، 2 = GND ، 3 = OUT. الطبق المعدن متوصل بالـ GND.'},
+C3:{n:'C3 – مكثف سيراميك 100nF',v:'100nF',t:'على خرج الـ 7805 عشان يمنعه يذبذب.',p:'لازق في رجل OUT ورجل GND بتوع الـ 7805.'},
+C7:{n:'C7 – مكثف سيراميك 100nF',v:'100nF',t:'فلتر خاص بالـ IC نفسه، بيمنع التشويش على المذبذبات.',p:'بين pin 14 و pin 7، وأقرب ما يمكن للـ IC.'},
+U1A:{n:'U1A – البوابة الأولى (pin 1 ← 2)',v:'المذبذب البطيء ≈ 1.2Hz',t:'بوابة Schmitt عاكسة. مع R1 وC4 بتطلّع موجة مربعة بطيئة، ودي "تمايل" اللهب الكبير.',p:'pin 1 = دخل، pin 2 = خرج.'},
+U1B:{n:'U1B – البوابة التانية (pin 3 ← 4)',v:'المذبذب المتوسط ≈ 3Hz',t:'مع R2 وC5. بتضيف حركة متوسطة فوق التمايل.',p:'pin 3 = دخل، pin 4 = خرج.'},
+U1C:{n:'U1C – البوابة التالتة (pin 5 ← 6)',v:'المذبذب السريع ≈ 12Hz',t:'مع R3 وC6. دي "الرجفة" السريعة الصغيرة اللي بتدّي إحساس الشمعة.',p:'pin 5 = دخل، pin 6 = خرج.'},
+R1:{n:'R1 – مقاومة 1MΩ',v:'بني · أسود · أخضر · دهبي',t:'مقاومة الرجوع للمذبذب البطيء. التردد تقريباً f ≈ 1.2 ÷ (R × C). لو كبّرتها المذبذب يبطّأ.',p:'بين pin 1 و pin 2.'},
+R2:{n:'R2 – مقاومة 390kΩ',v:'برتقالي · أبيض · أصفر · دهبي',t:'مقاومة الرجوع للمذبذب المتوسط. اخترناها 390k مش 330k عشان النسبة بين المذبذبات متبقاش رقم صحيح، فالنمط ياخد وقت طويل لحد ما يتكرر.',p:'بين pin 3 و pin 4.'},
+R3:{n:'R3 – مقاومة 100kΩ',v:'بني · أسود · أصفر · دهبي',t:'مقاومة الرجوع للمذبذب السريع.',p:'بين pin 5 و pin 6.'},
+C4:{n:'C4 – مكثف 1µF / 50V',v:'1µF',t:'مكثف التوقيت للمذبذب البطيء. بيشحن ويفضي عن طريق R1.',p:'(+) على pin 1، و(−) على الأرضي.'},
+C5:{n:'C5 – مكثف 1µF / 50V',v:'1µF',t:'مكثف التوقيت للمذبذب المتوسط.',p:'(+) على pin 3، و(−) على الأرضي.'},
+C6:{n:'C6 – مكثف 1µF / 50V',v:'1µF',t:'مكثف التوقيت للمذبذب السريع.',p:'(+) على pin 5، و(−) على الأرضي.'},
+R4:{n:'R4 – مقاومة 10kΩ (خلط)',v:'بني · أسود · برتقالي · دهبي',t:'بتوصّل المذبذب البطيء بالنقطة N. أصغر مقاومة في الخلط، فالبطيء هو صاحب التأثير الأكبر.',p:'من pin 2 للنقطة N.'},
+R5:{n:'R5 – مقاومة 22kΩ (خلط)',v:'أحمر · أحمر · برتقالي · دهبي',t:'وزن متوسط للمذبذب المتوسط.',p:'من pin 4 للنقطة N.'},
+R6:{n:'R6 – مقاومة 47kΩ (خلط)',v:'أصفر · بنفسجي · برتقالي · دهبي',t:'أكبر مقاومة، فالمذبذب السريع بيدّي رجفة خفيفة بس ومش بيغطي على الباقي.',p:'من pin 6 للنقطة N.'},
+R7:{n:'R7 – مقاومة 10kΩ (الحد الأدنى)',v:'بني · أسود · برتقالي · دهبي',t:'بتشد النقطة N لفوق عشان جهدها مايقلّش عن ~1.9V، فاللمبة عمرها ما تطفي خالص زي الشمعة. في النسخة الأولى كانت 33k، واتغيرت لـ 10k لأن الـ TIP122 محتاج ~1.3V عشان يشتغل.',p:'من +5V للنقطة N. لو اللمبة لسه بتطفي، نزّلها لـ 6.8k.'},
+C8:{n:'C8 – مكثف 22µF (تنعيم)',v:'22µF / 16V أو أكتر',t:'بيحوّل الموجات المربعة لطلوع ونزول ناعم. ثابت الزمن τ ≈ 3.75kΩ × 22µF ≈ 80ms. لو كبّرته الرعشة تهدى، ولو صغّرته تبقى أحدّ.',p:'(+) على النقطة N، و(−) على الأرضي.'},
+Q1:{n:'Q1 – ترانزستور دارلنجتون TIP122',v:'NPN · 100V · 5A · hFE ≥ 1000',t:'بياخد إشارة ضعيفة من النقطة N ويتحكم بيها في تيار اللمبة. كسبه عالي جداً، فمش بيحمّل على المذبذبات. لمبة واحدة مش محتاجة مشتت حراري.',p:'الكتابة قدامك: 1 = B (النقطة N)، 2 = C (سالب اللمبة)، 3 = E (مقاومات الإميتر). ⚠️ الطبق المعدن = C، ماينفعش يلمس الشاسيه أبداً.'},
+LAMP:{n:'اللمبة – T10 LED (لمبة الركن)',v:'12V · LED عادية (مش CANbus)',t:'موجبها على +12V، وسالبها على كولكتور الـ TIP122. الترانزستور هو اللي بيتحكم في تيارها من ناحية السالب.',p:'لمبات T10 LED ليها قطبية. لو مانوّرتش لفّها نص لفة. في التجربة على المكتب استخدم LED 5mm + مقاومة 470Ω بدلها.'},
+R89:{n:'R8 ∥ R9 – مقاومتين 68Ω على التوازي',v:'68Ω ∥ 68Ω = 34Ω',t:'بيحددوا أقصى تيار للمبة: I ≈ (V_N − 1.3) ÷ 34 ≈ 100mA كحد أقصى. اتقسموا اتنين عشان كل مقاومة تشيل نص الحرارة، فالربع وات يكفي.',p:'بين E بتاع الـ TIP122 والأرضي. للجنبين (لمبتين): 3 × 68Ω على التوازي.'}
+};
+
+function selectComp(id){
+  $$('#sch .comp').forEach(g=>g.classList.toggle('sel',g.dataset.id===id));
+  const d=INFO[id];if(!d)return;
+  $('#info').innerHTML=`<h3>${d.n}</h3><div class="val">${d.v}</div><p style="margin:0">${d.t}</p>${d.p?`<div class="pol">📌 ${d.p}</div>`:''}`;
+}
+
+/* =================== SCHEMATIC v2 (4 clear panels) =================== */
+function Pill(x,y,t,a='middle'){const w=Math.round(t.length*7.8+18);const x0=a==='middle'?x-w/2:a==='end'?x-w:x;return `<rect x="${x0}" y="${y-12}" width="${w}" height="24" rx="12" class="pill"/><text x="${x0+w/2}" y="${y+5}" text-anchor="middle" class="pilltx">${t}</text>`;}
+function Ref(x,y,t,a='middle'){return `<text x="${x}" y="${y}" text-anchor="${a}" class="ref">${t}</text>`;}
+function Flag(x,y,t,cls){const w=Math.round(t.length*9+22);return `<g class="flag ${cls}"><rect x="${x-w/2}" y="${y-12}" width="${w}" height="24" rx="6"/><text x="${x}" y="${y+5}" text-anchor="middle">${t}</text></g>`;}
+function Panel(W,H,num,title,sub,inner){return `<rect x="1" y="1" width="${W-2}" height="${H-2}" rx="16" class="pframe"/><rect x="1" y="1" width="${W-2}" height="42" rx="16" class="ptitle"/><rect x="1" y="28" width="${W-2}" height="15" class="ptitle"/><circle cx="${W-30}" cy="22" r="14" class="pnum"/><text x="${W-30}" y="27" text-anchor="middle" class="pnumt">${num}</text><text x="${W-54}" y="28" text-anchor="end" class="ptt">${title}</text><text x="20" y="28" class="pst">${sub}</text>${inner}`;}
+function ledDown(x,y1,y2){const a=y1+6,b=y2-6;return L(x,y1,x,a,'sym')+`<path d="M${x-11},${a} L${x+11},${a} L${x},${b} Z" class="symf"/>`+L(x-11,b,x+11,b,'sym')+L(x,b,x,y2,'sym')+P(`M${x+15},${a+4} L${x+27},${a-4} M${x+22},${a-4} L${x+27},${a-4} L${x+25},${a+1} M${x+15},${a+14} L${x+27},${a+6} M${x+22},${a+6} L${x+27},${a+6} L${x+25},${a+11}`);}
+
+function panelPower(){let s='';const y=120;
+  s+=Cp('IN',`<circle cx="60" cy="${y}" r="8" class="sym"/>`+Ref(60,y-24,'IN')+`<text x="60" y="${y+34}" text-anchor="middle" class="sm">من سلك</text><text x="60" y="${y+52}" text-anchor="middle" class="sm">لمبة الركن</text>`,28,y-48,64,110);
+  s+=L(68,y,110,y,'w nin');
+  s+=Cp('F1',L(110,y,190,y,'sym')+`<rect x="126" y="${y-10}" width="48" height="20" rx="4" class="sym" style="fill:#fff"/>`+Ref(150,y-26,'F1')+Pill(150,y+34,'فيوز 1A'),104,y-48,92,96);
+  s+=L(190,y,230,y,'w nin');
+  s+=Cp('D1',diodeH(230,310,y)+Ref(270,y-26,'D1')+Pill(270,y+34,'1N4007'),224,y-48,92,96);
+  s+=L(310,y,800,y,'w n12')+Flag(835,y,'+12V','f12');
+  s+=`<text x="835" y="${y+32}" text-anchor="middle" class="sm">← للمبة (جزء ④)</text>`;
+  s+=Dt(390,y)+L(390,y,390,155,'w n12')+Cp('D2',tvsV(390,155,200)+Ref(390,268,'D2')+Pill(390,292,'P6KE18A'),345,150,90,155)+L(390,200,390,235,'w')+Gd(390,235);
+  s+=Dt(490,y)+L(490,y,490,160,'w n12')+Cp('C1',capV(490,160,196,true)+Ref(490,268,'C1')+Pill(490,292,'100µF 50V'),445,150,90,155)+L(490,196,490,235,'w')+Gd(490,235);
+  s+=Dt(590,y)+L(590,y,590,160,'w n12')+Cp('C2',capV(590,160,196,false)+Ref(590,268,'C2')+Pill(590,292,'100nF'),545,150,90,155)+L(590,196,590,235,'w')+Gd(590,235);
+  s+=Dt(690,y)+L(690,y,690,165,'w n12');
+  s+=Cp('U2',`<rect x="650" y="165" width="120" height="62" rx="8" class="box"/><text x="710" y="202" text-anchor="middle" class="ref">7805</text>`+Tx(658,183,'IN','pin','start')+Tx(763,202,'OUT','pin','end')+Tx(710,222,'GND','pin')+Ref(710,285,'U2'),645,160,130,135);
+  s+=L(710,227,710,248,'w')+Gd(710,248);
+  s+=L(770,202,1000,202,'w n5')+Flag(1035,202,'+5V','f5');
+  s+=`<text x="1035" y="234" text-anchor="middle" class="sm">← للـ IC والخلط</text>`;
+  s+=Dt(890,202)+L(890,202,890,222,'w n5')+Cp('C3',capV(890,222,250,false)+Ref(910,236,'C3','start')+Pill(910,266,'100nF','start'),868,214,112,64)+L(890,250,890,262,'w')+Gd(890,262);
+  return s;}
+
+function panelOsc(){let s='';const gy=165;
+  [{g:'U1A',p:['1','2'],R:'R1',Rv:'1MΩ',C:'C4',f:'A',sp:'بطيء ≈ 1.2 مرة/ث'},{g:'U1B',p:['3','4'],R:'R2',Rv:'390kΩ',C:'C5',f:'B',sp:'متوسط ≈ 3 مرات/ث'},{g:'U1C',p:['5','6'],R:'R3',Rv:'100kΩ',C:'C6',f:'C',sp:'سريع ≈ 12 مرة/ث'}].forEach((r,i)=>{
+    const b=40+i*345,xin=b+60,xg=b+105,xout=b+195,fy=gy-62,c=(xin+xout)/2;
+    s+=L(xin,gy,xg,gy,'w nosc')+Cp(r.g,inv(xg,gy,r.g),xg-4,gy-24,64,66)+L(xg+55,gy,xout,gy,'w nosc');
+    s+=Tx(xin+22,gy-10,'pin '+r.p[0],'pin')+Tx(xg+73,gy-10,'pin '+r.p[1],'pin');
+    s+=Tx(xg+25,gy+56,r.sp,'sm');
+    s+=L(xin,gy,xin,fy,'w nosc')+L(xin,fy,xin+20,fy,'w nosc');
+    s+=Cp(r.R,P(zig(xin+20,fy,xout-20,fy))+Ref(c-4,fy-24,r.R,'end')+Pill(c+4,fy-24,r.Rv,'start'),xin+15,fy-42,xout-xin-30,58);
+    s+=L(xout-20,fy,xout,fy,'w nosc')+L(xout,fy,xout,gy,'w nosc');
+    s+=Dt(xin,gy)+Dt(xout,gy);
+    s+=L(xout,gy,xout+50,gy,'w nosc')+Flag(xout+66,gy,r.f,'fosc')+Tx(xout+66,gy+30,'للخلط','sm');
+    s+=L(xin,gy,xin,gy+25,'w nosc')+Cp(r.C,capV(xin,gy+25,gy+57,true)+Ref(xin-20,gy+40,r.C,'end')+Pill(xin-20,gy+68,'1µF','end'),xin-85,gy+18,100,64)+L(xin,gy+57,xin,gy+82,'w')+Gd(xin,gy+82);
+  });
+  s+=Cp('C7',`<rect x="40" y="272" width="1000" height="28" rx="8" class="note"/><text x="540" y="291" text-anchor="middle" class="notetx">البوابات التلاتة جوه IC واحدة: U1 = CD40106 · pin 14 ← +5V · pin 7 ← GND · pins 9 و11 و13 ← GND · C7 100nF بين pin 14 و pin 7</text>`,40,272,1000,28);
+  return s;}
+
+function panelMix(){let s='';const busX=390,ny=165;
+  [{f:'A',y:100,R:'R4',v:'10kΩ',p:'2'},{f:'B',y:165,R:'R5',v:'22kΩ',p:'4'},{f:'C',y:230,R:'R6',v:'47kΩ',p:'6'}].forEach(r=>{
+    s+=Flag(70,r.y,r.f,'fosc')+Tx(70,r.y+28,'من pin '+r.p,'sm');
+    s+=L(86,r.y,150,r.y,'w nosc')+Cp(r.R,P(zig(150,r.y,270,r.y))+Ref(206,r.y-20,r.R,'end')+Pill(214,r.y-20,r.v,'start'),145,r.y-36,140,52)+L(270,r.y,busX,r.y,'w nN')+Dt(busX,r.y);
+  });
+  s+=L(busX,100,busX,230,'w nN');
+  s+=L(busX,ny,900,ny,'w nN')+Flag(930,ny,'N','fN')+Tx(930,ny+30,'← لقاعدة Q1 (جزء ④)','sm');
+  s+=Flag(560,62,'+5V','f5')+L(560,74,560,86,'w n5');
+  s+=Cp('R7',P(zig(560,86,560,140))+Ref(580,108,'R7','start')+Pill(580,132,'10kΩ','start'),545,82,95,62)+L(560,140,560,ny,'w nN')+Dt(560,ny);
+  s+=Dt(720,ny)+L(720,ny,720,192,'w nN')+Cp('C8',capV(720,192,224,true)+Ref(742,202,'C8','start')+Pill(742,230,'22µF','start'),700,186,100,60)+L(720,224,720,245,'w')+Gd(720,245);
+  s+=Tx(busX,275,'النقطة N: هنا الموجات التلاتة بتتجمع','sm')+Tx(210,275,'المقاومة الأصغر = تأثير أكبر','sm');
+  return s;}
+
+function panelDrive(){let s='';const bx=300,by=175,lx=345;
+  s+=Flag(70,by,'N','fN')+Tx(70,by+30,'من الخلط','sm')+L(86,by,bx,by,'w nN');
+  s+=Cp('Q1',npn(bx,by)+Ref(bx+88,by-6,'Q1','start')+Pill(bx+88,by+22,'TIP122','start'),bx-5,by-42,190,84);
+  s+=Flag(lx,58,'+12V','f12')+L(lx,70,lx,74,'w n12');
+  s+=Cp('LAMP',lampSym(lx,95)+Tx(322,82,'+','pin','end')+Tx(322,118,'−','pin','end')+Ref(lx+38,92,'لمبة T10','start')+Pill(lx+38,118,'LED 12V','start'),lx-40,72,170,52);
+  s+=L(lx,116,lx,140,'w nlamp');
+  s+=L(lx,210,lx,225,'w')+Dt(lx,225)+L(lx-30,225,lx+30,225,'w');
+  s+=Cp('R89',P(zig(lx-30,225,lx-30,285))+P(zig(lx+30,225,lx+30,285))+Ref(lx+50,252,'R8 ∥ R9','start')+Pill(lx+50,280,'68Ω + 68Ω','start'),lx-45,220,210,70);
+  s+=L(lx-30,285,lx+30,285,'w')+Dt(lx,285)+L(lx,285,lx,297,'w')+Gd(lx,297);
+  s+=Tx(30,236,'Q1 = TIP122 (الكتابة قدامك):','lbl','start')+Tx(30,258,'pin 1 = B ← النقطة N','sm','start')+Tx(30,278,'pin 2 = C ← سالب اللمبة','sm','start')+Tx(30,298,'pin 3 = E ← R8 ∥ R9','sm','start')+`<text x="30" y="318" class="pin">⚠ الطبق المعدن = C (ماتلمسوش بالشاسيه)</text>`;
+  s+=`<rect x="600" y="58" width="455" height="258" rx="12" class="inset"/><text x="1040" y="86" text-anchor="end" class="ref">🧪 في التجربة على المكتب</text>`;
+  const tx=680;
+  s+=Flag(tx,118,'+12V','f12')+L(tx,130,tx,142,'w n12')+P(zig(tx,142,tx,196))+`<text x="${tx+16}" y="174" class="ref">470Ω</text>`+L(tx,196,tx,210,'w')+ledDown(tx,210,246)+`<text x="${tx+34}" y="232" class="sm">LED</text>`+L(tx,246,tx,268,'w nlamp')+`<text x="${tx}" y="290" text-anchor="middle" class="sm">↓ إلى C بتاع Q1</text>`;
+  s+=`<text x="1040" y="130" text-anchor="end" class="lbl">بدل لمبة T10 استخدم:</text><text x="1040" y="154" text-anchor="end" class="sm">LED 5mm + مقاومة 470Ω على التوالي</text><text x="1040" y="186" text-anchor="end" class="lbl" style="fill:#dc2626">من غير الـ 470Ω الـ LED هيتحرق فوراً</text><text x="1040" y="208" text-anchor="end" class="sm">لأن الدايرة بتعدّي لحد ~100mA</text><text x="1040" y="240" text-anchor="end" class="sm">الرجل الطويلة للـ LED ناحية الـ 470Ω</text><text x="1040" y="262" text-anchor="end" class="sm">والقصيرة ناحية C بتاع Q1</text>`;
+  return s;}
+
+const PANELS={power:{h:312,f:panelPower,num:'1',t:'الحماية والباور',st:'+12V → +5V'},osc:{h:312,f:panelOsc,num:'2',t:'المذبذبات التلاتة',st:'U1 = CD40106'},mix:{h:292,f:panelMix,num:'3',t:'الخلط والتنعيم',st:'A + B + C → N'},drive:{h:332,f:panelDrive,num:'4',t:'تشغيل اللمبة',st:'N → TIP122 → LAMP'}};
+function renderSch(tab){
+  const W=1080,keys=tab==='all'?Object.keys(PANELS):[tab];let y=0,s='';
+  keys.forEach(k=>{const p=PANELS[k];s+=`<g transform="translate(0,${y})">${Panel(W,p.h,p.num,p.t,p.st,p.f())}</g>`;y+=p.h+18;});
+  y-=18;const svg=$('#sch');svg.setAttribute('viewBox',`0 0 ${W} ${y}`);svg.innerHTML=s;
+  $$('#schTabs .btn').forEach(b=>b.classList.toggle('pri',b.dataset.t===tab));
+  const sel=$('#info').dataset.sel;if(sel)$$('#sch .comp').forEach(g=>g.classList.toggle('sel',g.dataset.id===sel));
+}
+const _oldSel=selectComp;
+selectComp=function(id){$('#info').dataset.sel=id;_oldSel(id);};
+
+/* =================== PINOUTS =================== */
+function dipSvg(){
+  const roles={1:['دخل A · R1 · C4','#5aa9ff'],2:['خرج A · R1 · R4','#5aa9ff'],3:['دخل B · R2 · C5','#5aa9ff'],4:['خرج B · R2 · R5','#5aa9ff'],5:['دخل C · R3 · C6','#5aa9ff'],6:['خرج C · R3 · R6','#5aa9ff'],7:['GND','#9aa6bd'],8:['فاضي','#4a5470'],9:['← GND','#9aa6bd'],10:['فاضي','#4a5470'],11:['← GND','#9aa6bd'],12:['فاضي','#4a5470'],13:['← GND','#9aa6bd'],14:['+5V','#ffb547']};
+  let s=`<svg viewBox="0 0 400 340" xmlns="http://www.w3.org/2000/svg"><text x="200" y="16" text-anchor="middle" fill="#ffb547" font-size="14" font-weight="700">CD40106 – منظر من فوق</text>`;
+  s+=`<rect x="150" y="30" width="100" height="290" rx="8" fill="#1a2133" stroke="#e2e8f6" stroke-width="2"/><path d="M188,30 A12,12 0 0 0 212,30" fill="#0b0f17" stroke="#e2e8f6" stroke-width="2"/><circle cx="166" cy="50" r="4" fill="#e2e8f6"/>`;
+  s+=`<text x="200" y="180" text-anchor="middle" fill="#8f9bb6" font-size="12" transform="rotate(-90 200 180)">CD40106BE</text>`;
+  for(let i=0;i<7;i++){const y=58+i*40;const l=i+1,r=14-i;
+    s+=`<rect x="132" y="${y-7}" width="18" height="14" fill="#c9d3ea"/><rect x="250" y="${y-7}" width="18" height="14" fill="#c9d3ea"/>`;
+    s+=`<text x="160" y="${y+4}" font-size="11" fill="#ffb547" font-weight="700">${l}</text><text x="240" y="${y+4}" font-size="11" fill="#ffb547" font-weight="700" text-anchor="end">${r}</text>`;
+    s+=`<text x="126" y="${y+4}" font-size="11.5" text-anchor="end" fill="${roles[l][1]}">${roles[l][0]}</text><text x="274" y="${y+4}" font-size="11.5" fill="${roles[r][1]}">${roles[r][0]}</text>`;}
+  s+=`<text x="200" y="336" text-anchor="middle" fill="#8f9bb6" font-size="11">الحز (النص دايرة) فوق · النقطة جنب pin 1</text></svg>`;
+  return s;
+}
+function to220(title,names,roles,tabNote,tabColor){
+  let s=`<svg viewBox="0 0 220 290" xmlns="http://www.w3.org/2000/svg"><text x="110" y="16" text-anchor="middle" fill="#ffb547" font-size="14" font-weight="700">${title}</text>`;
+  s+=`<rect x="55" y="28" width="110" height="52" rx="4" fill="#8f98ab"/><circle cx="110" cy="52" r="10" fill="#0b0f17"/>`;
+  s+=`<rect x="55" y="76" width="110" height="92" rx="4" fill="#1a2133" stroke="#e2e8f6" stroke-width="2"/><text x="110" y="126" text-anchor="middle" fill="#cbd5ea" font-size="14" font-weight="700">${title}</text>`;
+  [80,110,140].forEach((x,i)=>{s+=`<rect x="${x-4}" y="168" width="8" height="62" fill="#c9d3ea"/><text x="${x}" y="248" text-anchor="middle" fill="#ffb547" font-size="13" font-weight="700">${i+1}</text><text x="${x}" y="266" text-anchor="middle" fill="#e7ecf5" font-size="12" font-weight="700">${names[i]}</text><text x="${x}" y="282" text-anchor="middle" fill="#8f9bb6" font-size="9.5">${roles[i]}</text>`;});
+  s+=`<text x="110" y="100" text-anchor="middle" fill="${tabColor}" font-size="11" font-weight="700">${tabNote}</text></svg>`;
+  return s;
+}
+
+/* =================== SIMULATOR =================== */
+const DEF={R:[1e6,390e3,100e3],Cn:22e-6,Rf:10e3};
+const sim={R:[...DEF.R],Ct:[1e-6,1e-6,1e-6],kS:1,frozen:false,V5:5,Vbe:1.3,qDead:false,Re:34,lampLimit:.06,lampFull:.06,lampDead:false,Cn:DEF.Cn,Rf:DEF.Rf,Rm:[10e3,22e3,47e3],ph:[Math.random(),Math.random(),Math.random()],v:[0,0,0],vN:2.5,I:0,br:.5,run:true,hist:[]};
+const MAXH=750;let sAcc=0;
+const OPTS={sR1:[470e3,680e3,1e6,1.5e6,2.2e6],sR2:[220e3,270e3,330e3,390e3,470e3,560e3],sR3:[47e3,68e3,100e3,150e3,220e3],sCn:[4.7e-6,10e-6,22e-6,47e-6,100e-6],sRf:[0,22e3,15e3,10e3,6.8e3,4.7e3]};
+function fmtR(v){if(!v)return 'بدون';return v>=1e6?(v/1e6)+'MΩ':v>=1e3?(v/1e3)+'kΩ':v+'Ω';}
+function fmtC(v){return +(v*1e6).toFixed(1)+'µF';}
+function period(i){return 0.81*sim.R[i]*sim.Ct[i]*sim.kS;}
+function stepSim(dt){
+  for(let i=0;i<3;i++){sim.ph[i]=(sim.ph[i]+dt/period(i))%1;sim.v[i]=!sim.frozen&&sim.ph[i]<.5?sim.V5:0;}
+  let G=0,num=0;for(let i=0;i<3;i++){G+=1/sim.Rm[i];num+=sim.v[i]/sim.Rm[i];}
+  if(sim.Rf){G+=1/sim.Rf;num+=sim.V5/sim.Rf;}
+  const Vth=num/G,tau=sim.Cn/G;
+  sim.vN+=(Vth-sim.vN)*(1-Math.exp(-dt/tau));
+  sim.I=sim.qDead||sim.lampDead?0:Math.min(sim.lampLimit,Math.max(0,(sim.vN-sim.Vbe)/sim.Re));
+  sim.br=Math.min(1,sim.I/sim.lampFull);
+}
+function pushHist(){sim.hist.push({a:sim.v[0],b:sim.v[1],c:sim.v[2],n:sim.vN,br:sim.br});if(sim.hist.length>MAXH)sim.hist.shift();}
+function updateLabels(){
+  ['fA','fB','fC'].forEach((id,i)=>$('#'+id).textContent='≈ '+(1/period(i)).toFixed(1)+' Hz');
+  let G=0;sim.Rm.forEach(r=>G+=1/r);if(sim.Rf)G+=1/sim.Rf;
+  const tau=sim.Cn/G;$('#rTau').textContent=Math.round(tau*1000)+' ms';
+  $('#fCn').textContent=fmtC(sim.Cn);
+  const vmin=sim.Rf?sim.V5*(1/sim.Rf)/G:0;
+  $('#fRf').textContent='أقل جهد ≈ '+vmin.toFixed(2)+'V';
+}
+function fillSelects(){
+  const cur={sR1:sim.R[0],sR2:sim.R[1],sR3:sim.R[2],sCn:sim.Cn,sRf:sim.Rf};
+  Object.keys(OPTS).forEach(k=>{const el=$('#'+k);el.innerHTML=OPTS[k].map(v=>`<option value="${v}" ${v===cur[k]?'selected':''}>${k==='sCn'?fmtC(v):fmtR(v)}${v===(k==='sR1'?DEF.R[0]:k==='sR2'?DEF.R[1]:k==='sR3'?DEF.R[2]:k==='sCn'?DEF.Cn:DEF.Rf)?' (الأصلي)':''}</option>`).join('');});
+  updateLabels();
+}
+function bindSim(){
+  $('#sR1').onchange=e=>{sim.R[0]=+e.target.value;updateLabels();};
+  $('#sR2').onchange=e=>{sim.R[1]=+e.target.value;updateLabels();};
+  $('#sR3').onchange=e=>{sim.R[2]=+e.target.value;updateLabels();};
+  $('#sCn').onchange=e=>{sim.Cn=+e.target.value;updateLabels();};
+  $('#sRf').onchange=e=>{sim.Rf=+e.target.value;updateLabels();};
+  $('#pauseBtn').onclick=()=>{sim.run=!sim.run;$('#pauseBtn').textContent=sim.run?'⏸ إيقاف':'▶ تشغيل';};
+  $('#resetBtn').onclick=()=>{sim.R=[...DEF.R];sim.Cn=DEF.Cn;sim.Rf=DEF.Rf;fillSelects();};
+}
+function drawScope(){
+  const cv=$('#scope'),dpr=window.devicePixelRatio||1,W=cv.clientWidth,H=cv.clientHeight;
+  if(!W)return;
+  if(cv.width!==Math.round(W*dpr)||cv.height!==Math.round(H*dpr)){cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);}
+  const c=cv.getContext('2d');c.setTransform(dpr,0,0,dpr,0,0);c.clearRect(0,0,W,H);
+  const lanes=[{k:'a',lab:'A بطيء',col:'#5aa9ff',h:28},{k:'b',lab:'B متوسط',col:'#5aa9ff',h:28},{k:'c',lab:'C سريع',col:'#5aa9ff',h:28},{k:'n',lab:'النقطة N',col:'#b58cff',h:112,an:true},{k:'br',lab:'سطوع اللمبة',col:'#ffb547',h:74,fill:true}];
+  const x0=8,x1=W-82;let y=8;const h=sim.hist,N=h.length;
+  lanes.forEach(Ln=>{
+    c.fillStyle='#8f9bb6';c.font='12px Tahoma, Arial';c.textAlign='left';c.fillText(Ln.lab,x1+8,y+Math.min(17,Ln.h/2+5));
+    c.strokeStyle='#1c2436';c.lineWidth=1;c.strokeRect(x0+.5,y+.5,x1-x0,Ln.h);
+    if(Ln.an){const ty=y+Ln.h-3-(1.3/5)*(Ln.h-6);c.setLineDash([5,5]);c.strokeStyle='#7a5f2a';c.beginPath();c.moveTo(x0,ty);c.lineTo(x1,ty);c.stroke();c.setLineDash([]);c.fillStyle='#b8944e';c.font='10px Tahoma';c.fillText('1.3V',x0+4,ty-4);c.fillStyle='#5b6680';c.fillText('5V',x0+4,y+12);}
+    if(N>1){c.beginPath();for(let i=0;i<N;i++){const sm=h[i];const px=x0+(i/(MAXH-1))*(x1-x0);const v=Ln.k==='br'?sm.br:(Ln.an?sm.n/5:sm[Ln.k]/5);const py=y+Ln.h-3-v*(Ln.h-6);i?c.lineTo(px,py):c.moveTo(px,py);}
+      c.strokeStyle=Ln.col;c.lineWidth=1.7;c.stroke();
+      if(Ln.fill){c.lineTo(x0+((N-1)/(MAXH-1))*(x1-x0),y+Ln.h);c.lineTo(x0,y+Ln.h);c.closePath();c.fillStyle='rgba(255,181,71,.22)';c.fill();}}
+    y+=Ln.h+10;});
+}
+let last=performance.now();
+function loop(now){
+  const el=Math.min(.05,(now-last)/1000);last=now;
+  if(sim.run){let t=0;while(t<el){stepSim(.001);t+=.001;sAcc+=.001;if(sAcc>=.004){sAcc=0;pushHist();}}}
+  const b=(0.06+0.94*sim.br).toFixed(3);
+  $('#heroBulb').style.setProperty('--b',b);$('#simBulb').style.setProperty('--b',b);
+  $('#rN').textContent=sim.vN.toFixed(2)+' V';$('#rI').textContent=Math.round(sim.I*1000)+' mA';
+  drawScope();bbTick();requestAnimationFrame(loop);
+}
+
+/* =================== BOM =================== */
+const MK='https://makerselectronics.com/product/';
+const BOM=[
+ {g:'الدايرة الأساسية'},
+ {n:'CD40106',s:'CD40106BE – DIP-14',q:1,p:8,u:MK+'40106-ic-cmos-hex-schmitt-triggers/',on:1},
+ {n:'قاعدة IC',s:'IC Socket 14 Pin (7+7)',q:1,p:1.25,u:MK+'ic-socket-77-base-14-pin/',on:1},
+ {n:'ترانزستور',s:'TIP122 – TO-220',q:1,p:9,u:MK+'tip122-5a-100v-npn-darlington-power-transistor-to-220',on:1},
+ {n:'منظم جهد',s:'LM7805 – TO-220',q:1,p:5,u:MK+'positive-voltage-regulator-5v-7805',on:1},
+ {n:'دايود',s:'1N4007',q:1,p:.5,u:MK+'1n4007-diode-1a-1-1v1a-1kv-do-41/',on:1},
+ {n:'دايود حماية TVS',s:'P6KE18A',q:1,p:2,u:MK+'esd-suppressors-tvs-diodes-600w-18v-uni-directional-p6ke18a-e3-73/',on:1},
+ {n:'مكثف كيميائي',s:'100µF / 50V',q:1,p:1.5,u:MK+'capacitor-100uf-50v-6x12mm',on:1},
+ {n:'مكثف سيراميك',s:'100nF (104) / 50V',q:3,p:.5,u:MK+'ceramic-capacitor-100nf-50v/',on:1},
+ {n:'مكثف كيميائي',s:'1µF / 50V',q:3,p:.5,u:MK+'capacitor-1uf-50v-11mm-x-5mm/',on:1},
+ {n:'مكثف كيميائي',s:'22µF (16V أو أكتر)',q:1,p:3,est:1,u:MK+'capacitor-22uf-250v/',on:1},
+ {n:'مقاومة',s:'1MΩ ¼W',q:1,p:.15,u:MK+'carbon-resistor-1m%cf%89-0-25w/',on:1},
+ {n:'مقاومة',s:'390kΩ ¼W',q:1,p:.15,u:MK+'carbon-resistor-390k%cf%89-0-25w-through-hole/',on:1},
+ {n:'مقاومة',s:'100kΩ ¼W',q:1,p:.15,u:MK+'carbon-resistor-100k-0-25w/',on:1},
+ {n:'مقاومة',s:'47kΩ ¼W',q:1,p:.15,u:MK+'carbon-resistor-47k%cf%89-0-25w/',on:1},
+ {n:'مقاومة',s:'22kΩ ¼W',q:1,p:.15,u:MK+'carbon-resistor-22k%cf%89-0-25w-through/',on:1},
+ {n:'مقاومة',s:'10kΩ ¼W',q:2,p:.15,u:MK+'2pcs-carbon-resistor-10k%cf%89-0-25w-thr/',on:1},
+ {n:'مقاومة',s:'68Ω ¼W (أوم مش كيلو!)',q:2,p:.15,u:MK+'carbon-resistor-68%cf%89-0-25w-through-hole/',on:1},
+ {n:'بورد مثقّب',s:'Vero / Perfboard (12–25 جنيه)',q:1,p:15,est:1,u:'https://makerselectronics.com/product-category/breadboards-pcb-boards/page/2/',on:1},
+ {g:'للتجربة على المكتب'},
+ {n:'بريد بورد',s:'400 نقطة',q:1,p:25,u:MK+'breadboard-400-points/',on:1},
+ {n:'LED',s:'أصفر 5mm',q:2,p:.5,u:MK+'yellow-led-5mm',on:1},
+ {n:'مقاومة اختبار',s:'1kΩ ¼W (LED اختبار المذبذب)',q:1,p:.15,u:MK+'carbon-resistor-1k%cf%89-0-25w/',on:1},
+ {n:'مقاومة اختبار',s:'470Ω ¼W (بديل اللمبة في التجربة)',q:1,p:.15,u:MK+'carbon-resistor-470%cf%89-0-25w/',on:1},
+ {g:'اختياري'},
+ {n:'IC احتياطي',s:'CD40106BE',q:1,p:8,u:MK+'40106-ic-cmos-hex-schmitt-triggers/',on:0},
+ {n:'مقاومة تالتة',s:'68Ω – لو هتشغّل لمبتين',q:1,p:.15,u:MK+'carbon-resistor-68%cf%89-0-25w-through-hole/',on:0},
+ {g:'من محل قطع غيار العربيات (مش محسوب)'},
+ {n:'لمبة ركن',s:'T10 LED 12V عادية (مش CANbus)',q:1,p:0,car:1,on:0},
+ {n:'حامل فيوز',s:'حامل فيوز خارجي + فيوز 1A',q:1,p:0,car:1,on:0},
+ {n:'سلك وعزل',s:'سلك 0.75mm (4 ألوان) + جلبة حرارية',q:1,p:0,car:1,on:0},
+ {n:'علبة',s:'علبة بلاستيك صغيرة + سيليكون',q:1,p:0,car:1,on:0}
+];
+function renderBOM(){
+  const tb=$('#bomTable tbody');let html='',total=0;
+  BOM.forEach((it,i)=>{
+    if(it.g){html+=`<tr class="grp"><td colspan="7">${it.g}</td></tr>`;return;}
+    const line=it.q*it.p;if(it.on&&!it.car)total+=line;
+    html+=`<tr class="${it.on?'':'off'}"><td><input type="checkbox" data-i="${i}" ${it.on?'checked':''} ${it.car?'disabled':''}></td><td>${it.n}</td><td>${it.s}${it.est?'<span class="est">تقديري</span>':''}</td><td>${it.q}</td><td>${it.car?'—':it.p.toFixed(2)}</td><td>${it.car?'—':line.toFixed(2)}</td><td>${it.u?`<a href="${it.u}" target="_blank" rel="noopener">فتح ↗</a>`:'—'}</td></tr>`;
+  });
+  tb.innerHTML=html;$('#bomTotal').textContent=total.toFixed(2);
+  tb.querySelectorAll('input[type=checkbox]').forEach(cb=>cb.onchange=e=>{BOM[+e.target.dataset.i].on=e.target.checked?1:0;renderBOM();});
+}
+
+/* =================== STEPS =================== */
+const STEPS=[
+{t:'تجهيز الشغل',m:'⏱ 15 دقيقة',b:`<p>جهّز كل حاجة قبل ما تبدأ، عشان متقفش في النص.</p><ul><li><b>الأدوات:</b> كاوية 30–40 وات بسن رفيع، قصدير، ملتيميتر، قطّاعة، ماسك رفيع، وجلبة حرارية.</li><li><b>مصدر للتجربة:</b> أدابتر 12V (1A يكفي). شاحن راوتر قديم مكتوب عليه 12V ينفع. أسلم بكتير من إنك تشتغل على بطارية العربية على المكتب.</li><li><b>رتّب المقاومات:</b> حط كل قيمة في مكان واكتب عليها، أو قيسها بالملتيميتر. الـ 68Ω والـ 68kΩ شبه بعض جداً.</li></ul>`,c:['كل المكونات موجودة ومتراجعة على الليستة','المقاومات مقاسة ومكتوب عليها','الأدابتر 12V شغال (قسته بالملتيميتر)'],x:'الأدابتر: <b>11.5–13V</b> من غير حمل.'},
+{t:'الباور على البريد بورد',m:'⏱ 20 دقيقة · D1 · D2 · C1 · C2 · 7805 · C3',b:`<p>استخدم خطوط الباور اللي على الجنبين:</p><ul><li><b>الجنب الأول:</b> +12V والأرضي.</li><li><b>الجنب التاني:</b> +5V والأرضي.</li><li><b>اربط خطين الأرضي ببعض</b> بسلكة.</li></ul><ol><li>الأدابتر (+) ← <b>1N4007</b> (الشريطة ناحية خط +12V). مكان الفيوز سيبه دلوقتي.</li><li><b>P6KE18A</b>: الشريطة على +12V والتاني على الأرضي.</li><li><b>C1 100µF</b>: الطويلة على +12V. و<b>C2 100nF</b> جنبه.</li><li><b>7805</b>: الكتابة قدامك، pin 1 على +12V، وpin 2 على الأرضي، وpin 3 على خط +5V.</li><li><b>C3 100nF</b> بين خط +5V والأرضي، لازق في الـ 7805.</li></ol>`,c:['الدايود متركب والشريطة ناحية +12V','الـ TVS متركب والشريطة على +12V','الـ 7805 رجوله صح (IN · GND · OUT)','C1 وC2 وC3 متركبين','خطين الأرضي متوصلين ببعض'],x:'شغّل الأدابتر وقيس: خط +12V ≈ <b>11–12.5V</b> (أقل من الأدابتر بـ 0.7V تقريباً)، وخط +5V = <b>4.8–5.2V</b>. لو الـ 7805 سخن وهو فاضي يبقى في قصر، افصل على طول.'},
+{t:'الـ IC وأول مذبذب',m:'⏱ 20 دقيقة · U1 · R1 · C4 · C7',b:`<ol><li><b>افصل الباور.</b></li><li>حط الـ CD40106 في نص البريد بورد <b>راكب على المجرى اللي في النص</b>، والحز ناحية الشمال.</li><li>pin 14 ← +5V، وpin 7 ← الأرضي، و<b>C7 100nF</b> بين 14 و7 قريب من الـ IC.</li><li>وصّل pins <b>9 و11 و13</b> بالأرضي. الدخول الفاضية في CMOS بتعمل سخونية وتصرفات غريبة.</li><li><b>R1 1M</b> بين pin 1 وpin 2.</li><li><b>C4 1µF</b>: الطويلة على pin 1 والقصيرة على الأرضي.</li><li><b>LED الاختبار:</b> من pin 2 ← مقاومة 1k ← الرجل الطويلة للـ LED، والقصيرة على الأرضي.</li></ol>`,c:['الـ IC في مكانه والحز صح','14 على +5V و7 على الأرضي و C7 بينهم','9 و11 و13 على الأرضي','R1 وC4 متركبين','LED الاختبار على pin 2'],x:'شغّل: الـ LED لازم <b>يرمش حوالي مرة في الثانية</b>. لو منوّر ثابت أو مطفي، راجع C4 وR1 والقطبية.'},
+{t:'المذبذبين التانيين',m:'⏱ 15 دقيقة · R2 · C5 · R3 · C6',b:`<ol><li><b>R2 390k</b> بين 3 و4، و<b>C5 1µF</b> (+) على pin 3 و(−) على الأرضي.</li><li><b>R3 100k</b> بين 5 و6، و<b>C6 1µF</b> (+) على pin 5 و(−) على الأرضي.</li><li>انقل LED الاختبار لـ pin 4، وبعدين لـ pin 6.</li><li>بعد ما تتأكد، <b>شيل LED الاختبار والـ 1k خالص</b>.</li></ol>`,c:['R2 وC5 متركبين','R3 وC6 متركبين','جربت pin 4 (أسرع)','جربت pin 6 (سريع جداً)','شلت LED الاختبار'],x:'pin 4: حوالي <b>3 رمشات في الثانية</b>. pin 6: سريع لدرجة إنه <b>يبان كأنه بيرجف</b> (~12 مرة في الثانية).'},
+{t:'الخلط والتنعيم (النقطة N)',m:'⏱ 15 دقيقة · R4 · R5 · R6 · R7 · C8',b:`<p>اختار صف فاضي في البريد بورد وسمّيه <b>N</b>. كل الحاجات دي بتتقابل فيه:</p><ul><li><b>R4 10k</b> من pin 2 ← N</li><li><b>R5 22k</b> من pin 4 ← N</li><li><b>R6 47k</b> من pin 6 ← N</li><li><b>R7 10k</b> من +5V ← N</li><li><b>C8 22µF</b>: الطويلة على N والقصيرة على الأرضي</li></ul>`,c:['R4 وR5 وR6 داخلين على N','R7 من +5V لـ N','C8 متركب والقطبية صح'],x:'قيس بين N والأرضي: الرقم <b>بيتحرك باستمرار بين ~1.9V و~4.5V</b>. لو ثابت عند رقم واحد، المذبذبات مش شغالة أو C8 كبير زيادة.'},
+{t:'الترانزستور ولمبة تجريبية',m:'⏱ 20 دقيقة · Q1 · R8 · R9',b:`<ol><li><b>TIP122</b>، الكتابة قدامك: pin 1 (B) ← N، وpin 3 (E) ← R8 وR9 (68Ω كل واحدة) على التوازي ← الأرضي.</li><li><b>بديل اللمبة:</b> من +12V ← مقاومة <b>470Ω</b> ← الرجل الطويلة لـ LED 5mm، والقصيرة ← pin 2 (C) بتاع الـ TIP122.</li></ol><p style="color:var(--amber)">⚠️ متوصّلش LED 5mm من غير الـ 470Ω. الدايرة ممكن تعدّي لحد 100mA، وده يحرق الـ LED في ثانية.</p>`,c:['TIP122 رجوله B-C-E صح','R8 وR9 على التوازي بين E والأرضي','LED التجربة + 470Ω بين +12V والكولكتور'],x:'الـ LED لازم <b>يرعش زي الشمعة</b>: تمايل ورجفة ومايطفيش خالص. جهد الإميتر (E) بيتحرك بين <b>~0.5 و~3.5V</b>.'},
+{t:'تجربة لمبة T10 الحقيقية',m:'⏱ 10 دقايق',b:`<ol><li>شيل LED التجربة والـ 470Ω.</li><li>وصّل لمبة T10: موجبها على +12V وسالبها على الكولكتور. سلكتين وماسكين تمساح كفاية.</li><li>لو مانوّرتش، <b>اعكس اللمبة</b> (لمبات T10 LED ليها قطبية).</li><li>ظبّط الشكل: ارجع للمحاكي وجرّب قيم تانية، وبعدين غيّر المقاومة على البريد بورد.</li></ol>`,c:['اللمبة بترعش بالشكل اللي عاجبني','الـ TIP122 دافي بس مش بيحرق بعد 5 دقايق'],x:'السطوع بيتحرك من <b>~25% لـ 100%</b> وعمره ما يطفي خالص. لو بيطفي، نزّل R7 لـ 6.8k.'},
+{t:'اللحام على البورد المثقّب',m:'⏱ 60–90 دقيقة',b:`<ul><li><b>قسّم البورد:</b> الباور على طرف، والـ IC في النص، والـ TIP122 على الطرف التاني.</li><li><b>ترتيب اللحام:</b> السلوك القصيرة، وبعدها المقاومات، والدايودات، والقاعدة (<b>من غير الـ IC</b>)، والمكثفات السيراميك، والكيميائي، وفي الآخر الـ 7805 والـ TIP122.</li><li><b>4 سلوك خارجة بألوان ثابتة:</b> 🔴 أحمر = IN، ⚫ أسود = GND، 🟡 أصفر = LAMP+، 🔵 أزرق = LAMP−.</li><li>ركّب الفيوز على السلك الأحمر.</li><li>بعد اللحام: <b>قيس 5V على رجل 14 و7 في القاعدة الفاضية</b>، وبعدين افصل الباور وركّب الـ IC.</li><li>بص على اللحامات بعدسة أو كشاف: مفيش قصدير واصل بين نقطتين جنب بعض.</li></ul>`,c:['كل المكونات ملحومة حسب قائمة التوصيلات','الـ 4 سلوك بألوانهم والفيوز على الأحمر','5V على القاعدة قبل ما أحط الـ IC','مفيش قصر بين اللحامات','جربت البورد على الأدابتر ولمبة T10 وشغال'],x:'نفس نتيجة الخطوة 7 بالظبط. لو لأ، قارن كل وصلة بقائمة التوصيلات.'},
+{t:'العلبة والعزل',m:'⏱ 30 دقيقة',b:`<ul><li>علبة بلاستيك صغيرة. <b>الطبق المعدن بتاع الـ TIP122 = الكولكتور</b>، فماينفعش يلمس أي معدن.</li><li>ثبّت البورد جوه العلبة بشوية غرا سخن، وثبّت السلوك الطويلة عشان مفيش حاجة تتهز وتتقطع مع المطبات.</li><li>اعمل فتحة صغيرة للسلوك واقفلها بسيليكون ضد المية والتراب.</li><li>المكان: بعيد عن الموتور والشكمان. ورا الفانوس أو جوه الرفرف بعيد عن رش المية.</li></ul>`,c:['البورد مثبت جوه العلبة','الـ TIP122 مش لامس أي معدن','العلبة مقفولة ضد المية'],x:'رجّ العلبة بإيدك والدايرة شغالة على الأدابتر: اللمبة تفضل ترعش عادي ومفيش تقطيع.'},
+{t:'التركيب في العربية',m:'⏱ 30–45 دقيقة',b:`<ol><li><b>افصل القطب السالب للبطارية.</b></li><li>رجّعه مؤقتاً، ونوّر أنوار الركن، وقيس على سلكين فيشة اللمبة: السلك اللي عليه <b>12V</b> هو التغذية (+)، والتاني <b>0V</b> هو الأرضي (−). علّم عليهم وارجع افصل البطارية.</li><li>اقطع السلكين على بعد 10 سم من الفيشة.</li><li><b>ناحية الضفيرة:</b> التغذية ← الفيوز ← السلك الأحمر (IN). والأرضي ← السلك الأسود (GND).</li><li><b>ناحية الفيشة:</b> سلك الموجب ← الأصفر (LAMP+). وسلك السالب ← الأزرق (LAMP−).</li><li>لحّم الوصلات وغطّيها بجلبة حرارية، أو استخدم وصلات تكبيس كويسة. <b>بلاش لف السلوك وشريط لزق.</b></li><li>ركّب لمبة T10 LED في الفيشة ورجّع البطارية.</li></ol>`,c:['حددت التغذية والأرضي بالملتيميتر','التوصيلات الأربعة صح حسب الرسمة','الوصلات ملحومة ومعزولة','البطارية رجعت'],x:'قبل ما ترجّع البطارية، قيس مقاومة بين السلك الأحمر والأسود: <b>مش لازم تكون صفر</b> (صفر = قصر).'},
+{t:'الاختبار النهائي',m:'⏱ 15 دقيقة',b:`<ul><li>نوّر أنوار الركن: اللمبة ترعش.</li><li>دوّر الموتور (الجهد يطلع ~14V): الرعشة تفضل زي ما هي ومفيش حاجة تسخن زيادة.</li><li>بص على التابلوه: مفيش تحذير لمبة محروقة.</li><li>سيبها 10 دقايق، والمس العلبة من برا: دافية بالكتير.</li><li>اطفي الأنوار: اللمبة تطفي خالص.</li></ul><p style="color:var(--amber)">افتكر: استخدمها والعربية راكنة، أو حط مفتاح يرجّع اللمبة ثابتة وانت سايق.</p>`,c:['بترعش والموتور مطفي','بترعش والموتور شغال','مفيش تحذير على التابلوه','مفيش سخونية زيادة بعد 10 دقايق','بتطفي خالص لما الأنوار تطفي'],x:'🎉 كده خلصت.'}
+];
+const stepState=STEPS.map(s=>s.c.map(()=>false));let cur=0;
+function renderSteps(){
+  $('#sdots').innerHTML=STEPS.map((s,i)=>`<div class="sdot ${i===cur?'on':''} ${stepState[i].every(Boolean)?'done':''}" data-i="${i}" title="${s.t}">${stepState[i].every(Boolean)&&i!==cur?'✓':i+1}</div>`).join('');
+  $$('#sdots .sdot').forEach(d=>d.onclick=()=>{cur=+d.dataset.i;renderSteps();});
+  const doneAll=stepState.flat().filter(Boolean).length,totalAll=stepState.flat().length;
+  $('#sprog').style.width=(doneAll/totalAll*100)+'%';
+  const s=STEPS[cur];
+  $('#stepBox').innerHTML=`<span class="tag">الخطوة ${cur+1} من ${STEPS.length}</span><h3>${s.t}</h3><div class="meta">${s.m}</div>${s.b}<div style="margin-top:10px">${s.c.map((c,j)=>`<label class="check ${stepState[cur][j]?'done':''}"><input type="checkbox" data-j="${j}" ${stepState[cur][j]?'checked':''}><span>${c}</span></label>`).join('')}</div><div class="meas">📏 <b>المفروض تقيس / تشوف:</b> ${s.x}</div><div class="navbtns"><button class="btn" id="prevS" ${cur===0?'disabled':''}>→ السابقة</button><button class="btn pri" id="nextS" ${cur===STEPS.length-1?'disabled':''}>التالية ←</button></div>`;
+  $$('#stepBox input[type=checkbox]').forEach(cb=>cb.onchange=e=>{stepState[cur][+e.target.dataset.j]=e.target.checked;renderSteps();});
+  $('#prevS').onclick=()=>{if(cur>0){cur--;renderSteps();}};
+  $('#nextS').onclick=()=>{if(cur<STEPS.length-1){cur++;renderSteps();}};
+}
+
+/* =================== WIRING =================== */
+const WIRE=[
+ {g:'🛡️ الباور والحماية',i:['IN (أحمر) ← فيوز 1A ← أنود 1N4007','كاثود 1N4007 (الشريطة) ← خط +12V','P6KE18A: الشريطة ← +12V · التاني ← GND','C1 100µF: (+) ← +12V · (−) ← GND','C2 100nF: بين +12V وGND (جنب الـ 7805)','7805: pin 1 ← +12V · pin 2 ← GND · pin 3 ← +5V','C3 100nF: بين +5V وGND (جنب الـ 7805)']},
+ {g:'🔲 الـ IC CD40106',i:['pin 14 ← +5V','pin 7 ← GND','C7 100nF بين pin 14 و pin 7','pins 9 و 11 و 13 ← GND','pins 8 و 10 و 12 ← فاضيين (مش متوصلين)']},
+ {g:'〰️ المذبذبات',i:['R1 1M: بين pin 1 و pin 2','C4 1µF: (+) ← pin 1 · (−) ← GND','R2 390k: بين pin 3 و pin 4','C5 1µF: (+) ← pin 3 · (−) ← GND','R3 100k: بين pin 5 و pin 6','C6 1µF: (+) ← pin 5 · (−) ← GND']},
+ {g:'🌀 الخلط والتنعيم (N)',i:['R4 10k: pin 2 ← N','R5 22k: pin 4 ← N','R6 47k: pin 6 ← N','R7 10k: +5V ← N','C8 22µF: (+) ← N · (−) ← GND']},
+ {g:'💡 التشغيل واللمبة',i:['N ← TIP122 pin 1 (B)','TIP122 pin 3 (E) ← R8 68Ω ← GND','TIP122 pin 3 (E) ← R9 68Ω ← GND (توازي مع R8)','TIP122 pin 2 (C) ← LAMP− (أزرق)','+12V ← LAMP+ (أصفر)','GND ← السلك الأسود (أرضي العربية)']}
+];
+const wireState=WIRE.map(g=>g.i.map(()=>false));
+function renderWiring(){
+  $('#wiringBox').innerHTML=WIRE.map((g,gi)=>`<div class="card wiregrp"><h4>${g.g}</h4>${g.i.map((t,ti)=>`<label class="check ${wireState[gi][ti]?'done':''}"><input type="checkbox" data-g="${gi}" data-t="${ti}" ${wireState[gi][ti]?'checked':''}><span>${t}</span></label>`).join('')}</div>`).join('');
+  const d=wireState.flat().filter(Boolean).length,t=wireState.flat().length;
+  $('#wcount').innerHTML=`✔ <b style="color:var(--text)">${d}</b> من <b style="color:var(--text)">${t}</b> وصلة اتراجعت${d===t?' — <span style="color:var(--green)">كله تمام 🎉</span>':''}`;
+  $$('#wiringBox input').forEach(cb=>cb.onchange=e=>{wireState[+e.target.dataset.g][+e.target.dataset.t]=e.target.checked;renderWiring();});
+}
+
+/* =================== CAR SVG =================== */
+function carSvg(){
+  return `<svg viewBox="0 0 780 320" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,Tahoma,Arial">
+  <rect x="15" y="50" width="150" height="220" rx="14" fill="#141b2c" stroke="#3a4666" stroke-width="2"/>
+  <text x="90" y="40" text-anchor="middle" fill="#ffb547" font-size="14" font-weight="700">ضفيرة العربية</text>
+  <text x="90" y="160" text-anchor="middle" fill="#8f9bb6" font-size="12">جاية من</text><text x="90" y="178" text-anchor="middle" fill="#8f9bb6" font-size="12">مفتاح الأنوار</text>
+  <rect x="300" y="50" width="180" height="220" rx="14" fill="#1a1508" stroke="#ffb547" stroke-width="2"/>
+  <text x="390" y="40" text-anchor="middle" fill="#ffb547" font-size="14" font-weight="700">علبة الدايرة</text>
+  <text x="390" y="165" text-anchor="middle" fill="#cbd5ea" font-size="13">CD40106 + TIP122</text>
+  <text x="312" y="96" fill="#ff5d5d" font-size="12" font-weight="700">IN</text><text x="312" y="226" fill="#cfd7e8" font-size="12" font-weight="700">GND</text>
+  <text x="468" y="96" fill="#ffd24d" font-size="12" font-weight="700" text-anchor="end">LAMP+</text><text x="468" y="226" fill="#5aa9ff" font-size="12" font-weight="700" text-anchor="end">LAMP−</text>
+  <rect x="615" y="50" width="150" height="220" rx="14" fill="#141b2c" stroke="#3a4666" stroke-width="2"/>
+  <text x="690" y="40" text-anchor="middle" fill="#ffb547" font-size="14" font-weight="700">فيشة لمبة الركن</text>
+  <circle cx="690" cy="160" r="30" fill="#2a2210" stroke="#ffb547" stroke-width="2"/><text x="690" y="165" text-anchor="middle" fill="#ffd27a" font-size="13" font-weight="700">T10</text>
+  <text x="627" y="96" fill="#cbd5ea" font-size="12">(+)</text><text x="627" y="226" fill="#cbd5ea" font-size="12">(−)</text>
+  <line x1="165" y1="90" x2="205" y2="90" stroke="#ff5d5d" stroke-width="4"/><rect x="205" y="80" width="46" height="20" rx="4" fill="#2a1414" stroke="#ff5d5d" stroke-width="2"/><text x="228" y="94" text-anchor="middle" fill="#ff9a9a" font-size="11" font-weight="700">1A</text><line x1="251" y1="90" x2="300" y2="90" stroke="#ff5d5d" stroke-width="4"/>
+  <text x="232" y="72" text-anchor="middle" fill="#ff9a9a" font-size="11">تغذية + ← أحمر</text>
+  <line x1="165" y1="220" x2="300" y2="220" stroke="#cfd7e8" stroke-width="4"/><text x="232" y="246" text-anchor="middle" fill="#cfd7e8" font-size="11">أرضي − ← أسود</text>
+  <line x1="480" y1="90" x2="615" y2="90" stroke="#ffd24d" stroke-width="4"/><text x="548" y="72" text-anchor="middle" fill="#ffd24d" font-size="11">أصفر ← موجب الفيشة</text>
+  <line x1="480" y1="220" x2="615" y2="220" stroke="#5aa9ff" stroke-width="4"/><text x="548" y="246" text-anchor="middle" fill="#5aa9ff" font-size="11">أزرق ← سالب الفيشة</text>
+  <path d="M165,295 L615,295" stroke="#5a6480" stroke-width="2" stroke-dasharray="6 6"/>
+  <text x="390" y="312" text-anchor="middle" fill="#8f9bb6" font-size="11">قبل التعديل: الضفيرة كانت داخلة على الفيشة مباشرة، والسلكين دول هما اللي بتقطعهم</text>
+  <text x="390" y="291" text-anchor="middle" fill="#ff5d5d" font-size="16" font-weight="700">✂</text>
+  </svg>`;
+}
+
+/* =================== TROUBLE =================== */
+const TROUBLE=[
+ {q:'مفيش 5V خالص على خرج الـ 7805',a:['اتأكد إن الفيوز سليم.','الـ 1N4007 ممكن يكون مقلوب: الشريطة لازم تكون ناحية +12V.','لو الفيوز بيتحرق على طول: الـ P6KE18A غالباً مقلوب.','رجول الـ 7805: الكتابة قدامك = IN · GND · OUT.']},
+ {q:'الـ 7805 أو الـ IC بيسخن جامد',a:['في قصر على خط +5V. افصل وقيس مقاومة بين +5V والأرضي.','الـ IC ممكن يكون مقلوب: الحز لازم يكون ناحية pin 1 و14.','الدخول 9 و11 و13 لازم تتوصل بالأرضي، ماتتسابش فاضية.']},
+ {q:'اللمبة منورة ثابت ومش بترعش',a:['المذبذبات مش شغالة: جرّب LED الاختبار على pin 2 وpin 4 وpin 6.','مكثفات 1µF ممكن تكون مقلوبة أو مش واصلة للأرضي.','الـ TIP122 ممكن يكون ضرب (C وE واصلين ببعض)، أو الطبق بتاعه لامس الشاسيه.','C8 كبير أوي؟ لو حطيت 220µF بالغلط الرعشة هتختفي.']},
+ {q:'اللمبة مطفية خالص',a:['لمبة T10 LED ليها قطبية: لفّها نص لفة.','اتأكد من رجول الـ TIP122: B على N، وC على سالب اللمبة، وE على مقاومات الـ 68Ω.','قيس جهد N: لازم يكون فوق 1.3V. لو أقل، R7 مش واصلة.','اتأكد إن الـ 68Ω أوم مش كيلو أوم.']},
+ {q:'اللمبة بتطفي خالص في لحظات',a:['نزّل R7 من 10k لـ 6.8k عشان ترفع الحد الأدنى.','أو صغّر وزن المذبذب البطيء: غيّر R4 من 10k لـ 15k.']},
+ {q:'الرعشة سريعة أوي أو بطيئة أوي',a:['كبّر R1 وR2 وR3 عشان تبطّأ، أو صغّرهم عشان تسرّع. جرّب القيم في المحاكي الأول.','كبّر C8 (47µF) لو عايز رعشة أهدى وأنعم.']},
+ {q:'رسالة "لمبة محروقة" على التابلوه',a:['العربية بتقيس تيار اللمبة (CANbus). جرّب لمبة T10 CANbus، أو حط مقاومة حمل (Load Resistor) 12V على التوازي مع اللمبة.','المقاومة دي بتسخن جداً، فلازم تتثبت على معدن بعيد عن البلاستيك.']},
+ {q:'الدايرة شغالة على المكتب ومش شغالة في العربية',a:['قيس الجهد على سلك التغذية والأنوار منورة. لو الملتيميتر بيقرا رقم غريب أو بيتنطط، العربية بتغذّي اللمبة بنبضات PWM، والدايرة دي مش مناسبة ليها من غير تعديل.','ممكن تكون العربية بتفتح اللمبة من ناحية السالب. في الحالة دي هتلاقي الـ 12V دايماً على سلك، والتاني هو اللي بيتغير.','اتأكد من الأرضي: السلك الأسود لازم يروح لأرضي الضفيرة الأصلي.']}
+];
+function renderTrouble(){$('#troubleBox').innerHTML=TROUBLE.map(t=>`<details><summary>${t.q}</summary><ul>${t.a.map(x=>`<li>${x}</li>`).join('')}</ul></details>`).join('');}
+
+/* =================== NAV =================== */
+function bindNav(){
+  const links=$$('#navlinks a');
+  const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){links.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id));}});},{rootMargin:'-40% 0px -55% 0px'});
+  $$('main section').forEach(s=>obs.observe(s));
+}
+
+const BB={p:18,x0:150,cols:63,rows:{tp:130,tn:148,a:178,b:196,c:214,d:232,e:250,f:304,g:322,h:340,i:358,j:376,bn:406,bp:424}};
+const BB_RAILS={tp:'خط +5V اللي فوق',tn:'خط الأرضي اللي فوق',bn:'خط الأرضي اللي تحت',bp:'خط +12V اللي تحت'};
+const BB_RAIL_NET={tp:'V5',tn:'GND',bn:'GND',bp:'V12'};
+const bbX=c=>BB.x0+(c-1)*BB.p;
+const bbRailHole=c=>c>=2&&c<=62&&(c-2)%6!==5;
+const bbF=n=>+n.toFixed(1);
+const bbV=v=>v.toFixed(2)+' V';
+function bbParse(h){const m=/^(tp|tn|bn|bp|[a-j])(\d+)$/.exec(h);return m?{r:m[1],c:+m[2]}:null;}
+function bbXY(h){if(typeof h!=='string')return h;const q=bbParse(h);return {x:bbX(q.c),y:BB.rows[q.r]};}
+function bbStrip(h){const q=bbParse(h);if(q.r.length===2)return q.r;return ('abcde'.includes(q.r)?'T':'B')+q.c;}
+
+const BNET={
+ VIN:{n:'الدخل بعد الفيوز',c:'#f87171',v:()=>'≈ 12.0 V'},
+ V12:{n:'+12V المحمي',c:'#dc2626',v:()=>'≈ 11.3 V'},
+ V5:{n:'+5V',c:'#f97316',v:()=>'5.00 V'},
+ GND:{n:'الأرضي',c:'#475569',v:()=>'0.00 V'},
+ AIN:{n:'دخل A · pin 1',c:'#93c5fd',v:()=>'بين ~1.9 و ~2.9 V'},
+ BIN:{n:'دخل B · pin 3',c:'#93c5fd',v:()=>'بين ~1.9 و ~2.9 V'},
+ CIN:{n:'دخل C · pin 5',c:'#93c5fd',v:()=>'بين ~1.9 و ~2.9 V'},
+ A:{n:'خرج A · pin 2',c:'#2563eb',v:()=>bbV(sim.v[0])},
+ B:{n:'خرج B · pin 4',c:'#2563eb',v:()=>bbV(sim.v[1])},
+ C:{n:'خرج C · pin 6',c:'#2563eb',v:()=>bbV(sim.v[2])},
+ N:{n:'النقطة N',c:'#7c3aed',v:()=>bbV(sim.vN)},
+ E:{n:'إميتر Q1',c:'#0d9488',v:()=>bbV(Math.max(0,sim.vN-1.3))},
+ LN:{n:'سالب اللمبة',c:'#16a34a',v:()=>'بيتغيّر مع السطوع'},
+ NC:{n:'رجل مش متوصلة',c:'#94a3b8',v:()=>'—'}
+};
+const BB_CHIPS=['V12','V5','GND','A','B','C','N','E','LN'];
+const BB_WIRE={V12:'#dc2626',VIN:'#dc2626',V5:'#f97316',GND:'#1c1c1f',A:'#2563eb',B:'#2563eb',C:'#2563eb',N:'#7c3aed',LN:'#16a34a'};
+const BB_WNAME={V12:'أحمر',VIN:'أحمر',V5:'برتقاني',GND:'أسود',A:'أزرق',B:'أزرق',C:'أزرق',N:'بنفسجي',LN:'أخضر'};
+const BB_U1PN=Array.from({length:14},(_,i)=>'pin '+(i+1));
+
+const BPARTS=[
+ {id:'VIN',k:'adapter',s:2,lab:'الأدابتر',pins:[],nets:['VIN','GND'],link:['F1','WGND']},
+ {id:'F1',k:'fuse',s:2,pins:[['h3','VIN']],link:['VIN'],note:'في التجربة على المكتب ممكن تأجّله زي ما الخطوة 2 بتقول، بس لازم يتركّب قبل ما تنقل الدايرة للعربية.'},
+ {id:'WGND',k:'wire',s:2,lab:'سلك الأرضي الداخل',pins:[['bn2','GND']],pts:[{x:72,y:400},{x:122,y:400},{x:138,y:406},'bn2'],link:['VIN']},
+ {id:'D1',k:'diode',s:2,pins:[['i3','VIN'],['i8','V12']],pn:['الأنود','الكاثود (الشريطة)']},
+ {id:'J1',k:'jumper',s:2,pins:[['j8','V12'],['bp8','V12']],t:'بيودّي الـ +12V اللي خارجة من كاثود الدايود (العمود 8) لخط +12V اللي تحت.'},
+ {id:'D2',k:'tvs',s:2,pins:[['bn12','GND'],['bp9','V12']],pn:['الأنود','الكاثود (الشريطة)'],note:'نايم على الخطين اللي تحت: الشريطة في خط +12V، والطرف التاني في خط الأرضي.'},
+ {id:'C1',k:'can',r:16,s:2,pins:[['bp14','V12'],['bn14','GND']],pn:['+ (الطويلة)','− (الشريطة)']},
+ {id:'U2',k:'to220',lbl:'LM7805',s:2,pins:[['f15','V12'],['f16','GND'],['f17','V5']],pn:['IN','GND','OUT'],note:'الكتابة ناحيتك: IN في العمود 15، وGND في 16، وOUT في 17. الخرم اللي تحتهم هو اللي بتوصّل فيه.'},
+ {id:'C2',k:'ceramic',s:2,pins:[['g15','V12'],['g16','GND']],note:'بين عمود IN وعمود GND بتوع الـ 7805، يعني لازق فيه.'},
+ {id:'C3',k:'ceramic',s:2,pins:[['h16','GND'],['h17','V5']],note:'بين عمود GND وعمود OUT بتوع الـ 7805، يعني لازق فيه.'},
+ {id:'J2',k:'jumper',s:2,pins:[['j15','V12'],['bp16','V12']],t:'بيغذّي رجل IN بتاعة الـ 7805 (العمود 15) من خط +12V.'},
+ {id:'J3',k:'jumper',s:2,pins:[['j16','GND'],['bn17','GND']],t:'بيوصّل رجل GND بتاعة الـ 7805 (العمود 16) بخط الأرضي.'},
+ {id:'J4',k:'jumper',s:2,pins:[['i17','V5'],['tp20','V5']],via:['i20'],t:'بياخد الـ 5V من رجل OUT (العمود 17) ويطلع بيها لخط +5V اللي فوق. عدّيه جنب الـ 7805 مش من تحته.'},
+ {id:'J5',k:'jumper',s:2,pins:[['tn23','GND'],['bn23','GND']],t:'بيربط الأرضي اللي فوق بالأرضي اللي تحت. من غيره الـ IC والـ TIP122 هيبقوا من غير أرضي.'},
+ {id:'U1',k:'dip',s:3,pins:[['f26','AIN'],['f27','A'],['f28','BIN'],['f29','B'],['f30','CIN'],['f31','C'],['f32','GND'],['e32','NC'],['e31','GND'],['e30','NC'],['e29','GND'],['e28','NC'],['e27','GND'],['e26','V5']],pn:BB_U1PN},
+ {id:'J6',k:'jumper',s:3,pins:[['a26','V5'],['tp26','V5']],t:'بيغذّي pin 14 (العمود 26) من خط +5V.'},
+ {id:'C7',k:'ceramic',s:3,pins:[['c26','V5'],['c27','GND']],note:'على البورد راكب بين العمود 26 (pin 14) والعمود 27 (pin 13، ودي متوصلة بالأرضي). كهربياً ده نفس "بين pin 14 وpin 7"، بس أقرب للـ IC.'},
+ {id:'J7',k:'jumper',s:3,pins:[['b27','GND'],['tn27','GND']],t:'بيوصّل pin 13 (العمود 27) بالأرضي، لأنها دخل بوابة مش مستخدمة.'},
+ {id:'J8',k:'jumper',s:3,pins:[['b29','GND'],['tn29','GND']],t:'بيوصّل pin 11 (العمود 29) بالأرضي، لأنها دخل بوابة مش مستخدمة.'},
+ {id:'J9',k:'jumper',s:3,pins:[['b31','GND'],['tn32','GND']],t:'بيوصّل pin 9 (العمود 31) بالأرضي، لأنها دخل بوابة مش مستخدمة.'},
+ {id:'J10',k:'jumper',s:3,pins:[['j32','GND'],['bn32','GND']],t:'بيوصّل pin 7 (أرضي الـ IC، العمود 32) بخط الأرضي اللي تحت.'},
+ {id:'R1',k:'res',ohm:1e6,s:3,pins:[['g26','AIN'],['j27','A']],note:'راكبة بالميل من العمود 26 (pin 1) للعمود 27 (pin 2)، عشان يفضل مكان لـ C4 ولسلك الخرج.'},
+ {id:'C4',k:'can',r:13,s:3,pins:[['j26','AIN'],['bn26','GND']],pn:['+ (الطويلة)','− (الشريطة)']},
+ {id:'R2',k:'res',ohm:390e3,s:4,pins:[['g28','BIN'],['j29','B']],note:'بالميل من العمود 28 (pin 3) للعمود 29 (pin 4).'},
+ {id:'C5',k:'can',r:13,s:4,pins:[['j28','BIN'],['bn28','GND']],pn:['+ (الطويلة)','− (الشريطة)']},
+ {id:'R3',k:'res',ohm:100e3,s:4,pins:[['g30','CIN'],['j31','C']],note:'بالميل من العمود 30 (pin 5) للعمود 31 (pin 6).'},
+ {id:'C6',k:'can',r:13,s:4,pins:[['j30','CIN'],['bn30','GND']],pn:['+ (الطويلة)','− (الشريطة)']},
+ {id:'JA',k:'jumper',s:5,pins:[['h27','A'],['i41','A']],t:'بيودّي موجة المذبذب البطيء من pin 2 (العمود 27) للمقاومة R4 في العمود 41.'},
+ {id:'JB',k:'jumper',s:5,pins:[['i29','B'],['j42','B']],t:'بيودّي موجة المذبذب المتوسط من pin 4 (العمود 29) للمقاومة R5 في العمود 42.'},
+ {id:'JC',k:'jumper',s:5,pins:[['g31','C'],['h40','C']],t:'بيودّي موجة المذبذب السريع من pin 6 (العمود 31) للمقاومة R6 في العمود 40.'},
+ {id:'R4',k:'res',ohm:10e3,s:5,pins:[['h41','A'],['h46','N']],note:'من العمود 41 (موجة A) للعمود 46، والعمود 46 ده هو النقطة N.'},
+ {id:'R5',k:'res',ohm:22e3,s:5,pins:[['i42','B'],['i46','N']],note:'من العمود 42 (موجة B) للعمود 46 (النقطة N).'},
+ {id:'R6',k:'res',ohm:47e3,s:5,pins:[['g40','C'],['g46','N']],note:'من العمود 40 (موجة C) للعمود 46 (النقطة N).'},
+ {id:'C8',k:'can',r:13,s:5,pins:[['j46','N'],['bn46','GND']],pn:['+ (الطويلة)','− (الشريطة)']},
+ {id:'JN',k:'jumper',s:5,pins:[['f46','N'],['e50','N']],t:'بيوصّل النقطة N (العمود 46 تحت) بالعمود 50 فوق، اللي فيه R7 وبعدين قاعدة الـ TIP122.'},
+ {id:'R7',k:'res',ohm:10e3,s:5,pins:[['c45','V5'],['c50','N']],note:'العمود 45 بياخد +5V بالسلك البرتقاني، والعمود 50 هو النقطة N فوق.'},
+ {id:'J11',k:'jumper',s:5,pins:[['b45','V5'],['tp44','V5']],t:'بيغذّي R7 من خط +5V.'},
+ {id:'Q1',k:'to220',lbl:'TIP122',s:6,pins:[['a50','N'],['a51','LN'],['a52','E']],pn:['B','C','E'],note:'الكتابة ناحيتك: B في العمود 50 (النقطة N)، وC في 51 (سالب اللمبة)، وE في 52 (R8 وR9).'},
+ {id:'R8',k:'res',ohm:68,s:6,info:'R89',pins:[['c52','E'],['c57','GND']],note:'R8 وR9 جنب بعض، الاتنين من العمود 52 للعمود 57، يعني على التوازي.'},
+ {id:'R9',k:'res',ohm:68,s:6,info:'R89',pins:[['d52','E'],['d57','GND']],note:'R8 وR9 جنب بعض، الاتنين من العمود 52 للعمود 57، يعني على التوازي.'},
+ {id:'J12',k:'jumper',s:6,pins:[['b57','GND'],['tn56','GND']],t:'بيوصّل الطرف التاني لـ R8 وR9 (العمود 57) بالأرضي.'},
+ {id:'WLN',k:'wire',s:6,lab:'سلك سالب اللمبة',pins:[['e51','LN']],pts:['e51',{x:1050,y:277},{x:1305,y:277},{x:1335,y:300}],link:['LAMP','LED']},
+ {id:'WLP',k:'wire',s:6,lab:'سلك موجب اللمبة',pins:[['bp60','V12']],pts:['bp60',{x:1212,y:458},{x:1305,y:458},{x:1335,y:400}],link:['LAMP','LED','RT']},
+ {id:'LAMP',k:'lamp',s:6,mode:'t10',lab:'اللمبة',pins:[],nets:['V12','LN'],link:['WLN','WLP']},
+ {id:'RT',k:'rt',s:6,mode:'led',lab:'470Ω',pins:[],nets:['V12'],link:['WLP','LED']},
+ {id:'LED',k:'led',s:6,mode:'led',lab:'LED',pins:[],nets:['LN'],link:['WLN','RT']}
+];
+
+const BINFO={
+ U1:{n:'U1 – CD40106 (6 بوابات Schmitt)',v:'DIP-14 · راكبة على المجرى اللي في النص',t:'البوابات التلاتة اللي بنستخدمها (U1A وU1B وU1C) كلها جوه الـ IC دي. الرجول من 1 لـ 7 في الصف f، ومن 8 لـ 14 في الصف e.',p:'الحز (النص دايرة) ناحية الشمال، فتبقى pin 1 تحت على الشمال. pin 14 على +5V، وpin 7 على الأرضي، والدخول 9 و11 و13 على الأرضي.'},
+ VIN:{n:'الأدابتر 12V',v:'12V DC · 1A',t:'مصدر الكهربا وقت التجربة على المكتب. في العربية بيتشال، ومكانه سلك لمبة الركن وأرضي العربية.',p:'الأحمر (+) رايح على الفيوز، والأسود (−) على خط الأرضي اللي تحت.'},
+ WGND:{n:'سلك الأرضي الداخل',v:'أسود · 0V',t:'بيوصّل سالب الأدابتر بخط الأرضي اللي تحت. ومن هنا الأرضي بيطلع للخط اللي فوق بالسلك الأسود اللي في العمود 23.',p:'في العربية السلك ده بيبقى أرضي الضفيرة الأصلي.'},
+ WLN:{n:'سلك سالب اللمبة',v:'LAMP− · من كولكتور Q1',t:'من العمود 51 (رجل C بتاعة الـ TIP122) لسالب اللمبة. ده السلك اللي الترانزستور بيتحكم في تياره.',p:'في التركيب النهائي ده السلك الأزرق.'},
+ WLP:{n:'سلك موجب اللمبة',v:'LAMP+ · +12V',t:'من خط +12V اللي تحت لموجب اللمبة. موجب اللمبة ثابت على طول، والترانزستور بيتحكم من ناحية السالب.',p:'في التركيب النهائي ده السلك الأصفر.'},
+ RT:{n:'مقاومة 470Ω (للتجربة بس)',v:'أصفر · بنفسجي · بني · دهبي',t:'بتحدد تيار الـ LED الـ 5mm لحوالي 20mA. من غيرها الـ LED هيتحرق فوراً لأن الدايرة بتعدّي لحد ~100mA.',p:'على التوالي مع الـ LED، وبتتشال لما تركّب لمبة T10.'},
+ LED:{n:'LED 5mm (بديل اللمبة في التجربة)',v:'أصفر 5mm',t:'بيقلّد اللمبة على المكتب، عشان متحتاجش لمبة العربية وانت بتجرّب.',p:'الرجل الطويلة (+) ناحية الـ 470Ω، والقصيرة ناحية سلك الكولكتور.'}
+};
+
+const BB_STAGES=[
+ {s:0,b:'البورد كاملة',d:'ده شكل البورد في الآخر، بلمبة T10 مكان LED التجربة. اختار مرحلة عشان تشوف القطع اللي بتتضاف فيها، وهتلاقيها متعلّمة بالأخضر.'},
+ {s:2,b:'① الباور',step:1,d:'الدايود والـ TVS والمكثفات والـ 7805. خط +12V تحت، وخط +5V فوق، والسلك الأسود في العمود 23 بيربط الأرضي اللي فوق باللي تحت.'},
+ {s:3,b:'② الـ IC وأول مذبذب',step:2,d:'الـ CD40106 راكبة على المجرى اللي في النص، والحز ناحية الشمال. R1 وC4 هما المذبذب البطيء على pin 1 وpin 2.'},
+ {s:4,b:'③ باقي المذبذبات',step:3,d:'R2 وC5 للمذبذب المتوسط، وR3 وC6 للسريع. كل مقاومة راكبة بالميل بين دخل البوابة وخرجها.'},
+ {s:5,b:'④ الخلط والنقطة N',step:4,d:'3 سلوك زرقا بتودّي الموجات لـ R4 وR5 وR6، والتلاتة بيتقابلوا في العمود 46 (النقطة N). R7 بتشدها لـ +5V، وC8 بينعّمها، والسلك البنفسجي بيطلّعها للعمود 50.'},
+ {s:6,b:'⑤ الترانزستور واللمبة',step:5,d:'الـ TIP122 فوق على اليمين، وقاعدته في العمود 50. R8 وR9 جنب بعض على التوازي. جرّب الأول بـ LED و470Ω، وبعدين بدّل للمبة T10.'}
+];
+const BB_Z={res:1,diode:1,tvs:1,ceramic:1,dip:2,can:3,jumper:4,to220:5,wire:6,fuse:6,adapter:6,lamp:6,rt:7,led:6};
+const bbState={stage:0,sel:null,net:null,strip:null,lamp:'t10',labels:true,mode:'easy'};
+const BB_LABELS={
+ D1:[231,350,'D1 1N4007','middle'],D2:[321,457,'D2','middle','P6KE18A'],C1:[384,457,'C1','middle','100µF'],
+ C2:[398,325,'C2','end'],C3:[442,343,'C3','start'],C7:[621,217,'C7','start'],
+ R1:[621,369,'R1 1M','start'],R2:[657,369,'R2','start'],R3:[693,369,'R3','start'],
+ C4:[600,457,'C4','middle','1µF'],C5:[636,457,'C5','middle','1µF'],C6:[672,457,'C6','middle','1µF'],
+ R4:[968,343,'R4 10k','start'],R5:[968,361,'R5 22k','start'],R6:[968,325,'R6 47k','start'],C8:[960,457,'C8','middle','22µF'],
+ R7:[987,207,'R7 10k','middle'],R8:[1166,217,'R8 68Ω','start'],R9:[1166,235,'R9 68Ω','start'],RT:[1262,474,'470Ω','middle']
+};
+const bbEl={glow:null,meter:null,mt:0};
+
+const BB_BAND=['#161616','#7a4a1e','#d42a2a','#f07a1a','#f2d21b','#2f9e44','#2563eb','#8b3fd9','#8a8a8a','#f5f5f5'];
+function bbBands(ohm){const e=Math.floor(Math.log10(ohm))-1,d=Math.round(ohm/10**e);return [BB_BAND[Math.floor(d/10)],BB_BAND[d%10],BB_BAND[e],'#c9a227'];}
+function bbLead(a,b){return `<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" class="bb-lead"/>`;}
+function bbFoot(a){return `<circle cx="${a.x}" cy="${a.y}" r="2.6" class="bb-foot"/>`;}
+function bbHitLine(a,b){return `<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" class="bb-hitw"/>`;}
+function bbAxial(a,b,len,thick,body){
+  const ang=Math.atan2(b.y-a.y,b.x-a.x)*180/Math.PI,mx=(a.x+b.x)/2,my=(a.y+b.y)/2;
+  return bbHitLine(a,b)+bbLead(a,b)+bbFoot(a)+bbFoot(b)+`<g transform="translate(${bbF(mx)} ${bbF(my)}) rotate(${bbF(ang)})">${body(len,thick)}</g>`;
+}
+function bbResBody(ohm){
+  const bands=bbBands(ohm);
+  return (L,T)=>{const h=L/2,xs=[-h+6,-h+10.5,-h+15,h-7];
+    return `<rect x="${-h}" y="${-T/2}" width="${L}" height="${T}" rx="${T/2}" class="bb-res"/>`+bands.map((c,i)=>`<rect x="${xs[i]-1.4}" y="${-T/2+.6}" width="2.8" height="${T-1.2}" style="fill:${c}"/>`).join('')+`<rect x="${-h+3}" y="${-T/2+1.6}" width="${L-6}" height="1.8" rx=".9" class="bb-shine"/>`;};
+}
+function bbDiodeBody(cls){return (L,T)=>`<rect x="${-L/2}" y="${-T/2}" width="${L}" height="${T}" rx="2.5" class="${cls}"/><rect x="${L/2-8}" y="${-T/2}" width="4" height="${T}" class="bb-stripe"/><rect x="${-L/2+3}" y="${-T/2+1.4}" width="${L-6}" height="1.6" rx=".8" class="bb-shine"/>`;}
+function bbCeramic(a,b){
+  const m={x:(a.x+b.x)/2,y:(a.y+b.y)/2};
+  return bbHitLine(a,b)+bbLead(a,m)+bbLead(b,m)+bbFoot(a)+bbFoot(b)+`<ellipse cx="${m.x}" cy="${m.y}" rx="9.5" ry="7.5" class="bb-cer"/><text x="${m.x}" y="${m.y+2.4}" class="bb-cert">104</text>`;
+}
+function bbCan(pos,neg,r){
+  const cx=(pos.x+neg.x)/2,cy=(pos.y+neg.y)/2,ang=Math.atan2(neg.y-pos.y,neg.x-pos.x);
+  const pt=a=>`${bbF(cx+r*Math.cos(a))},${bbF(cy+r*Math.sin(a))}`,v=bbF(r*.38);
+  return `<circle cx="${cx}" cy="${cy}" r="${r}" class="bb-can"/><path d="M${cx},${cy} L${pt(ang-.8)} A${r},${r} 0 0 1 ${pt(ang+.8)} Z" class="bb-canstripe"/><circle cx="${cx}" cy="${cy}" r="${bbF(r*.7)}" class="bb-cantop"/><path d="M${cx-v},${cy} L${cx+v},${cy} M${cx},${cy-v} L${cx},${cy+v}" class="bb-canvent"/>`;
+}
+function bbTO220(pins,label,id){
+  const ps=pins.map(bbXY),cx=ps[1].x,y0=ps[0].y,w=72,legTop=y0-16,bodyTop=legTop-62,tabTop=bodyTop-44;
+  return ps.map(p=>`<rect x="${p.x-2.2}" y="${legTop}" width="4.4" height="${y0-legTop}" class="bb-leg"/>`+bbFoot(p)).join('')
+    +`<rect x="${cx-w/2}" y="${tabTop}" width="${w}" height="${bodyTop-tabTop+8}" rx="3" class="bb-tab"/><circle cx="${cx}" cy="${tabTop+19}" r="7.5" class="bb-tabhole"/>`
+    +`<rect x="${cx-w/2}" y="${bodyTop}" width="${w}" height="62" rx="3" class="bb-ic"/><text x="${cx}" y="${bodyTop+27}" class="bb-ict">${label}</text><text x="${cx}" y="${bodyTop+42}" class="bb-icid">${id}</text>`
+    +ps.map((p,i)=>`<text x="${p.x}" y="${legTop-6}" class="bb-icpin">${i+1}</text>`).join('');
+}
+function bbDip(c0,label){
+  const e=BB.rows.e,f=BB.rows.f,yT=e+7,yB=f-7,x1=bbX(c0)-11,x2=bbX(c0+6)+11,my=(yT+yB)/2;let s='';
+  for(let i=0;i<7;i++){const x=bbX(c0+i);s+=`<rect x="${x-3.5}" y="${e-2}" width="7" height="${yT-e+3}" class="bb-pin"/><rect x="${x-3.5}" y="${yB-1}" width="7" height="${f-yB+3}" class="bb-pin"/>`;}
+  let n='';for(let i=0;i<7;i++){const x=bbX(c0+i);n+=`<text x="${x}" y="${yT+8}" class="bb-dipn">${14-i}</text><text x="${x}" y="${yB-3}" class="bb-dipn">${i+1}</text>`;}
+  return s+`<rect x="${x1}" y="${yT}" width="${x2-x1}" height="${yB-yT}" rx="3" class="bb-ic"/><path d="M${x1},${my-6} A6,6 0 0 1 ${x1},${my+6} Z" class="bb-notch"/><circle cx="${bbX(c0)}" cy="${yB-7}" r="2.4" class="bb-dot1"/><text x="${(x1+x2)/2+6}" y="${my+4}" class="bb-ict">U1 ${label}</text>`+n;
+}
+function bbTo(p,q,r){const dx=q.x-p.x,dy=q.y-p.y,l=Math.hypot(dx,dy)||1,k=Math.min(r,l/2)/l;return `${bbF(p.x+dx*k)},${bbF(p.y+dy*k)}`;}
+function bbPath(pts){
+  let d=`M${pts[0].x},${pts[0].y}`;
+  for(let i=1;i<pts.length-1;i++)d+=` L${bbTo(pts[i],pts[i-1],8)} Q${pts[i].x},${pts[i].y} ${bbTo(pts[i],pts[i+1],8)}`;
+  const l=pts[pts.length-1];return d+` L${l.x},${l.y}`;
+}
+function bbWire(pts,col){
+  const d=bbPath(pts.map(bbXY));
+  return `<path d="${d}" class="bb-hitw"/><path d="${d}" class="bb-wire-o"/><path d="${d}" class="bb-wire" style="stroke:${col}"/><path d="${d}" class="bb-wire-hi"/>`;
+}
+function bbTips(hs){return hs.map(h=>{const p=bbXY(h);return `<circle cx="${p.x}" cy="${p.y}" r="2.8" class="bb-tip"/>`;}).join('');}
+function bbAdapter(){return `<rect x="10" y="338" width="62" height="82" rx="9" class="bb-adp"/><text x="41" y="364" class="bb-adpt">12V</text><text x="41" y="380" class="bb-adps">DC · 1A</text><text x="41" y="408" class="bb-adps">أدابتر</text><circle cx="72" cy="372" r="3.5" class="bb-term-r"/><circle cx="72" cy="400" r="3.5" class="bb-term-k"/>`;}
+function bbFuse(){
+  const col=BB_WIRE.VIN;
+  return bbWire([{x:72,y:372},{x:84,y:372}],col)+bbWire([{x:116,y:372},{x:136,y:372},{x:150,y:340},'h3'],col)+bbTips(['h3'])
+    +`<rect x="82" y="362" width="36" height="20" rx="9" class="bb-fuse"/><text x="100" y="375.5" class="bb-fuset">${bbCalc().fuse}</text>`;
+}
+function bbLampT10(){
+  return `<circle id="bbGlow" cx="1402" cy="350" r="78" style="fill:url(#bbGlowG)"/><rect x="1335" y="286" width="30" height="128" rx="6" class="bb-sock"/><rect x="1331" y="296" width="8" height="8" class="bb-pin"/><rect x="1331" y="396" width="8" height="8" class="bb-pin"/>`
+    +`<rect x="1365" y="322" width="54" height="56" rx="12" class="bb-bulb"/><rect x="1378" y="331" width="10" height="10" rx="1.5" class="bb-chip"/><rect x="1396" y="331" width="10" height="10" rx="1.5" class="bb-chip"/><rect x="1378" y="359" width="10" height="10" rx="1.5" class="bb-chip"/><rect x="1396" y="359" width="10" height="10" rx="1.5" class="bb-chip"/>`
+    +`<text x="1350" y="278" class="bb-matt">LAMP −</text><text x="1350" y="432" class="bb-matt">LAMP +</text><text x="1392" y="398" class="bb-matt">T10 LED</text>`;
+}
+function bbLed(){
+  return `<circle id="bbGlow" cx="1402" cy="350" r="60" style="fill:url(#bbGlowG)"/>`+bbLead({x:1335,y:300},{x:1372,y:344})+bbLead({x:1335,y:400},{x:1372,y:356})
+    +`<rect x="1369" y="332" width="5" height="36" rx="1.5" class="bb-led"/><path d="M1374,336 L1394,336 A14,14 0 0 1 1394,364 L1374,364 Z" class="bb-led"/>`
+    +`<text x="1350" y="290" class="bb-matt">− القصيرة</text><text x="1350" y="420" class="bb-matt">+ الطويلة</text><text x="1400" y="392" class="bb-matt">${bbCalc().ledDead?'🔥 اتحرق':bbCalc().ledRev?'↩ مقلوب':'LED 5mm'}</text>`;
+}
+function bbPartInner(p){
+  const ps=p.pins.map(x=>bbXY(x[0]));
+  switch(p.k){
+    case 'res':return bbAxial(ps[0],ps[1],30,10,bbResBody(bbOhm(p)));
+    case 'diode':return bbAxial(ps[0],ps[1],26,9,bbDiodeBody('bb-dio'));
+    case 'tvs':return bbAxial(ps[0],ps[1],30,11,bbDiodeBody('bb-tvs'));
+    case 'ceramic':return bbCeramic(ps[0],ps[1]);
+    case 'can':return bbCan(ps[0],ps[1],p.r);
+    case 'to220':return bbTO220(p.pins.map(x=>x[0]),p.lbl,p.id);
+    case 'dip':return bbDip(26,'CD40106BE');
+    case 'jumper':{const hs=p.pins.map(x=>x[0]);return bbWire([hs[0],...(p.via||[]),hs[1]],BB_WIRE[p.pins[0][1]])+bbTips(hs);}
+    case 'wire':return bbWire(p.pts,BB_WIRE[p.pins[0][1]])+bbTips(p.pins.map(x=>x[0]));
+    case 'adapter':return bbAdapter();
+    case 'fuse':return bbFuse();
+    case 'lamp':return bbLampT10();
+    case 'led':return bbLed();
+    case 'rt':return bbAxial({x:1234,y:458},{x:1290,y:458},30,10,bbResBody(bbCalc().Rled));
+  }
+  return '';
+}
+function bbBoardSvg(){
+  const L=130,R=bbX(63)+20,T=110,B=444,rw=BB.rows;
+  let s=`<rect x="${L}" y="${T}" width="${R-L}" height="${B-T}" rx="8" class="bb-board"/><rect x="${L}" y="${rw.e+13}" width="${R-L}" height="${rw.f-rw.e-26}" class="bb-chan"/>`;
+  [[121,'r'],[157,'b'],[397,'b'],[433,'r']].forEach(([y,c])=>s+=`<line x1="${bbX(2)-6}" y1="${y}" x2="${bbX(62)+6}" y2="${y}" class="bb-rl-${c}"/>`);
+  [['tp','+5V','r'],['tn','GND','b'],['bn','GND','b'],['bp','+12V','r']].forEach(([r,t,c])=>s+=`<text x="${L+5}" y="${rw[r]+3}" class="bb-rlt bb-rlt-${c}">${t}</text>`);
+  ['tp','tn','bn','bp'].forEach(r=>{for(let c=2;c<=62;c++)if(bbRailHole(c))s+=`<rect x="${bbX(c)-3.5}" y="${rw[r]-3.5}" width="7" height="7" rx="1.2" class="bb-hole"/>`;});
+  'abcdefghij'.split('').forEach(r=>{for(let c=1;c<=BB.cols;c++)s+=`<rect x="${bbX(c)-3.5}" y="${rw[r]-3.5}" width="7" height="7" rx="1.2" class="bb-hole"/>`;
+    s+=`<text x="${L+9}" y="${rw[r]+3}" class="bb-num">${r}</text><text x="${R-9}" y="${rw[r]+3}" class="bb-num">${r}</text>`;});
+  [1,5,10,15,20,25,30,35,40,45,50,55,60].forEach(c=>s+=`<text x="${bbX(c)}" y="170" class="bb-num">${c}</text><text x="${bbX(c)}" y="393" class="bb-num">${c}</text>`);
+  return s;
+}
+function bbStripBox(s){
+  const rw=BB.rows;
+  if(BB_RAILS[s])return {x:bbX(2)-8,y:rw[s]-8,w:bbX(62)-bbX(2)+16,h:16};
+  const c=+s.slice(1),top=s[0]==='T';
+  return {x:bbX(c)-8,y:(top?rw.a:rw.f)-8,w:16,h:(top?rw.e-rw.a:rw.j-rw.f)+16};
+}
+function bbStripHits(){
+  const ids=['tp','tn','bn','bp'];for(let c=1;c<=BB.cols;c++)ids.push('T'+c,'B'+c);
+  return ids.map(id=>{const b=bbStripBox(id);return `<rect x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" class="bs" data-s="${id}"/>`;}).join('');
+}
+function bbDefs(){
+  return `<defs><linearGradient id="bbMetal" x1="0" x2="1"><stop offset="0" stop-color="#8f959d"/><stop offset=".5" stop-color="#e4e7eb"/><stop offset="1" stop-color="#8a9098"/></linearGradient>`
+    +`<radialGradient id="bbGlowG"><stop offset="0" stop-color="#fff6d0" stop-opacity=".95"/><stop offset=".35" stop-color="#ffbf47" stop-opacity=".55"/><stop offset="1" stop-color="#ff8a00" stop-opacity="0"/></radialGradient>`
+    +`<pattern id="bbMat" width="36" height="36" patternUnits="userSpaceOnUse"><rect width="36" height="36" class="bb-mat"/><path d="M36 0 L0 0 0 36" class="bb-matl"/></pattern>`
+    +`<filter id="bbSh" x="-10%" y="-10%" width="120%" height="120%"><feDropShadow dx="1.2" dy="2" stdDeviation="1.3" flood-color="#000" flood-opacity=".35"/></filter></defs>`;
+}
+function bbParts(){return BPARTS.filter(p=>!p.mode||p.mode===bbState.lamp);}
+function bbVisible(){const g=bbGone();return bbParts().filter(p=>!g.has(p.id)&&(bbState.stage===0||p.s<=bbState.stage));}
+function bbById(id){return BPARTS.find(p=>p.id===id);}
+function bbRender(){
+  bbSyncLamp();
+  const parts=bbParts().slice().sort((a,b)=>BB_Z[a.k]-BB_Z[b.k]);
+  const body=parts.map(p=>`<g class="bp" data-id="${p.id}" tabindex="0" role="button" aria-label="${bbShort(p)}">${bbPartInner(p)}</g>`).join('');
+  $('#bb').innerHTML=bbDefs()+`<rect x="0" y="36" width="1460" height="440" style="fill:url(#bbMat)"/>`+bbBoardSvg()+bbStripHits()+`<g id="bbHL"></g><g id="bbParts" filter="url(#bbSh)">${body}</g><g id="bbLab">${bbLabels(parts)}</g><g id="bbOut"></g>`;
+  $('#bb').classList.toggle('nolab',!bbState.labels);
+  $('#bbLampBtn').textContent=bbState.lamp==='t10'?'🧪 بدّل لـ LED التجربة + 470Ω':'🚘 بدّل للمبة T10';
+  bbApply();
+}
+function bbLabels(parts){
+  return parts.filter(p=>BB_LABELS[p.id]).map(p=>{const [x,y,t0,a,v0]=BB_LABELS[p.id],mat=y>450,t=bbLabText(p.id,t0),v=v0&&bbLabVal(p.id,v0);
+    return `<g class="bb-labg" data-for="${p.id}"><text x="${x}" y="${y}" text-anchor="${a}" class="bb-lab${mat?' bb-lab-m':''}">${t}</text>${v?`<text x="${x}" y="${y+11}" text-anchor="${a}" class="bb-lab bb-lab-v">${v}</text>`:''}</g>`;}).join('');
+}
+function bbStripNets(vis){
+  const m={};
+  vis.forEach(p=>p.pins.forEach(([h,n])=>{m[bbStrip(h)]=n;}));
+  return m;
+}
+function bbTouches(p,net){return p.pins.some(x=>x[1]===net)||(p.nets||[]).includes(net);}
+function bbFocus(vis,sm){
+  const st=bbState;
+  if(st.sel){
+    const p=bbById(st.sel),own=new Set(p.pins.map(x=>bbStrip(x[0])).filter(s=>!BB_RAILS[s]));
+    const f=new Set([p.id,...(p.link||[])]);
+    vis.forEach(q=>{if(q.pins.some(x=>own.has(bbStrip(x[0]))))f.add(q.id);});
+    return {f,hl:p.pins.map(([h,n])=>({s:bbStrip(h),n}))};
+  }
+  if(st.net){
+    const f=new Set(vis.filter(q=>bbTouches(q,st.net)).map(q=>q.id));
+    return {f,hl:Object.keys(sm).filter(s=>sm[s]===st.net).map(s=>({s,n:st.net}))};
+  }
+  if(st.strip)return {f:new Set(),hl:[{s:st.strip,n:'NC'}]};
+  return {f:null,hl:[]};
+}
+function bbApply(){
+  const st=bbState,vis=bbVisible(),visIds=new Set(vis.map(p=>p.id)),sm=bbStripNets(vis);
+  if(st.sel&&!visIds.has(st.sel)&&!bbGone().has(st.sel))st.sel=null;
+  const {f,hl}=bbFocus(vis,sm);
+  $$('#bb .bp,#bb .bb-labg').forEach(g=>{const id=g.dataset.id||g.dataset.for;g.classList.toggle('hide',!visIds.has(id));g.classList.toggle('dim',!!f&&!f.has(id));});
+  $('#bbHL').innerHTML=hl.map(({s,n})=>{const b=bbStripBox(s),c=BNET[n].c;return `<rect x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" rx="6" class="bb-hl" style="stroke:${c};fill:${c}"/>`;}).join('');
+  bbOutlines(vis);
+  $('#bbInfo').innerHTML=bbInfoHtml(vis,sm);
+  $$('#bbNets .chip').forEach(c=>c.classList.toggle('on',c.dataset.n===st.net));
+  bbEl.glow=$('#bbGlow');bbEl.meter=$('#bbMeter');
+}
+function bbOutlines(vis){
+  const st=bbState,ids=st.sel?[st.sel]:(!st.net&&!st.strip&&st.stage>0?vis.filter(p=>p.s===st.stage).map(p=>p.id):[]);
+  const cls=st.sel?'bb-out-sel':'bb-out-new';
+  $('#bbOut').innerHTML=ids.map(id=>{const g=$(`#bb .bp[data-id="${id}"]`);if(!g||g.classList.contains('hide'))return '';const b=g.getBBox();return `<rect x="${bbF(b.x-5)}" y="${bbF(b.y-5)}" width="${bbF(b.width+10)}" height="${bbF(b.height+10)}" rx="7" class="${cls}"/>`;}).join('');
+}
+function bbShort(p){
+  if(bbState.mode==='easy'){const e=BB_EDU[bbEduKey(p)];return `${e.ic} ${p.k==='jumper'?'سلك '+BB_WNAME[p.pins[0][1]]:(p.lab||p.id)} · ${e.short}`;}
+  if(p.k==='jumper')return 'سلك '+BB_WNAME[p.pins[0][1]]+' · '+BNET[p.pins[0][1]].n;
+  const d=BINFO[p.id]||INFO[p.info||p.id];return d?d.n:(p.lab||p.id);
+}
+function bbHoleText(h){const q=bbParse(h);return q.r.length===2?BB_RAILS[q.r]:`<code>${h}</code>`;}
+function bbStripName(s){if(BB_RAILS[s])return BB_RAILS[s];return 'عمود '+s.slice(1)+(s[0]==='T'?' فوق (a–e)':' تحت (f–j)');}
+function bbJumperInfo(p){
+  const net=p.pins[0][1];
+  return {n:'سلك جمبر '+BB_WNAME[net],v:BNET[net].n,t:p.t,p:'السلك ملوش اتجاه، بس خلّي الألوان ثابتة: الأحمر +12V، والبرتقاني +5V، والأسود أرضي. ده بيسهّل عليك تتبّع أي عطل.'};
+}
+function bbPartHtml(p){
+  if(bbState.mode==='easy')return bbEasyHtml(p);
+  const d=p.k==='jumper'?bbJumperInfo(p):(BINFO[p.id]||INFO[p.info||p.id]);
+  return `<h3>${d.n}</h3><div class="val">${d.v}</div><p style="margin:0">${d.t}</p>${d.p?`<div class="pol">📌 ${d.p}</div>`:''}${bbLocHtml(p)}${p.note?`<div class="pol">🧭 ${p.note}</div>`:''}${bbOptsHtml(bbEduKey(p))}${bbMiniHtml()}`;
+}
+const BB_EDU={
+ adapter:{ic:'🔌',n:'الأدابتر (مصدر الكهربا)',short:'بيدّي الدايرة كهربا وانت بتجرّب',what:'شاحن شبه شاحن الراوتر، بيحوّل كهربا البيت لـ 12 فولت.',why:'بيقوم بدور بطارية العربية وانت بتجرّب على المكتب، عشان تشتغل بأمان من غير ما تقرب من العربية.'},
+ fuse:{ic:'🧯',n:'الفيوز',short:'بيقطع الكهربا لو حصل قصر',what:'أنبوبة أو قطعة صغيرة جواها سلك رفيع جداً.',why:'لو حصلت مشكلة والدايرة سحبت كهربا زيادة، السلك ده بيسيح ويقطع الكهربا قبل ما الأسلاك تسخن أو حاجة تولّع. زي المفتاح اللي بيفصل في لوحة كهربا البيت.'},
+ diode:{ic:'🚪',n:'الدايود 1N4007',short:'باب بيعدّي الكهربا في اتجاه واحد',what:'قطعة سودا صغيرة عليها شريطة رمادي من ناحية.',why:'زي باب بيفتح ناحية واحدة بس. لو وصّلت الموجب والسالب بالعكس بالغلط، الباب بيتقفل والدايرة متتحرقش.'},
+ tvs:{ic:'🛡️',n:'دايود الحماية P6KE18A',short:'بيشرب الخبطات الكهربا العالية',what:'دايود أتخن شوية، شغلته الحماية بس.',why:'العربية ساعات بتطلع "خبطات" كهربا عالية لجزء من الثانية، من الدينامو أو المارش. القطعة دي نايمة طول الوقت، ولما تيجي خبطة تشربها قبل ما توصل للدايرة.'},
+ c1:{ic:'🪣',n:'المكثف الكبير 100µF',short:'خزان صغير بيسند الكهربا',what:'علبة أسطوانة صغيرة زرقا أو سودا، عليها شريطة فيها علامة (−).',why:'زي خزان المية اللي فوق البيت: بيخزّن شوية كهربا، ولو الكهربا وقعت لحظة بيسد مكانها، فالمنظم ياخد كهربا ناعمة.'},
+ cer:{ic:'🧹',n:'المكثفات الصغيرة 100nF (مكتوب عليها 104)',short:'فلتر بيشيل التشويش',what:'قرص صغير برتقاني أو أصفر ليه رجلين، ومالوش اتجاه.',why:'زي فلتر المية: الكهربا فيها "وشوشة" سريعة صغيرة، والمكثف ده بيمسحها. عشان كده بنحطه لازق في رجول الـ 7805 والشريحة.'},
+ reg:{ic:'🔽',n:'منظم الجهد 7805',short:'بيحوّل 12V لـ 5V ثابتة',what:'قطعة سودا بضهر معدن فيه خرم، وليها 3 رجول.',why:'كهربا العربية بتتغير من 12 لـ 14.4 فولت. الشريحة اللي بتعمل الرعشة محتاجة 5 فولت ثابتة، فالقطعة دي بتاخد الجهد العالي المتغير وتطلّع 5 فولت على طول.'},
+ ic:{ic:'🧠',n:'الشريحة CD40106',short:'العقل اللي بيعمل الدقات',what:'شريحة سودا بـ 14 رجل، وعليها نص دايرة من ناحية عشان تعرف اتجاهها.',why:'جواها 6 مفاتيح صغيرة ذكية. بنستخدم 3 منهم، وكل مفتاح مع مقاومة ومكثف بيبقى "ساعة" بتدق: واحدة بطيئة، وواحدة متوسطة، وواحدة سريعة. خلط التلاتة هو اللي بيعمل رعشة الشمعة.'},
+ rt1:{ic:'⏱️',n:'مقاومات السرعة R1 وR2 وR3',short:'بتحدد سرعة كل ساعة',what:'المقاومة قطعة صغيرة بيج عليها خطوط ألوان، والألوان دي هي قيمتها.',why:'المقاومة بتصعّب مرور الكهربا. كل ما تكبر، المكثف يتملى أبطأ، فالساعة تدق أبطأ. R1 (1M) للبطيئة، وR2 (390k) للمتوسطة، وR3 (100k) للسريعة.'},
+ ct:{ic:'🥛',n:'مكثفات التوقيت 1µF',short:'الكوباية اللي بتتملى وتفضى',what:'علبة أسطوانة صغيرة عليها شريطة (−).',why:'زي كوباية بتتملى وتفضى: المفتاح اللي في الشريحة بيقلب لما الكوباية تتملى، ويرجع يقلب لما تفضى. الوقت ده هو الدقة الواحدة.'},
+ mix:{ic:'🎚️',n:'مقاومات الخلط R4 وR5 وR6',short:'بتخلط الساعات التلاتة',what:'مقاومات عادية، كل واحدة بألوان مختلفة.',why:'زي 3 حنفيات بتصب في نفس الحلّة (النقطة N). الحنفية المفتوحة أكتر، يعني المقاومة الأصغر، تأثيرها أكبر: R4 (10k) للبطيئة عشان التمايل يبان، وR6 (47k) للسريعة عشان الرجفة تبقى خفيفة.'},
+ r7:{ic:'⬆️',n:'مقاومة الحد الأدنى R7',short:'بتمنع اللمبة تطفي خالص',what:'مقاومة 10k جاية من خط +5V.',why:'بتدّي النقطة N دفعة ثابتة لفوق، فالجهد مايقلّش عن حد معيّن، واللمبة تفضل منورة شوية دايماً زي الشمعة، مش بتطفي وتولّع.'},
+ c8:{ic:'🧽',n:'مكثف التنعيم 22µF',short:'بينعّم الرعشة',what:'علبة أسطوانة صغيرة عليها شريطة (−).',why:'زي الإسفنجة: بدل ما النور ينط فجأة من قوي لضعيف، المكثف ده بيخليه يطلع وينزل بهدوء زي لهب الشمعة.'},
+ q1:{ic:'🚰',n:'الترانزستور TIP122',short:'بيتحكم في تيار اللمبة',what:'قطعة سودا بضهر معدن زي الـ 7805، وليها 3 رجول: B وC وE.',why:'زي حنفية كبيرة بتفتحها بصباع صغير: الإشارة الضعيفة اللي خارجة من الشريحة بتتحكم في التيار الكبير اللي رايح للمبة.'},
+ r89:{ic:'🚧',n:'مقاومات الحماية R8 وR9 (68Ω)',short:'بتحدد أقصى تيار للمبة',what:'مقاومتين صغيرين جنب بعض.',why:'بيحطوا سقف للتيار (حوالي 100mA)، عشان اللمبة والترانزستور ميتحرقوش. حاطين اتنين بدل واحدة عشان السخونية تتقسم عليهم.'},
+ lamp:{ic:'💡',n:'لمبة الركن T10 LED',short:'اللمبة اللي بترعش',what:'لمبة صغيرة من غير قاعدة مسمار، بتدخل في الفيشة زي الإسفين.',why:'دي النتيجة النهائية: اللمبة اللي في فانوس العربية، واللي هتعمل شكل الشمعة.'},
+ led:{ic:'🔆',n:'LED التجربة 5mm',short:'بديل اللمبة وانت بتجرّب',what:'لمبة صغيرة برجلين: واحدة طويلة (+) وواحدة قصيرة (−).',why:'بتقلّد لمبة العربية على المكتب، عشان تشوف الرعشة من غير ما تستخدم أي حاجة من العربية.'},
+ rled:{ic:'🚧',n:'مقاومة الـ LED 470Ω',short:'بتحمي الـ LED من الحرق',what:'مقاومة عادية ألوانها أصفر، بنفسجي، بني.',why:'الـ LED حساس جداً، ومن غير المقاومة دي هيتحرق في ثانية. هي بتقلل التيار لحد مناسب له (حوالي 20mA).'},
+ wire:{ic:'〰️',n:'أسلاك التوصيل (الجمبر)',short:'بتوصّل نقطتين بعاد عن بعض',what:'سلوك صغيرة ملونة، أطرافها معدن بتدخل في خرم البريد بورد.',why:'البريد بورد بيوصّل الخرم اللي في نفس العمود بس. لو عايز توصّل نقطتين بعاد، بتحط سلك بينهم. الألوان مجرد تنظيم: الأحمر +12V، والبرتقاني +5V، والأسود أرضي.'}
+};
+const BB_EDU_ID={VIN:'adapter',F1:'fuse',D1:'diode',D2:'tvs',C1:'c1',C2:'cer',C3:'cer',C7:'cer',U2:'reg',U1:'ic',R1:'rt1',R2:'rt1',R3:'rt1',C4:'ct',C5:'ct',C6:'ct',R4:'mix',R5:'mix',R6:'mix',R7:'r7',C8:'c8',Q1:'q1',R8:'r89',R9:'r89',LAMP:'lamp',LED:'led',RT:'rled'};
+const bbEduKey=p=>BB_EDU_ID[p.id]||'wire';
+const BB_BASE={R:[1e6,390e3,100e3],Ct:[1e-6,1e-6,1e-6],kS:1,frozen:false,V5:5,Rm:[10e3,22e3,47e3],Rf:10e3,Cn:22e-6,Vbe:1.3,qDead:false,Re:34,single:false,Vin:12,lampType:'t10',Rled:470,ledDead:false,ledRev:false,fuse:'1A',noTvs:false};
+const BB_ST={ok:'✅',warn:'⚠️',bad:'⛔'};
+const BB_OPTS={
+ adapter:[{t:'أدابتر 12V · 1A'},
+  {t:'أي أدابتر 12V من 0.5A وطالع (شاحن راوتر قديم)',st:'ok',r:'نفس النتيجة بالظبط. الدايرة كلها بتسحب أقل من 150mA.'},
+  {t:'باور سبلاي معمل على 12V',st:'ok',r:'نفس النتيجة، وكمان تقدر تحط حد للتيار (0.3A) كحماية زيادة وانت بتجرّب.'},
+  {t:'بطارية 9V',st:'warn',fx:p=>({...p,Vin:9}),r:'الـ 7805 لسه بيطلّع 5V فشكل الرعشة زي ما هو، بس لمبة T10 هتنوّر حوالي النص لأنها معمولة على 12V. والبطارية هتخلص بسرعة.'}],
+ fuse:[{t:'فيوز 1A'},
+  {t:'فيوز عربيات Mini Blade 1A في حامل خارجي',st:'ok',r:'نفس الحماية بالظبط، وأسهل تلاقيه في محلات قطع الغيار.'},
+  {t:'فيوز إزاز 5×20mm قيمته 1A',st:'ok',r:'نفس الحماية بالظبط.'},
+  {t:'فيوز PTC (Polyfuse) من 0.5 لـ 1A',st:'ok',r:'بيفصل لو حصل قصر، ويرجع يوصّل لوحده لما يبرد. الرعشة زي ما هي.'},
+  {t:'فيوز 5A أو أكبر',st:'bad',fx:p=>({...p,fuse:'5A'}),r:'الدايرة هتشتغل عادي، بس لو حصل قصر السلك ممكن يسخن ويسيح قبل ما الفيوز يقطع. يعني الفيوز ده مش بيحمي حاجة.'}],
+ diode:[{t:'1N4007'},
+  {t:'أي دايود من 1N4001 لـ 1N4006',st:'ok',r:'نفس النتيجة بالظبط. كلهم 1A، والفرق بس في أقصى جهد عكسي، و50V كفاية جداً للعربية.'},
+  {t:'1N5819 (شوتكي)',st:'ok',r:'بياكل حوالي 0.35V بدل 0.7V. الرعشة زي ما هي لأن الـ 7805 بيثبّت الـ 5V.'},
+  {t:'من غير دايود (سلك مكانه)',st:'warn',r:'هتشتغل عادي، بس لو وصّلت الأسلاك بالعكس مرة واحدة، الـ 7805 والشريحة ممكن يتحرقوا.'}],
+ tvs:[{t:'P6KE18A'},
+  {t:'1.5KE18A',st:'ok',r:'نفس الشغل، وبيستحمل خبطات أقوى. الرعشة زي ما هي.'},
+  {t:'SMBJ15A أو SMBJ16A',st:'ok',r:'نفس الحماية، بس ده للّحام على السطح (SMD) ومش هيدخل في البريد بورد.'},
+  {t:'من غيره',st:'warn',fx:p=>({...p,noTvs:true}),r:'على المكتب مش هتفرق خالص. في العربية الدايرة ممكن تتحرق من أول خبطة من المارش أو الدينامو.'}],
+ c1:[{t:'100µF / 50V'},
+  {t:'47µF',st:'ok',r:'مفيش فرق يتشاف، لأن الحمل صغير جداً.'},
+  {t:'220µF',st:'ok',r:'مفيش فرق يتشاف، والتنعيم أحسن شوية لو الكهربا فيها تذبذب.'},
+  {t:'100µF بس مكتوب عليه 16V',st:'bad',r:'جهد العربية بيوصل 14.4V والخبطات أعلى من كده. المكثف هيسخن ومع الوقت ممكن ينفخ أو ينفجر. خليه 25V وطالع.'},
+  {t:'متركب بالعكس',st:'bad',fx:p=>({...p,Vin:0}),r:'المكثف بيسخن وبيسحب تيار كبير، فالفيوز اتحرق والدايرة كلها طفيت. الرجل الطويلة (+) لازم ناحية +12V.'}],
+ cer:[{t:'سيراميك 100nF (104)'},
+  {t:'ملتي لاير 100nF (104)',st:'ok',r:'نفس النتيجة بالظبط.'},
+  {t:'مكثف فيلم 100nF',st:'ok',r:'نفس النتيجة، بس حجمه أكبر.'},
+  {t:'47nF أو 220nF',st:'ok',r:'هيشتغل عادي. القيمة هنا مش حساسة.'},
+  {t:'من غيرهم خالص',st:'warn',r:'غالباً هتشتغل على المكتب، بس الـ 7805 ممكن يذبذب أو المذبذبات تتلخبط من التشويش، خصوصاً في العربية.'}],
+ reg:[{t:'LM7805'},
+  {t:'L7805CV أو KA7805',st:'ok',r:'نفس القطعة من شركة تانية. نفس الرجول ونفس النتيجة.'},
+  {t:'78L05 متركب صح',st:'ok',r:'بيطلّع 5V عادي والحمل صغير فيكفي. لازم تلفّه لأن رجوله بالترتيب العكسي.'},
+  {t:'78L05 في نفس خرم الـ 7805 من غير ما تلفّه',st:'bad',fx:p=>({...p,V5:0}),r:'رجل الدخل راحت مكان الخرج، فمفيش 5V خالص. الشريحة مش شغالة واللمبة مطفية. ده عطل مشهور!'},
+  {t:'موديول Buck متظبط على 5V',st:'ok',r:'بيطلّع 5V وبيسخن أقل. لازم تظبطه بالملتيميتر قبل ما توصّله بالشريحة.'}],
+ ic:[{t:'CD40106'},
+  {t:'HEF40106 أو MC14106',st:'ok',r:'نفس الشريحة من شركة تانية. السرعات ممكن تختلف فرق صغير.'},
+  {t:'74HC14',st:'warn',fx:p=>({...p,kS:1.15}),r:'نفس الرجول وبتشتغل، بس الساعات أبطأ بحوالي 15% (رقم تقريبي) لأن نقط القلب جواها مختلفة.'},
+  {t:'74LS14',st:'bad',fx:p=>({...p,frozen:true}),r:'الـ LS محتاجة مقاومات صغيرة جداً عشان تذبذب، فمع 1M التلات ساعات وقفت. اللمبة منورة ثابت ومش بترعش.'}],
+ rt1:[{t:'R1 1M · R2 390k · R3 100k'},
+  {t:'كله أبطأ: R1 1.5M · R2 470k · R3 150k',st:'ok',fx:p=>({...p,R:[1.5e6,470e3,150e3]}),r:'الرعشة أهدى وأبطأ، زي شمعة في أوضة مقفولة.'},
+  {t:'كله أسرع: R1 680k · R2 330k · R3 68k',st:'ok',fx:p=>({...p,R:[680e3,330e3,68e3]}),r:'الرعشة أسرع وأعصب، زي شمعة جنب شباك مفتوح.'},
+  {t:'البطيء بس أبطأ: R1 = 1.5M',st:'ok',fx:p=>({...p,R:[1.5e6,p.R[1],p.R[2]]}),r:'التمايل الكبير بقى أطول، والرجفة الصغيرة زي ما هي.'},
+  {t:'R3 = 10k بالغلط (بدل 100k)',st:'warn',fx:p=>({...p,R:[p.R[0],p.R[1],10e3]}),r:'الساعة السريعة بقت أسرع 10 مرات (حوالي 120 مرة في الثانية)، والعين مش بتلحقها. الرعشة بقت أنعم وأبهت.'}],
+ ct:[{t:'كيميائي 1µF'},
+  {t:'سيراميك 1µF (105)',st:'ok',r:'نفس السرعات، وأدق كمان لأن السيراميك مش بيتغير مع السخونية.'},
+  {t:'تانتالوم 1µF',st:'ok',r:'نفس السرعات. خلي بالك من اتجاهه زي الكيميائي.'},
+  {t:'2.2µF',st:'ok',fx:p=>({...p,Ct:[2.2e-6,2.2e-6,2.2e-6]}),r:'التلات ساعات بطّأت للنص تقريباً، والرعشة بقت كسولة.'},
+  {t:'10µF بالغلط',st:'warn',fx:p=>({...p,Ct:[10e-6,10e-6,10e-6]}),r:'الساعات بقت أبطأ 10 مرات: البطيئة بتقلب كل 8 ثواني تقريباً. ده مش رعشة، ده نور بيطلع وينزل ببطء.'}],
+ mix:[{t:'R4 10k · R5 22k · R6 47k'},
+  {t:'R6 = 22k (رجفة أوضح)',st:'ok',fx:p=>({...p,Rm:[p.Rm[0],p.Rm[1],22e3]}),r:'الرجفة السريعة بقت أوضح، والشمعة شكلها أعصب.'},
+  {t:'R4 = 15k (تمايل أهدى)',st:'ok',fx:p=>({...p,Rm:[15e3,p.Rm[1],p.Rm[2]]}),r:'التمايل الكبير بقى أخف، والرعشة كلها أهدى.'},
+  {t:'التلاتة 22k',st:'ok',fx:p=>({...p,Rm:[22e3,22e3,22e3]}),r:'التلات ساعات بقى ليهم نفس التأثير، فالرعشة بقت عشوائية ومفيهاش تمايل واضح.'}],
+ r7:[{t:'10k'},
+  {t:'6.8k',st:'ok',fx:p=>({...p,Rf:6.8e3}),r:'اللمبة أنور وعمرها ما تقرب تطفي. رعشة ألطف.'},
+  {t:'15k',st:'ok',fx:p=>({...p,Rf:15e3}),r:'الرعشة أعمق، واللمبة بتقرب تطفي في اللحظات الواطية.'},
+  {t:'من غيرها',st:'warn',fx:p=>({...p,Rf:0}),r:'مفيش حاجة شادّة النقطة N لفوق، فاللمبة بتطفي خالص كل شوية. ده مش شكل شمعة.'}],
+ c8:[{t:'22µF'},
+  {t:'10µF',st:'ok',fx:p=>({...p,Cn:10e-6}),r:'الرعشة أحدّ وأسرع.'},
+  {t:'47µF',st:'ok',fx:p=>({...p,Cn:47e-6}),r:'الرعشة أهدى وأنعم.'},
+  {t:'220µF بالغلط',st:'warn',fx:p=>({...p,Cn:220e-6}),r:'التنعيم زيادة عن اللزوم: الموجات كلها اتمسحت واللمبة شبه ثابتة.'}],
+ q1:[{t:'TIP122'},
+  {t:'TIP120 أو TIP121',st:'ok',r:'نفس الرجول ونفس الشغل بالظبط.'},
+  {t:'BD681 في نفس الخرم',st:'bad',fx:p=>({...p,qDead:true}),r:'ترتيب رجوله مختلف (E C B)، فالقاعدة والإميتر اتبدلوا. اللمبة مش بتنوّر خالص.'},
+  {t:'موسفت IRLZ44N في نفس الخرم',st:'warn',fx:p=>({...p,Vbe:2.4}),r:'رجوله (G D S) بنفس ترتيب B C E فبيشتغل، بس محتاج جهد أعلى عشان يفتح (رقم تقريبي)، فاللمبة أضعف وبتطفي في اللحظات الواطية.'}],
+ r89:[{t:'68Ω + 68Ω على التوازي'},
+  {t:'مقاومة واحدة 33Ω ½ وات',st:'ok',fx:p=>({...p,Re:33,single:true}),r:'نفس النتيجة تقريباً (33Ω بدل 34Ω). لازم تكون ½ وات لأنها شايلة السخونية لوحدها.'},
+  {t:'مقاومة واحدة 39Ω ½ وات',st:'ok',fx:p=>({...p,Re:39,single:true}),r:'اللمبة أضعف شوية في أعلى نقطة.'},
+  {t:'مقاومة واحدة 68Ω بس',st:'warn',fx:p=>({...p,Re:68,single:true}),r:'التيار نزل للنص تقريباً، واللمبة بقت أضعف بشكل واضح.'},
+  {t:'68kΩ بالغلط (كيلو مش أوم)',st:'bad',fx:p=>({...p,Re:34e3}),r:'التيار بقى صفر تقريباً واللمبة مطفية. غلطة مشهورة لأن الألوان شبه بعض: الفرق في الشريطة التالتة (أسود = أوم، برتقاني = كيلو).'}],
+ lamp:[{t:'T10 LED 12V'},
+  {t:'أي T10 أو W5W LED عادية',st:'ok',r:'نفس النتيجة.'},
+  {t:'لمبة W5W عادية (أم فتلة)',st:'warn',fx:p=>({...p,lampType:'w5w'}),r:'اللمبة دي محتاجة حوالي 400mA، والدايرة مش بتدّي أكتر من 100mA، فبتنوّر ضعيف جداً.'},
+  {t:'T10 CANbus',st:'warn',r:'بتشتغل، بس جواها مقاومة بتسحب تيار زيادة، فهي والـ TIP122 بيسخنوا أكتر.'}],
+ led:[{t:'LED أصفر 5mm'},
+  {t:'LED 3mm أو أي لون',st:'ok',r:'نفس النتيجة، بس شكل الإضاءة مختلف.'},
+  {t:'LED أبيض أو أزرق',st:'ok',r:'بياكل جهد أكتر (حوالي 3V)، بس مع 470Ω لسه تمام.'},
+  {t:'LED متركب بالعكس',st:'bad',fx:p=>({...p,ledRev:true}),r:'مش بينوّر خالص. لفّه: الرجل الطويلة ناحية الـ 470Ω.'}],
+ rled:[{t:'470Ω'},
+  {t:'1kΩ',st:'ok',fx:p=>({...p,Rled:1000}),r:'الـ LED بقى أهدى بحوالي النص.'},
+  {t:'330Ω',st:'warn',fx:p=>({...p,Rled:330}),r:'الـ LED أنور، بس قريب من أقصى تيار للـ LED العادي (حوالي 27mA).'},
+  {t:'من غير مقاومة',st:'bad',fx:p=>({...p,ledDead:true}),r:'التيار طلع لحد 100mA، والـ LED اتحرق في ثانية. 🔥'}],
+ wire:[{t:'سلوك جمبر'},
+  {t:'علبة جمبر جاهزة (Male-Male)',st:'ok',r:'نفس النتيجة.'},
+  {t:'سلك نت (Ethernet) متقشّر',st:'ok',r:'نفس النتيجة، وأرخص حاجة.'},
+  {t:'سلك شعر (مجدول)',st:'warn',r:'الشعر بيتفرّد ويتكسر جوه الخرم، وممكن يلمس الخرم اللي جنبه أو يفصل ويوصل، فالرعشة تبقى متقطعة بشكل غريب.'}]
+};
+let bbSwap={};
+function bbCalc(){return Object.entries(bbSwap).reduce((p,[k,i])=>{const o=BB_OPTS[k][i];return o&&o.fx?o.fx(p):p;},{...BB_BASE});}
+function bbLampParams(p){
+  if(bbState.lamp==='led')return {limit:Math.max(0,(p.Vin-3)/p.Rled),full:.02,dead:p.ledDead||p.ledRev};
+  if(p.lampType==='w5w')return {limit:.42*p.Vin/12,full:.42,dead:false};
+  return {limit:.06*Math.max(0,(p.Vin-6)/6),full:.06,dead:false};
+}
+function bbSyncLamp(){const l=bbLampParams(bbCalc());sim.lampLimit=l.limit;sim.lampFull=l.full;sim.lampDead=l.dead;}
+function bbApplySwaps(){
+  const p=bbCalc();
+  Object.assign(sim,{R:[...p.R],Ct:[...p.Ct],kS:p.kS,frozen:p.frozen,V5:p.Vin>=7?p.V5:0,Rm:[...p.Rm],Rf:p.Rf,Cn:p.Cn,Vbe:p.Vbe,qDead:p.qDead,Re:p.Re});
+  fillSelects();
+  $('#bbDict').innerHTML=bbDictHtml();
+  bbRenderSwapBar();
+  bbRender();
+}
+function bbSetSwap(k,i){
+  const next={...bbSwap};
+  if(i)next[k]=i;else delete next[k];
+  bbSwap=next;bbApplySwaps();
+}
+function bbRenderSwapBar(){
+  const el=$('#bbSwapBar'),ks=Object.keys(bbSwap);
+  el.hidden=!ks.length;
+  el.innerHTML=ks.length?`<b>🔁 بدائل شغالة دلوقتي:</b>${ks.map(k=>`<button class="chip" data-unswap="${k}">${BB_EDU[k].ic} ${BB_OPTS[k][bbSwap[k]].t} ✖</button>`).join('')}<button class="btn" data-unswap="*">↺ رجّع كله للأصلي</button>`:'';
+}
+function bbOptsHtml(k){
+  const os=BB_OPTS[k],cur=bbSwap[k]||0,o=os[cur];
+  return `<div class="edu alt"><b>🔁 اختار بديل وشوف النتيجة لايف</b><div class="opts">${os.map((x,i)=>`<button class="opt${i===cur?' on':''}" data-k="${k}" data-i="${i}">${i?'':'الأصلي: '}${x.t}</button>`).join('')}</div>${cur?`<div class="res st-${o.st}">${BB_ST[o.st]} ${o.r}</div>`:''}</div>`;
+}
+function bbMiniHtml(){return `<canvas id="bbMini" class="bbmini" aria-label="سطوع اللمبة في آخر 3 ثواني"></canvas><div class="bbmini-cap">🟧 سطوع اللمبة · 🟪 جهد N · آخر 3 ثواني · <a href="#sim">افتح المحاكي الكامل ←</a></div>`;}
+function bbDrawMini(){
+  const cv=$('#bbMini');if(!cv)return;
+  const dpr=window.devicePixelRatio||1,W=cv.clientWidth,H=cv.clientHeight;if(!W)return;
+  if(cv.width!==Math.round(W*dpr)){cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);}
+  const c=cv.getContext('2d'),h=sim.hist,N=h.length;c.setTransform(dpr,0,0,dpr,0,0);c.clearRect(0,0,W,H);
+  if(N<2)return;
+  const X=i=>i/(MAXH-1)*W;
+  c.beginPath();h.forEach((s,i)=>{const y=H-2-s.br*(H-6);i?c.lineTo(X(i),y):c.moveTo(X(i),y);});
+  c.lineTo(X(N-1),H);c.lineTo(0,H);c.closePath();c.fillStyle='rgba(255,181,71,.28)';c.fill();
+  c.beginPath();h.forEach((s,i)=>{const y=H-2-s.br*(H-6);i?c.lineTo(X(i),y):c.moveTo(X(i),y);});c.strokeStyle='#ffb547';c.lineWidth=1.6;c.stroke();
+  c.beginPath();h.forEach((s,i)=>{const y=H-2-s.n/5*(H-6);i?c.lineTo(X(i),y):c.moveTo(X(i),y);});c.strokeStyle='#b58cff';c.lineWidth=1.2;c.stroke();
+}
+function bbGone(){
+  const p=bbCalc(),g=new Set();
+  if(!sim.Rf){g.add('R7');g.add('J11');}
+  if(p.noTvs)g.add('D2');
+  if(p.single)g.add('R9');
+  return g;
+}
+function bbOhm(p){
+  const m={R1:sim.R[0],R2:sim.R[1],R3:sim.R[2],R4:sim.Rm[0],R5:sim.Rm[1],R6:sim.Rm[2],R7:sim.Rf,R8:bbCalc().single?sim.Re:sim.Re*2,R9:sim.Re*2,RT:bbCalc().Rled};
+  return m[p.id]||p.ohm;
+}
+function bbLabText(id,t){
+  if(!/^R/.test(id)||!t.includes(' '))return t;
+  const p=bbById(id);return id+' '+fmtR(bbOhm(p));
+}
+function bbLabVal(id,v){
+  const m={C4:sim.Ct[0],C5:sim.Ct[1],C6:sim.Ct[2],C8:sim.Cn};
+  return m[id]?fmtC(m[id]):v;
+}
+function bbLocHtml(p){
+  return p.pins.length?`<div class="bbloc"><b>مكانها على البورد</b><ul class="${p.pins.length>4?'cols':''}">${p.pins.map(([h],i)=>`<li>${p.pn?`<b>${p.pn[i]}</b> ← `:''}${bbHoleText(h)}</li>`).join('')}</ul></div>`:'';
+}
+function bbEasyHtml(p){
+  const e=BB_EDU[bbEduKey(p)];
+  return `<span class="tag">${p.lab||p.id}</span><h3>${e.ic} ${e.n}</h3><div class="edu"><b>هي إيه؟</b>${e.what}</div><div class="edu"><b>بتعمل إيه هنا؟</b>${e.why}</div>${p.t?`<div class="edu"><b>السلك ده بالذات</b>${p.t}</div>`:''}${bbOptsHtml(bbEduKey(p))}${bbMiniHtml()}${bbLocHtml(p)}`;
+}
+function bbDictHtml(){
+  return Object.entries(BB_EDU).map(([k,e])=>{
+    const ids=BPARTS.filter(p=>bbEduKey(p)===k).map(p=>p.id),first=ids.find(i=>/^J\d/.test(i))||ids[0];
+    const tag=k==='wire'?'J1 … J12':ids.join(' · ');
+    return `<div class="card bbcard" role="button" tabindex="0" data-id="${first}"><h4>${e.ic} ${e.n}</h4><span class="ids">${tag}</span><p>${e.why}</p>${bbOptsHtml(k)}</div>`;
+  }).join('');
+}
+function bbShowPart(id){
+  const p=bbById(id),st=bbState;
+  if(st.stage&&p.s>st.stage)bbSetStage(0);
+  if(p.mode&&p.mode!==st.lamp){st.lamp=p.mode;bbRender();}
+  st.sel=id;st.net=null;st.strip=null;bbApply();
+  $('#bbWrap').scrollIntoView({behavior:'smooth',block:'center'});
+}
+function bbSetMode(m){
+  bbState.mode=m;
+  $$('#bbMode button').forEach(b=>b.classList.toggle('on',b.dataset.m===m));
+  bbRender();
+}
+
+function bbPinsOn(p,net){
+  const nm=p.lab||p.id,idx=p.pins.map((x,i)=>x[1]===net?i:-1).filter(i=>i>=0);
+  return p.pn&&idx.length?idx.map(i=>nm+' '+p.pn[i]).join('، '):nm;
+}
+function bbNetHtml(net,vis,sm){
+  const d=BNET[net],ps=vis.filter(p=>bbTouches(p,net)),nj=ps.filter(p=>p.k==='jumper').length;
+  const names=ps.filter(p=>p.k!=='jumper').map(p=>bbPinsOn(p,net)).join('، ');
+  const strips=Object.keys(sm).filter(s=>sm[s]===net);
+  return `<h3>🔌 ${d.n}</h3><div class="bbmeter"><span>📟 الملتيميتر (السالب على الأرضي)</span><b id="bbMeter">${d.v()}</b></div><p style="margin:0"><b>متوصل بيه:</b> ${names||'—'}${nj?` · و${nj} سلك جمبر`:''}.</p>${strips.length?`<div class="pol">📍 ${strips.map(bbStripName).join('، ')}</div>`:''}`;
+}
+function bbInfoHtml(vis,sm){
+  const st=bbState;
+  if(st.sel)return bbPartHtml(bbById(st.sel));
+  if(st.net)return bbNetHtml(st.net,vis,sm);
+  if(st.strip)return `<h3>⭕ ${bbStripName(st.strip)}</h3><p style="margin:0">مفيش حاجة متوصلة هنا في المرحلة دي.</p><div class="pol">📌 الخمس خرم اللي في العمود الواحد (a–e أو f–j) متوصلين ببعض من جوه. عشان كده أي رجلين في نفس العمود = متوصلين.</div>`;
+  if(st.mode==='easy')return `<h3>👆 دوس على أي قطعة</h3><p style="margin:0 0 8px;color:var(--muted)">هقولك بالبلدي ومن غير مصطلحات: القطعة دي إيه، وبتعمل إيه هنا، ولو مش لاقيها تجيب إيه بدالها.</p><div class="pol">📌 لو دي أول مرة ليك مع الإلكترونيات، اقرا "أساسيات في دقيقة" تحت البورد الأول.</div>`;
+  return `<h3>👆 دوس على أي قطعة أو خرم</h3><p style="margin:0 0 8px;color:var(--muted)">القطعة هتقولك هي إيه وكل رجل منها في أنهي خرم. والخرم هيوريك كل اللي متوصل بيه، ويقيسلك الجهد عليه لايف.</p><div class="pol">📌 الحرف = الصف، والرقم = العمود. يعني <code>g26</code> = صف g عمود 26.</div>`;
+}
+function bbSelectPart(id){const st=bbState;st.sel=st.sel===id?null:id;st.net=null;st.strip=null;bbApply();}
+function bbSelectNet(n){const st=bbState;st.net=st.net===n?null:n;st.sel=null;st.strip=null;bbApply();}
+function bbSelectStrip(s){
+  const n=bbStripNets(bbVisible())[s],st=bbState;
+  if(n){bbSelectNet(n);return;}
+  st.sel=null;st.net=null;st.strip=st.strip===s?null:s;bbApply();
+}
+function bbClearSel(){const st=bbState;st.sel=null;st.net=null;st.strip=null;bbApply();}
+function bbSetStage(s){
+  const st=bbState,g=BB_STAGES.find(x=>x.s===s);
+  st.stage=s;st.sel=null;st.net=null;st.strip=null;st.lamp=s===6?'led':'t10';
+  $$('#bbStages .btn').forEach(b=>b.classList.toggle('pri',+b.dataset.s===s));
+  $('#bbStageNote').innerHTML=`${g.d}${g.step!==undefined?` <button class="btn" id="bbGoStep">📋 افتح الخطوة ${g.step+1} بالتفصيل</button>`:''}`;
+  const go=$('#bbGoStep');if(go)go.onclick=()=>{cur=g.step;renderSteps();$('#steps').scrollIntoView({behavior:'smooth'});};
+  bbRender();
+}
+function bbHover(e){
+  const tip=$('#bbTip'),w=$('#bbWrap'),p=e.target.closest('.bp'),s=e.target.closest('.bs');let t='';
+  if(p)t=bbShort(bbById(p.dataset.id));
+  else if(s){const n=bbStripNets(bbVisible())[s.dataset.s];t=bbStripName(s.dataset.s)+' · '+(n?BNET[n].n:'فاضي');}
+  if(!t){tip.style.display='none';return;}
+  const r=w.getBoundingClientRect();
+  tip.textContent=t;tip.style.display='block';
+  tip.style.left=(e.clientX-r.left+w.scrollLeft+14)+'px';tip.style.top=(e.clientY-r.top+w.scrollTop+16)+'px';
+}
+function bbTick(){
+  bbDrawMini();
+  if(bbEl.glow)bbEl.glow.style.opacity=(.02+.98*sim.br*sim.br).toFixed(3);
+  const now=performance.now();
+  if(bbEl.meter&&bbState.net&&now-bbEl.mt>120){bbEl.mt=now;const t=BNET[bbState.net].v();if(bbEl.meter.textContent!==t)bbEl.meter.textContent=t;}
+}
+function bbInit(){
+  $('#bbStages').innerHTML=BB_STAGES.map(x=>`<button class="btn" data-s="${x.s}">${x.b}</button>`).join('');
+  $$('#bbStages .btn').forEach(b=>b.onclick=()=>bbSetStage(+b.dataset.s));
+  $('#bbNets').innerHTML=`<span class="bbnl">تتبّع خط:</span>`+BB_CHIPS.map(k=>`<button class="chip" data-n="${k}"><i style="background:${BNET[k].c}"></i>${BNET[k].n}</button>`).join('');
+  $$('#bbNets .chip').forEach(b=>b.onclick=()=>bbSelectNet(b.dataset.n));
+  $('#bbLampBtn').onclick=()=>{bbState.lamp=bbState.lamp==='t10'?'led':'t10';bbRender();};
+  $('#bbLabels').onclick=()=>{bbState.labels=!bbState.labels;$('#bb').classList.toggle('nolab',!bbState.labels);$('#bbLabels').textContent=bbState.labels?'🏷️ إخفاء الأسماء':'🏷️ إظهار الأسماء';};
+  $('#bbFull').onclick=()=>{const w=$('#bbWrap');if(document.fullscreenElement)document.exitFullscreen();else if(w.requestFullscreen)w.requestFullscreen();};
+  $('#bbClear').onclick=bbClearSel;
+  const svg=$('#bb');
+  svg.addEventListener('click',e=>{const p=e.target.closest('.bp');if(p){bbSelectPart(p.dataset.id);return;}const s=e.target.closest('.bs');if(s){bbSelectStrip(s.dataset.s);return;}bbClearSel();});
+  svg.addEventListener('keydown',e=>{if(e.key!=='Enter'&&e.key!==' ')return;const p=e.target.closest('.bp');if(p){e.preventDefault();bbSelectPart(p.dataset.id);}});
+  svg.addEventListener('mousemove',bbHover);
+  svg.addEventListener('mouseleave',()=>{$('#bbTip').style.display='none';});
+  $$('#bbMode button').forEach(b=>b.onclick=()=>bbSetMode(b.dataset.m));
+  $('#bbDict').innerHTML=bbDictHtml();
+  $('#bbDict').addEventListener('click',e=>{if(e.target.closest('.opt'))return;const c=e.target.closest('.bbcard');if(c)bbShowPart(c.dataset.id);});
+  $('#bbDict').addEventListener('keydown',e=>{const c=e.target.closest('.bbcard');if(c&&(e.key==='Enter'||e.key===' ')){e.preventDefault();bbShowPart(c.dataset.id);}});
+  document.addEventListener('click',e=>{
+    const o=e.target.closest('.opt');
+    if(o){const card=o.closest('.bbcard');bbSetSwap(o.dataset.k,+o.dataset.i);if(card)bbShowPart(card.dataset.id);return;}
+    const u=e.target.closest('[data-unswap]');
+    if(u){if(u.dataset.unswap==='*'){bbSwap={};bbApplySwaps();}else bbSetSwap(u.dataset.unswap,0);}
+  });
+  ['sR1','sR2','sR3','sCn','sRf'].forEach(id=>$('#'+id).addEventListener('change',()=>bbRender()));
+  $('#resetBtn').addEventListener('click',()=>{bbSwap={};bbApplySwaps();});
+  bbSetStage(0);
+  bbRenderSwapBar();
+}
+
+
+/* =================== INIT =================== */
+renderSch('all');
+$$('#schTabs .btn').forEach(b=>b.onclick=()=>renderSch(b.dataset.t));
+$('#sch').addEventListener('click',e=>{const g=e.target.closest('.comp');if(g)selectComp(g.dataset.id);});
+$('#colorBtn').onclick=()=>{$('#sch').classList.toggle('colored');};
+$('#sch').classList.add('colored');
+$('#dipSvg').innerHTML=dipSvg();
+$('#to7805').innerHTML=to220('LM7805',['IN','GND','OUT'],['+12V','أرضي','+5V'],'الطبق = GND','#9aa6bd');
+$('#toTip').innerHTML=to220('TIP122',['B','C','E'],['النقطة N','سالب اللمبة','68Ω ∥ 68Ω'],'⚠ الطبق = C','#ff5d5d');
+fillSelects();bindSim();renderBOM();renderSteps();renderWiring();renderTrouble();bindNav();
+$('#wreset').onclick=()=>{wireState.forEach(g=>g.fill(false));renderWiring();};
+$('#carSvg').innerHTML=carSvg();
+bbInit();
+for(let i=0;i<MAXH;i++){for(let k=0;k<4;k++)stepSim(.001);pushHist();}
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
