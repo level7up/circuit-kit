@@ -60,3 +60,7 @@ Every section except the simulator is optional: leave `car`, `pinouts`, etc. out
 
 - Breadboard rails in the included circuit: top = +5V / GND, bottom = GND / +12V.
 - Simulation numbers are approximations meant to show behaviour, not SPICE-accurate values.
+
+## Free lab (`?lab=sandbox`)
+
+Drag resistors, LEDs and switches onto an empty breadboard, add jumper wires, pick a supply voltage, and a DC solver (`src/lib/sandbox/solver.ts`, nodal analysis with a piecewise LED model) shows what happens: LED current and brightness, burned LEDs, reversed LEDs, shorts, hot or bypassed resistors. Plain-language explanations live in `src/lab/sandbox-content.ts`; the build is saved in the browser (localStorage). The empty-breadboard lesson is at `?learn=breadboard`.

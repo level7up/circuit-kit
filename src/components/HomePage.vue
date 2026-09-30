@@ -26,6 +26,16 @@ document.title = 'معمل الدواير – اختار دايرتك'
           <span class="btn pri">ابدأ الدرس ←</span>
         </div>
       </a>
+      <a class="card kit-card learn-card lab-card" href="?lab=sandbox">
+        <div class="kit-icon" aria-hidden="true">🧪</div>
+        <span class="tag">معمل حر · جرّب بإيدك</span>
+        <h3>ركّب دايرتك بنفسك وشوفها بتشتغل</h3>
+        <p>اسحب مقاومات وLED ومفاتيح وسلوك على البريد بورد، واختار جهد المصدر، وشوف الـ LED بينوّر ولا بيتحرق، وليه.</p>
+        <div class="kit-foot">
+          <span class="kit-level">بعد الدرس الأول</span>
+          <span class="btn pri">افتح المعمل ←</span>
+        </div>
+      </a>
     </div>
     <h2 class="home-count">{{ circuits.length }} {{ circuits.length === 1 ? 'دايرة متاحة' : 'دواير متاحة' }}</h2>
     <div class="kit-grid">

@@ -364,3 +364,39 @@ main.wrap>section{border-bottom:0}
 .kit-foot .btn{white-space:nowrap;flex:none}
 .kit-foot{gap:10px}
 .guide-title{padding-top:64px}
+.lab-card{border-color:#3b2a5a;background:linear-gradient(160deg,#1a1430,var(--panel))}
+.sb-toolbar{margin-bottom:14px}
+.sb-palette{display:flex;flex-wrap:wrap;gap:8px}
+.sb-item{display:inline-flex;align-items:center;gap:8px;background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:12px;padding:10px 16px;font:inherit;font-size:15px;cursor:grab;touch-action:none;user-select:none;transition:border-color .15s}
+.sb-item:hover,.sb-item.on{border-color:var(--amber)}
+.sb-item.on{background:#2a2110}
+.sb-item:active{cursor:grabbing}
+.sb-item-icon{font-size:20px}
+.sb-controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
+.sb-controls label{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--muted)}
+.sb-controls select{width:auto}
+.sb-help{margin:10px 0 0;font-size:13.5px;color:var(--muted)}
+kbd{font-family:Consolas,monospace;background:var(--panel2);border:1px solid var(--line);border-radius:5px;padding:0 6px;font-size:12px}
+.sb-board svg{touch-action:none;cursor:default}
+#bb .sb-part{cursor:grab}
+#bb .sb-part.sel{filter:drop-shadow(0 0 4px #f59e0b)}
+#bb .sb-part.hot{filter:drop-shadow(0 0 5px #ef4444)}
+#bb .sb-ghost{opacity:.6;pointer-events:none}
+#bb .sb-ghost-hole{fill:none;stroke:#22c55e;stroke-width:3}
+#bb .sb-ghost.bad .sb-ghost-hole{stroke:#ef4444}
+#bb .sb-plus{fill:#b91c1c;font-size:11px;font-weight:900;text-anchor:middle}
+#bb .sb-burn{font-size:13px;text-anchor:middle}
+#bb .sb-switch{fill:#1f2937;stroke:#0b0f17}
+#bb .sb-knob{fill:#9ca3af}
+#bb .sb-knob-on{fill:#22c55e}
+#bb .sb-caption{fill:#475569;font-size:8px;font-weight:800;text-anchor:middle}
+#bb .sb-labels{pointer-events:none}
+.sb-under{display:grid;grid-template-columns:1fr 340px;gap:16px;align-items:start;margin:14px 0 24px}
+@media(max-width:900px){.sb-under{grid-template-columns:1fr}}
+.sb-messages h3,.sb-inspector h3{margin:0 0 8px;color:var(--amber)}
+.sb-messages .res{margin-top:8px}
+.sb-probe{margin:0 0 6px}
+.sb-inspector label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted);margin-top:10px}
+.sb-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.sb-reading{margin:0;font-size:14px}
+.sb-tip{font-size:13px;color:var(--muted);margin:10px 0 0}
