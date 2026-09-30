@@ -28,16 +28,23 @@ const PART_TEXT: Record<string, (p: FlickerParams) => string> = {
 }
 
 const LED_STAGE = 6
+const MAX_DRAWN_EMITTER = 3
+const isBundle = (p: FlickerParams) => p.emitter.length > MAX_DRAWN_EMITTER
+
+function labelText(id: string, base: string, p: FlickerParams): string {
+  if (id === 'R8' && isBundle(p)) return `R8 حزمة ${p.emitter.length}×${fmtR(p.emitter[0])}`
+  return OHM_OF[id] && base.includes(' ') ? `${id} ${fmtR(OHM_OF[id](p))}` : base
+}
 
 const dynamics: BoardDynamics<FlickerParams> = {
   hidden: p => new Set([
     ...(p.Rf ? [] : ['R7', 'J11']),
     ...(p.noTvs ? ['D2'] : []),
-    ...(p.emitter.length < 2 ? ['R9'] : []),
-    ...(p.emitter.length < 3 ? ['R10'] : [])
+    ...(p.emitter.length < 2 || isBundle(p) ? ['R9'] : []),
+    ...(p.emitter.length < 3 || isBundle(p) ? ['R10'] : [])
   ]),
   ohm: (id, p) => OHM_OF[id]?.(p),
-  labelText: (id, base, p) => (OHM_OF[id] && base.includes(' ') ? `${id} ${fmtR(OHM_OF[id](p))}` : base),
+  labelText,
   labelSub: (id, base, p) => (CAP_OF[id] ? fmtC(CAP_OF[id](p)) : base),
   partText: (id, p) => PART_TEXT[id]?.(p),
   lampMode: p => p.lampMode,

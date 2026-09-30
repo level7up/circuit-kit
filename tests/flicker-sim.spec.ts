@@ -131,16 +131,34 @@ describe('parking flicker simulation', () => {
     })
 
     it('makes the desk test work with the kit 470Ω on the emitter and 1kΩ on the LED', () => {
-      const p = { ...applySwaps(led, { r89: pick('r89', '470Ω'), rled: pick('rled', '1kΩ') }, board.alternatives), lampMode: 'led' as const }
+      const p = { ...applySwaps(led, { r89: pick('r89', '470Ω لوحدها'), rled: pick('rled', '1kΩ') }, board.alternatives), lampMode: 'led' as const }
       const r = run(p)
       expect(r.max - r.min).toBeGreaterThan(0.15)
       expect(r.offShare).toBeLessThan(0.05)
     })
 
+    it('gets close to the original with 10 × 470Ω from the BOM', () => {
+      const r = run(swap('r89', pick('r89', '10 × 470Ω')))
+      expect(r.max).toBe(1)
+      expect(r.min).toBeGreaterThan(0.25)
+      expect(close(r)).toBeLessThan(0.2)
+    })
+
+    it('matches the original with 14 × 470Ω', () => {
+      expect(close(run(swap('r89', pick('r89', '14 × 470Ω'))))).toBeLessThan(0.03)
+    })
+
+    it('draws a bundle as one resistor in the R8 spot', () => {
+      const p = swap('r89', pick('r89', '10 × 470Ω'))
+      const hidden = board.dynamics.hidden(p)
+      expect(hidden.has('R9') && hidden.has('R10')).toBe(true)
+      expect(board.dynamics.labelText('R8', 'R8 68Ω', p)).toContain('10×470Ω')
+    })
+
     it('shows R10 on the board only when three resistors are used', () => {
       expect(board.dynamics.hidden(defaults).has('R10')).toBe(true)
       expect(board.dynamics.hidden(swap('r89', pick('r89', '3 × 100Ω'))).has('R10')).toBe(false)
-      expect(board.dynamics.hidden(swap('r89', pick('r89', '470Ω'))).has('R9')).toBe(true)
+      expect(board.dynamics.hidden(swap('r89', pick('r89', '470Ω لوحدها'))).has('R9')).toBe(true)
     })
   })
 
