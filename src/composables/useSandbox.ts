@@ -1,6 +1,6 @@
 import { computed, ref, watch } from 'vue'
 import { EXAMPLES, explain, partLabels } from '../lab/sandbox-content'
-import { canPlace, occupied, orientationOf, secondHole } from '../lib/sandbox/placement'
+import { canPlaceLegs, legsFor, occupied, orientationOf } from '../lib/sandbox/placement'
 import { solve, type SandboxKind, type SandboxPart } from '../lib/sandbox/solver'
 
 const STORAGE_KEY = 'circuit-lab:sandbox'
@@ -62,9 +62,9 @@ export function useSandbox() {
   const rotate = (id: string): boolean => {
     const p = parts.value.find(x => x.id === id)
     if (!p || p.kind === 'wire') return false
-    const b = secondHole(p.a, p.kind, orientationOf(p) === 'h' ? 'v' : 'h')
-    if (!canPlace(p.a, b, occupied(parts.value, id))) return false
-    update(id, { b })
+    const legs = legsFor(p.a, p.kind, orientationOf(p) === 'h' ? 'v' : 'h')
+    if (!canPlaceLegs(legs, occupied(parts.value, id))) return false
+    update(id, legs)
     return true
   }
   const flip = (id: string) => {

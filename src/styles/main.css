@@ -400,3 +400,25 @@ kbd{font-family:Consolas,monospace;background:var(--panel2);border:1px solid var
 .sb-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
 .sb-reading{margin:0;font-size:14px}
 .sb-tip{font-size:13px;color:var(--muted);margin:10px 0 0}
+#bb .sb-btn-body{fill:#1f2937;stroke:#0b0f17}
+#bb .sb-btn-cap{fill:#9ca3af;stroke:#4b5563}
+#bb .sb-btn-cap.on{fill:#22c55e;stroke:#15803d}
+#bb .sb-buzzer{fill:#111827;stroke:#374151;stroke-width:1.5}
+#bb .sb-wave{fill:none;stroke:#f59e0b;stroke-width:2;animation:sbwave .6s ease-out infinite}
+@keyframes sbwave{0%{opacity:1}100%{opacity:0}}
+#bb .sb-motor{fill:#9ca3af;stroke:#4b5563;stroke-width:1.5}
+#bb .sb-rotor{transform-box:fill-box;transform-origin:center}
+#bb .sb-rotor.spin{animation:sbspin 1s linear infinite}
+@keyframes sbspin{to{transform:rotate(360deg)}}
+#bb .sb-blade{fill:#374151}
+#bb .sb-ldr{fill:#fde68a;stroke:#92400e;stroke-width:1.2}
+#bb .sb-pot{fill:#1e40af;stroke:#1e3a8a}
+#bb .sb-pot-knob{fill:#e5e7eb;stroke:#9ca3af}
+#bb .sb-to92{fill:#111827;stroke:#000}
+#bb .sb-to92t{fill:#d1d5db;font-size:5.5px;font-weight:700;text-anchor:middle}
+#bb .sb-pin{fill:#475569;font-size:7.5px;font-weight:800;text-anchor:middle}
+@media (prefers-reduced-motion: reduce){#bb .sb-rotor.spin,#bb .sb-wave{animation:none}}
+.sb-palette{flex-direction:column;gap:10px}
+.sb-group{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.sb-group-title{font-size:12.5px;color:var(--muted);font-weight:700;min-width:44px}
+.sb-inspector input[type=range]{width:100%;accent-color:var(--amber)}

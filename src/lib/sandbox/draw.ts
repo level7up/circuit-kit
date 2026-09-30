@@ -49,11 +49,79 @@ function toggleSwitch(p: SandboxPart): string {
     + `<text x="${cx}" y="${cy + h / 2 + 11}" class="sb-caption">${p.closed ? 'ON' : 'OFF'}</text>`
 }
 
+const mid = (p: SandboxPart) => {
+  const a = holeXY(p.a)
+  const b = holeXY(p.b)
+  return { a, b, cx: (a.x + b.x) / 2, cy: (a.y + b.y) / 2 }
+}
+const leads = (p: SandboxPart, cx: number, cy: number) => [p.a, p.b, ...(p.c ? [p.c] : [])]
+  .map(h => { const q = holeXY(h); return `<line x1="${q.x}" y1="${q.y}" x2="${cx}" y2="${cy}" class="bb-lead"/><circle cx="${q.x}" cy="${q.y}" r="2.6" class="bb-foot"/>` }).join('')
+
+function button(p: SandboxPart): string {
+  const { cx, cy } = mid(p)
+  return leads(p, cx, cy) + `<rect x="${cx - 13}" y="${cy - 13}" width="26" height="26" rx="4" class="sb-btn-body"/><circle cx="${cx}" cy="${cy}" r="8" class="${p.pressed ? 'sb-btn-cap on' : 'sb-btn-cap'}"/><text x="${cx}" y="${cy + 24}" class="sb-caption">${p.pressed ? 'مضغوط' : 'اضغط'}</text>`
+}
+
+function buzzer(p: SandboxPart, r?: PartResult): string {
+  const { a, cx, cy } = mid(p)
+  const waves = r?.active ? [16, 22, 28].map((rad, i) => `<path d="M${cx + rad * 0.7},${cy - rad * 0.7} A${rad},${rad} 0 0 1 ${cx + rad * 0.7},${cy + rad * 0.7}" class="sb-wave" style="animation-delay:${i * 0.15}s"/>`).join('') : ''
+  return leads(p, cx, cy) + `<circle cx="${cx}" cy="${cy}" r="12" class="sb-buzzer"/><circle cx="${cx}" cy="${cy}" r="3" fill="#0b0f17"/>` + waves + `<text x="${a.x}" y="${a.y - 7}" class="sb-plus">+</text>`
+}
+
+function bulb(p: SandboxPart, r?: PartResult): string {
+  const { cx, cy } = mid(p)
+  const glow = r?.brightness ?? 0
+  return `<circle cx="${cx}" cy="${cy}" r="${14 + 18 * glow}" fill="#ffb45a" opacity="${(glow * 0.6).toFixed(2)}" filter="blur(4px)"/>` + leads(p, cx, cy)
+    + `<circle cx="${cx}" cy="${cy}" r="12" fill="rgba(255,248,230,${(0.35 + 0.6 * glow).toFixed(2)})" stroke="#cbd5e1"/><path d="M${cx - 6},${cy + 3} l3,-6 l3,6 l3,-6 l3,6" fill="none" stroke="${glow > 0.05 ? '#ff9a2e' : '#6b7280'}" stroke-width="1.4"/>`
+}
+
+function motor(p: SandboxPart, r?: PartResult): string {
+  const { cx, cy } = mid(p)
+  const speed = r?.speed ?? 0
+  const spin = speed > 0 ? `style="animation-duration:${(1.4 - speed * 1.2).toFixed(2)}s"` : ''
+  return leads(p, cx, cy) + `<circle cx="${cx}" cy="${cy}" r="16" class="sb-motor"/><g class="${speed > 0 ? 'sb-rotor spin' : 'sb-rotor'}" ${spin}><rect x="${cx - 12}" y="${cy - 2}" width="24" height="4" rx="2" class="sb-blade"/><rect x="${cx - 2}" y="${cy - 12}" width="4" height="24" rx="2" class="sb-blade"/></g><circle cx="${cx}" cy="${cy}" r="3" fill="#e5e7eb"/>`
+}
+
+function ldr(p: SandboxPart): string {
+  const { cx, cy } = mid(p)
+  const track = [-6, -2, 2, 6].map(y => `<line x1="${cx - 7}" y1="${cy + y}" x2="${cx + 7}" y2="${cy + y}" stroke="#b45309" stroke-width="1.6"/>`).join('')
+  return leads(p, cx, cy) + `<circle cx="${cx}" cy="${cy}" r="11" class="sb-ldr"/>${track}`
+}
+
+function pot(p: SandboxPart): string {
+  const { cx, cy } = mid(p)
+  const ang = (-135 + 270 * (p.level ?? 0.5)) * Math.PI / 180
+  return leads(p, cx, cy) + `<rect x="${cx - 16}" y="${cy - 16}" width="32" height="32" rx="4" class="sb-pot"/><circle cx="${cx}" cy="${cy}" r="11" class="sb-pot-knob"/><line x1="${cx}" y1="${cy}" x2="${(cx + 9 * Math.sin(ang)).toFixed(1)}" y2="${(cy - 9 * Math.cos(ang)).toFixed(1)}" stroke="#0b0f17" stroke-width="2.4" stroke-linecap="round"/>`
+}
+
+function npn(p: SandboxPart, r?: PartResult): string {
+  const { cx, cy } = mid(p)
+  const burned = p.burned || r?.transistor === 'burned'
+  const legs = [p.a, p.c ?? p.a, p.b].map(h => holeXY(h))
+  const names = ['C', 'B', 'E']
+  return leads(p, cx, cy) + `<path d="M${cx - 13},${cy + 6} L${cx - 13},${cy - 2} A13,13 0 0 1 ${cx + 13},${cy - 2} L${cx + 13},${cy + 6} Z" class="sb-to92"/>`
+    + `<text x="${cx}" y="${cy + 3}" class="sb-to92t">BC547</text>`
+    + legs.map((q, i) => `<text x="${q.x}" y="${q.y + 13}" class="sb-pin">${names[i]}</text>`).join('')
+    + (burned ? `<text x="${cx}" y="${cy - 16}" class="sb-burn">🔥</text>` : '')
+}
+
+function diode(p: SandboxPart): string {
+  return drawPart(asBoardPart(p, 'diode'), { ...baseCtx, ohm: () => undefined })
+}
+
 export function drawSandboxPart(p: SandboxPart, r?: PartResult): string {
   switch (p.kind) {
     case 'res': return drawPart(asBoardPart(p, 'res'), { ...baseCtx, ohm: () => p.ohms })
     case 'wire': return drawPart(asBoardPart(p, 'jumper'), { ...baseCtx, wireColor: () => wireColorFor(p.a, p.b), ohm: () => undefined })
     case 'led': return led(p, r)
     case 'switch': return toggleSwitch(p)
+    case 'button': return button(p)
+    case 'diode': return diode(p)
+    case 'buzzer': return buzzer(p, r)
+    case 'bulb': return bulb(p, r)
+    case 'motor': return motor(p, r)
+    case 'ldr': return ldr(p)
+    case 'pot': return pot(p)
+    case 'npn': return npn(p, r)
   }
 }

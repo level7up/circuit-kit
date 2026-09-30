@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { EXAMPLES, explain, recommendedResistor } from '../src/lab/sandbox-content'
-import { canPlace, occupied } from '../src/lib/sandbox/placement'
+import { canPlace, legsFor, occupied, orientationOf } from '../src/lib/sandbox/placement'
 import { solve, type SandboxPart } from '../src/lib/sandbox/solver'
 
 const build = (key: string, patch: (p: SandboxPart) => SandboxPart = p => p) => {
@@ -13,6 +13,36 @@ describe('sandbox examples and explanations', () => {
   it.each(EXAMPLES.map(e => [e.key]))('places every part of the %s example on free, real holes', key => {
     const { parts } = build(key)
     parts.forEach((p, i) => expect(canPlace(p.a, p.b, occupied(parts.slice(0, i)))).toBe(true))
+  })
+
+  it.each(EXAMPLES.map(e => [e.key]))('uses the real leg spacing of every part in the %s example', key => {
+    const { parts } = build(key)
+    for (const p of parts.filter(x => x.kind !== 'wire')) {
+      const legs = legsFor(p.a, p.kind as never, orientationOf(p))
+      expect({ id: p.id, ...legs }).toEqual({ id: p.id, a: p.a, b: p.b, ...(p.c ? { c: p.c } : {}) })
+    }
+  })
+
+  it('turns the bulb on only while the transistor button is pressed', () => {
+    const off = build('npn')
+    const on = build('npn', p => (p.kind === 'button' ? { ...p, pressed: true } : p))
+    expect(off.result.parts.p1.brightness).toBeLessThan(0.01)
+    expect(on.result.parts.p1.brightness).toBeGreaterThan(0.4)
+    expect(on.result.burnedNow).toEqual([])
+  })
+
+  it('lights the night-light LED only in the dark', () => {
+    const bright = build('ldr')
+    const dark = build('ldr', p => (p.kind === 'ldr' ? { ...p, level: 0.1 } : p))
+    expect(bright.result.parts.p8.ledState).toBe('off')
+    expect(dark.result.parts.p8.ledState).toBe('on')
+  })
+
+  it('dims the potentiometer example without ever burning the LED', () => {
+    for (const level of [0, 0.5, 1]) {
+      const r = build('pot', p => (p.kind === 'pot' ? { ...p, level } : p)).result
+      expect(r.burnedNow).toEqual([])
+    }
   })
 
   it('lights the LED example and says so', () => {

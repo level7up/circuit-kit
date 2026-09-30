@@ -1,44 +1,95 @@
 import { stripOf } from '../breadboard/geometry'
 
-export type SandboxKind = 'res' | 'led' | 'wire' | 'switch'
+export type SandboxKind = 'res' | 'led' | 'wire' | 'switch' | 'button' | 'diode' | 'buzzer' | 'bulb' | 'motor' | 'ldr' | 'pot' | 'npn'
+export type LedColor = 'red' | 'yellow' | 'green' | 'blue' | 'white'
 
 export interface SandboxPart {
   id: string
   kind: SandboxKind
   a: string
   b: string
+  c?: string
   ohms?: number
   color?: LedColor
   closed?: boolean
+  pressed?: boolean
+  level?: number
   burned?: boolean
   burnCurrent?: number
 }
-
-export type LedColor = 'red' | 'yellow' | 'green' | 'blue' | 'white'
 
 export const LED_VF: Record<LedColor, number> = { red: 1.8, yellow: 2, green: 2.1, blue: 3, white: 3 }
 export const LED_MAX_A = 0.03
 export const LED_FULL_A = 0.02
 export const RESISTOR_RATED_W = 0.25
+export const NPN_BETA = 200
+export const NPN_MAX_IB = 0.02
+export const NPN_MAX_IC = 0.2
+export const BULB_OHMS = 144
+export const BULB_RATED_W = 1
+export const MOTOR_OHMS = 24
+export const MOTOR_START_A = 0.04
+export const MOTOR_FULL_A = 0.4
+export const POT_OHMS = 10000
+export const BUZZER_MIN_A = 0.01
 
-const LED_SERIES_OHMS = 15
 const GMIN = 1e-9
-const MAX_ITERATIONS = 40
+const MAX_ITERATIONS = 80
+const VBE = 0.65
+const RBE = 25
+const VCE_SAT = 0.2
+const RCE_SAT = 2
+const MIN_SEGMENT_OHMS = 1
+const LEAKAGE_A = 1e-6
 
-export type LedState = 'on' | 'off' | 'reversed' | 'burned' | 'bypassed'
+interface Junction {
+  vf: number
+  rs: number
+  max: number
+}
+
+const JUNCTION: Record<'led' | 'diode' | 'buzzer', (p: SandboxPart) => Junction> = {
+  led: p => ({ vf: LED_VF[p.color ?? 'red'], rs: 15, max: LED_MAX_A }),
+  diode: () => ({ vf: 0.7, rs: 0.5, max: 1 }),
+  buzzer: () => ({ vf: 2.8, rs: 120, max: 0.06 })
+}
+
+export const ldrOhms = (level = 0.5) => 10 ** (5 - 3 * Math.min(1, Math.max(0, level)))
+
+function resistance(p: SandboxPart): number | null {
+  switch (p.kind) {
+    case 'res': return p.ohms ?? 1000
+    case 'bulb': return BULB_OHMS
+    case 'motor': return MOTOR_OHMS
+    case 'ldr': return ldrOhms(p.level)
+    default: return null
+  }
+}
+
+const isJunction = (k: SandboxKind): k is 'led' | 'diode' | 'buzzer' => k === 'led' || k === 'diode' || k === 'buzzer'
+
+export type JunctionState = 'on' | 'off' | 'reversed' | 'burned' | 'bypassed'
+export type LedState = JunctionState
+export type TransistorState = 'off' | 'active' | 'saturated' | 'burned'
 
 export interface PartResult {
   current: number
   voltage: number
+  junction?: JunctionState
   ledState?: LedState
   brightness?: number
+  active?: boolean
+  speed?: number
   hot?: boolean
   bypassed?: boolean
+  transistor?: TransistorState
+  ib?: number
+  ic?: number
+  ohms?: number
 }
 
 export interface SolveResult {
   short: boolean
-  nodeOf: (strip: string) => number
   voltage: (strip: string) => number | null
   parts: Record<string, PartResult>
   burnedNow: string[]
@@ -77,91 +128,199 @@ function solveLinear(A: number[][], z: number[]): number[] {
   return M.map((row, i) => row[n] / (row[i] || 1e-18))
 }
 
-interface Element {
-  part: SandboxPart
-  a: string
-  b: string
-}
-
-function buildNodes(parts: SandboxPart[]): UnionFind {
+function connect(parts: SandboxPart[]): UnionFind {
   const uf = new UnionFind()
   uf.union('tp', 'bp')
   uf.union('tn', 'bn')
   for (const p of parts) {
-    if (p.kind === 'wire' || (p.kind === 'switch' && p.closed)) uf.union(stripOf(p.a), stripOf(p.b))
+    const joined = p.kind === 'wire' || (p.kind === 'switch' && p.closed) || (p.kind === 'button' && p.pressed)
+    if (joined) uf.union(stripOf(p.a), stripOf(p.b))
   }
   return uf
 }
 
+interface Circuit {
+  node: (hole: string) => string
+  index: Map<string, number>
+  fixed: Map<string, number>
+}
+
+class Mna {
+  readonly A: number[][]
+  readonly z: number[]
+  constructor(private c: Circuit) {
+    const n = c.index.size
+    this.A = Array.from({ length: n }, (_, i) => Array.from({ length: n }, (_, j) => (i === j ? GMIN : 0)))
+    this.z = new Array(n).fill(0)
+  }
+  private i(node: string): number { return this.c.index.get(node) as number }
+  conductance(a: string, b: string, g: number) {
+    const ia = this.i(a), ib = this.i(b)
+    this.A[ia][ia] += g; this.A[ib][ib] += g; this.A[ia][ib] -= g; this.A[ib][ia] -= g
+  }
+  source(a: string, b: string, amps: number) {
+    this.z[this.i(a)] -= amps; this.z[this.i(b)] += amps
+  }
+  junction(a: string, b: string, vf: number, rs: number) {
+    this.conductance(a, b, 1 / rs)
+    this.source(a, b, -vf / rs)
+  }
+  transconductance(from: string, to: string, ctrlP: string, ctrlN: string, gm: number, offset: number) {
+    const f = this.i(from), t = this.i(to), p = this.i(ctrlP), n = this.i(ctrlN)
+    this.A[f][p] += gm; this.A[f][n] -= gm; this.A[t][p] -= gm; this.A[t][n] += gm
+    this.z[f] += gm * offset; this.z[t] -= gm * offset
+  }
+  solve(): Map<string, number> {
+    for (const [node, v] of this.c.fixed) {
+      const r = this.i(node)
+      this.A[r] = this.A[r].map((_, j) => (j === r ? 1 : 0))
+      this.z[r] = v
+    }
+    const x = solveLinear(this.A, this.z)
+    return new Map([...this.c.index].map(([node, i]) => [node, x[i]]))
+  }
+}
+
+interface NpnLegs { c: string; b: string; e: string }
+
+function npnLegs(p: SandboxPart, node: (h: string) => string): NpnLegs {
+  return { c: node(p.a), b: node(p.c ?? p.a), e: node(p.b) }
+}
+
+function stampParts(m: Mna, parts: SandboxPart[], node: (h: string) => string, jOn: Map<string, boolean>, qState: Map<string, TransistorState>) {
+  for (const p of parts) {
+    if (p.burned) continue
+    const a = node(p.a)
+    const b = node(p.b)
+    const r = resistance(p)
+    if (r !== null && a !== b) m.conductance(a, b, 1 / r)
+    else if (isJunction(p.kind) && a !== b) {
+      const j = JUNCTION[p.kind](p)
+      if (jOn.get(p.id)) m.junction(a, b, j.vf, j.rs)
+      else m.conductance(a, b, GMIN)
+    } else if (p.kind === 'pot' && p.c) {
+      const total = p.ohms ?? POT_OHMS
+      const pos = Math.min(1, Math.max(0, p.level ?? 0.5))
+      const w = node(p.c)
+      if (a !== w) m.conductance(a, w, 1 / Math.max(MIN_SEGMENT_OHMS, total * (1 - pos)))
+      if (w !== b) m.conductance(w, b, 1 / Math.max(MIN_SEGMENT_OHMS, total * pos))
+    } else if (p.kind === 'npn' && p.c) {
+      const q = npnLegs(p, node)
+      const st = qState.get(p.id)
+      if (st === 'off' || q.b === q.e) { m.conductance(q.b, q.e, GMIN); m.conductance(q.c, q.e, GMIN); continue }
+      m.junction(q.b, q.e, VBE, RBE)
+      if (st === 'active') m.transconductance(q.c, q.e, q.b, q.e, NPN_BETA / RBE, VBE)
+      else m.junction(q.c, q.e, VCE_SAT, RCE_SAT)
+    }
+  }
+}
+
+function nextStates(parts: SandboxPart[], node: (h: string) => string, V: Map<string, number>, jOn: Map<string, boolean>, qState: Map<string, TransistorState>) {
+  const at = (n: string) => V.get(n) ?? 0
+  const j = new Map(jOn)
+  const q = new Map(qState)
+  for (const p of parts) {
+    if (p.burned) continue
+    if (isJunction(p.kind)) {
+      const { vf, rs } = JUNCTION[p.kind](p)
+      const drop = at(node(p.a)) - at(node(p.b))
+      j.set(p.id, jOn.get(p.id) ? (drop - vf) / rs > 0 : drop > vf)
+    }
+    if (p.kind === 'npn' && p.c) {
+      const { c, b, e } = npnLegs(p, node)
+      const vbe = at(b) - at(e)
+      const vce = at(c) - at(e)
+      const st = qState.get(p.id) ?? 'off'
+      const ib = (vbe - VBE) / RBE
+      const beOn = st === 'off' ? vbe > VBE : ib > 0
+      if (!beOn) q.set(p.id, 'off')
+      else if (st === 'off') q.set(p.id, 'active')
+      else if (st === 'active') q.set(p.id, vce < VCE_SAT ? 'saturated' : 'active')
+      else if (st === 'saturated') {
+        const icSat = (vce - VCE_SAT) / RCE_SAT
+        q.set(p.id, icSat > NPN_BETA * ib || icSat < 0 ? 'active' : 'saturated')
+      }
+    }
+  }
+  return { j, q }
+}
+
+function mapsEqual<K, V>(x: Map<K, V>, y: Map<K, V>) {
+  return [...x].every(([k, v]) => y.get(k) === v)
+}
+
 export function solve(parts: SandboxPart[], supply: number): SolveResult {
-  const uf = buildNodes(parts)
+  const uf = connect(parts)
+  const node = (h: string) => uf.find(stripOf(h))
   const vcc = uf.find('tp')
   const gnd = uf.find('tn')
   const short = supply > 0 && vcc === gnd
-  const elements: Element[] = parts
-    .filter(p => p.kind === 'res' || (p.kind === 'led' && !p.burned))
-    .map(p => ({ part: p, a: uf.find(stripOf(p.a)), b: uf.find(stripOf(p.b)) }))
-
-  const unknown = [...new Set(elements.flatMap(e => [e.a, e.b]))].filter(n => n !== vcc && n !== gnd)
-  const index = new Map(unknown.map((n, i) => [n, i]))
-  const fixed = (n: string): number | null => (n === gnd ? 0 : n === vcc ? (short ? 0 : supply) : null)
-
-  let ledOn = new Map(elements.filter(e => e.part.kind === 'led').map(e => [e.part.id, false]))
-  let V = new Map<string, number>()
-  for (let iter = 0; iter < MAX_ITERATIONS; iter++) {
-    const n = unknown.length
-    const A = Array.from({ length: n }, () => new Array(n).fill(0))
-    const z = new Array(n).fill(0)
-    unknown.forEach((_, i) => { A[i][i] += GMIN })
-    const stamp = (a: string, b: string, g: number, src: number) => {
-      const ia = index.get(a)
-      const ib = index.get(b)
-      const fa = fixed(a)
-      const fb = fixed(b)
-      if (ia !== undefined) { A[ia][ia] += g; z[ia] += src; if (ib !== undefined) A[ia][ib] -= g; else if (fb !== null) z[ia] += g * fb }
-      if (ib !== undefined) { A[ib][ib] += g; z[ib] -= src; if (ia !== undefined) A[ib][ia] -= g; else if (fa !== null) z[ib] += g * fa }
-    }
-    for (const e of elements) {
-      if (e.a === e.b) continue
-      if (e.part.kind === 'res') stamp(e.a, e.b, 1 / (e.part.ohms ?? 1000), 0)
-      else if (ledOn.get(e.part.id)) {
-        const g = 1 / LED_SERIES_OHMS
-        stamp(e.a, e.b, g, g * LED_VF[e.part.color ?? 'red'])
-      } else stamp(e.a, e.b, GMIN, 0)
-    }
-    const x = n ? solveLinear(A, z) : []
-    V = new Map(unknown.map((node, i) => [node, x[i]]))
-    const at = (node: string) => fixed(node) ?? V.get(node) ?? 0
-    const next = new Map(ledOn)
-    for (const e of elements) {
-      if (e.part.kind !== 'led') continue
-      const vf = LED_VF[e.part.color ?? 'red']
-      const drop = at(e.a) - at(e.b)
-      const on = ledOn.get(e.part.id)
-      next.set(e.part.id, on ? (drop - vf) / LED_SERIES_OHMS > 0 : drop > vf)
-    }
-    const changed = [...next].some(([k, v]) => ledOn.get(k) !== v)
-    ledOn = next
-    if (!changed) break
+  const nodes = [...new Set([vcc, gnd, ...parts.flatMap(p => [p.a, p.b, ...(p.c ? [p.c] : [])].map(node))])]
+  const circuit: Circuit = {
+    node,
+    index: new Map(nodes.map((n, i) => [n, i])),
+    fixed: new Map(short ? [[gnd, 0]] : [[gnd, 0], [vcc, supply]])
   }
 
-  const at = (node: string) => fixed(node) ?? V.get(node) ?? 0
+  let jOn = new Map(parts.filter(p => isJunction(p.kind)).map(p => [p.id, false]))
+  let qState = new Map(parts.filter(p => p.kind === 'npn').map(p => [p.id, 'off' as TransistorState]))
+  let V = new Map<string, number>()
+  for (let iter = 0; iter < MAX_ITERATIONS; iter++) {
+    const m = new Mna(circuit)
+    stampParts(m, parts, node, jOn, qState)
+    V = m.solve()
+    const next = nextStates(parts, node, V, jOn, qState)
+    const stable = mapsEqual(next.j, jOn) && mapsEqual(next.q, qState)
+    jOn = next.j
+    qState = next.q
+    if (stable) break
+  }
+
+  const at = (n: string) => V.get(n) ?? 0
   const results: Record<string, PartResult> = {}
   const burnedNow: string[] = []
   for (const p of parts) {
-    const a = uf.find(stripOf(p.a))
-    const b = uf.find(stripOf(p.b))
+    const a = node(p.a)
+    const b = node(p.b)
     const drop = at(a) - at(b)
-    if (p.kind === 'res') {
-      const current = a === b ? 0 : drop / (p.ohms ?? 1000)
-      results[p.id] = { current, voltage: drop, bypassed: a === b, hot: current * current * (p.ohms ?? 1000) > RESISTOR_RATED_W }
-    } else if (p.kind === 'led') {
-      const vf = LED_VF[p.color ?? 'red']
-      const current = !p.burned && a !== b && ledOn.get(p.id) ? Math.max(0, (drop - vf) / LED_SERIES_OHMS) : 0
-      const burns = !p.burned && current > LED_MAX_A && !short
+    const r = resistance(p)
+    if (r !== null) {
+      const current = a === b ? 0 : drop / r
+      const power = current * current * r
+      const base: PartResult = { current, voltage: drop, bypassed: a === b, ohms: r }
+      if (p.kind === 'res') results[p.id] = { ...base, hot: power > RESISTOR_RATED_W }
+      else if (p.kind === 'ldr') results[p.id] = { ...base, hot: power > RESISTOR_RATED_W / 2 }
+      else if (p.kind === 'bulb') results[p.id] = { ...base, brightness: Math.min(1, power / BULB_RATED_W) }
+      else results[p.id] = { ...base, speed: Math.abs(current) < MOTOR_START_A ? 0 : Math.min(1, (Math.abs(current) - MOTOR_START_A) / (MOTOR_FULL_A - MOTOR_START_A)) }
+    } else if (isJunction(p.kind)) {
+      const j = JUNCTION[p.kind](p)
+      const on = !p.burned && a !== b && jOn.get(p.id)
+      const raw = on ? Math.max(0, (drop - j.vf) / j.rs) : 0
+      const current = raw > LEAKAGE_A ? raw : 0
+      const burns = !p.burned && current > j.max && !short
       if (burns) burnedNow.push(p.id)
-      const ledState: LedState = p.burned || burns ? 'burned' : a === b ? 'bypassed' : current > 0 ? 'on' : drop < -1 ? 'reversed' : 'off'
-      results[p.id] = { current: burns ? current : ledState === 'on' ? current : 0, voltage: drop, ledState, brightness: ledState === 'on' ? Math.min(1, current / LED_FULL_A) : 0 }
+      const state: JunctionState = p.burned || burns ? 'burned' : a === b ? 'bypassed' : current > 0 ? 'on' : drop < -1 ? 'reversed' : 'off'
+      const res: PartResult = { current, voltage: drop, junction: state }
+      if (p.kind === 'led') results[p.id] = { ...res, ledState: state, brightness: state === 'on' ? Math.min(1, current / LED_FULL_A) : 0 }
+      else if (p.kind === 'buzzer') results[p.id] = { ...res, active: state === 'on' && current >= BUZZER_MIN_A }
+      else results[p.id] = res
+    } else if (p.kind === 'pot' && p.c) {
+      const w = node(p.c)
+      const total = p.ohms ?? POT_OHMS
+      const pos = Math.min(1, Math.max(0, p.level ?? 0.5))
+      const i1 = a === w ? 0 : (at(a) - at(w)) / Math.max(MIN_SEGMENT_OHMS, total * (1 - pos))
+      const i2 = w === b ? 0 : (at(w) - at(b)) / Math.max(MIN_SEGMENT_OHMS, total * pos)
+      const hot = i1 * i1 * total * (1 - pos) > RESISTOR_RATED_W || i2 * i2 * total * pos > RESISTOR_RATED_W
+      results[p.id] = { current: Math.max(Math.abs(i1), Math.abs(i2)), voltage: at(w) - at(b), hot }
+    } else if (p.kind === 'npn' && p.c) {
+      const { c, b: base, e } = npnLegs(p, node)
+      const st = p.burned ? 'burned' : qState.get(p.id) ?? 'off'
+      const vbe = at(base) - at(e)
+      const ib = st === 'off' || st === 'burned' ? 0 : Math.max(0, (vbe - VBE) / RBE)
+      const ic = st === 'active' ? NPN_BETA * ib : st === 'saturated' ? Math.max(0, (at(c) - at(e) - VCE_SAT) / RCE_SAT) : 0
+      const burns = !p.burned && !short && (ib > NPN_MAX_IB || ic > NPN_MAX_IC)
+      if (burns) burnedNow.push(p.id)
+      results[p.id] = { current: burns ? Math.max(ib, ic) : ic, voltage: at(c) - at(e), transistor: burns ? 'burned' : st, ib, ic }
     } else {
       results[p.id] = { current: 0, voltage: drop }
     }
@@ -169,11 +328,9 @@ export function solve(parts: SandboxPart[], supply: number): SolveResult {
 
   return {
     short,
-    nodeOf: s => unknown.indexOf(uf.find(s)),
     voltage: s => {
-      const node = uf.find(s)
-      if (fixed(node) !== null) return fixed(node)
-      return V.has(node) ? V.get(node) ?? 0 : null
+      const n = uf.find(s)
+      return V.has(n) ? V.get(n) ?? 0 : null
     },
     parts: results,
     burnedNow

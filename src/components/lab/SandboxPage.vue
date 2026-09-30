@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { HOME_HREF } from '../../circuits'
-import { EXAMPLES, PALETTE, SUPPLIES, type PaletteItem } from '../../lab/sandbox-content'
+import { EXAMPLES, PALETTE_GROUPS, SUPPLIES, type PaletteItem } from '../../lab/sandbox-content'
 import { useSandbox } from '../../composables/useSandbox'
-import { canPlace, occupied, orientationOf, secondHole, type Orientation } from '../../lib/sandbox/placement'
-import type { SandboxKind, SandboxPart } from '../../lib/sandbox/solver'
+import { canPlace, canPlaceLegs, legsFor, occupied, orientationOf, type Orientation, type PlaceableKind } from '../../lib/sandbox/placement'
+import type { SandboxPart } from '../../lib/sandbox/solver'
 import { stripOf } from '../../lib/breadboard/geometry'
 import SandboxBoard, { type Ghost } from './SandboxBoard.vue'
 import SandboxInspector from './SandboxInspector.vue'
@@ -21,7 +21,7 @@ const probe = ref<string | null>(null)
 const ghost = ref<Ghost | null>(null)
 
 interface Drag {
-  kind: Exclude<SandboxKind, 'wire'>
+  kind: PlaceableKind
   orient: Orientation
   props: Partial<SandboxPart>
   moveId?: string
@@ -36,9 +36,9 @@ const drag = ref<Drag | null>(null)
 function candidate(d: Drag, clientX: number, clientY: number): Ghost | null {
   const a = board.value?.holeAt(clientX, clientY)
   if (!a) return null
-  const b = secondHole(a, d.kind, d.orient)
-  const part: SandboxPart = { id: 'ghost', kind: d.kind, a, b: b ?? a, ...d.props }
-  return { part, valid: canPlace(a, b, occupied(sb.parts.value, d.moveId)) }
+  const legs = legsFor(a, d.kind, d.orient)
+  const part: SandboxPart = { ...d.props, id: 'ghost', kind: d.kind, a, b: legs?.b ?? a, c: legs?.c }
+  return { part, valid: canPlaceLegs(legs, occupied(sb.parts.value, d.moveId)) }
 }
 
 function startNew(item: PaletteItem, e: PointerEvent) {
@@ -52,8 +52,9 @@ function startMove(id: string, e: PointerEvent) {
   if (!p) return
   e.preventDefault()
   if (p.kind === 'wire') { drag.value = null; sb.selected.value = id; return }
-  const { kind, a: _a, b: _b, id: _id, ...rest } = p
-  drag.value = { kind, orient: orientationOf(p), props: rest, moveId: id, x0: e.clientX, y0: e.clientY, moved: false, lastX: e.clientX, lastY: e.clientY }
+  const { kind, a: _a, b: _b, c: _c, id: _id, ...rest } = p
+  drag.value = { kind, orient: orientationOf(p), props: { ...rest, pressed: false }, moveId: id, x0: e.clientX, y0: e.clientY, moved: false, lastX: e.clientX, lastY: e.clientY }
+  if (kind === 'button') sb.update(id, { pressed: true })
 }
 
 function onMove(e: PointerEvent) {
@@ -61,7 +62,10 @@ function onMove(e: PointerEvent) {
   if (!d) return
   d.lastX = e.clientX
   d.lastY = e.clientY
-  if (!d.moved && Math.hypot(e.clientX - d.x0, e.clientY - d.y0) > CLICK_SLOP_PX) d.moved = true
+  if (!d.moved && Math.hypot(e.clientX - d.x0, e.clientY - d.y0) > CLICK_SLOP_PX) {
+    d.moved = true
+    if (d.moveId && d.kind === 'button') sb.update(d.moveId, { pressed: false })
+  }
   ghost.value = d.moved ? candidate(d, e.clientX, e.clientY) : null
 }
 
@@ -71,13 +75,14 @@ function onUp(e: PointerEvent) {
   drag.value = null
   const g = ghost.value
   ghost.value = null
+  if (d.moveId && d.kind === 'button') sb.update(d.moveId, { pressed: false })
   if (d.moveId && !d.moved) {
     sb.selected.value = d.moveId
     return
   }
   if (g?.valid) {
-    const placed = { kind: d.kind, a: g.part.a, b: g.part.b, ...d.props }
-    if (d.moveId) { sb.update(d.moveId, { a: placed.a, b: placed.b }); sb.selected.value = d.moveId }
+    const placed = { ...d.props, kind: d.kind, a: g.part.a, b: g.part.b, ...(g.part.c ? { c: g.part.c } : {}) }
+    if (d.moveId) { sb.update(d.moveId, { a: placed.a, b: placed.b, c: g.part.c }); sb.selected.value = d.moveId }
     else sb.selected.value = sb.add(placed)
     return
   }
@@ -129,10 +134,13 @@ const probeVoltage = () => (probe.value ? sb.result.value.voltage(stripOf(probe.
   <main class="wrap lab">
     <div class="sb-toolbar card">
       <div class="sb-palette" aria-label="صندوق القطع">
-        <button v-for="item in PALETTE" :key="item.kind" class="sb-item" :title="item.hint" @pointerdown="startNew(item, $event)">
-          <span class="sb-item-icon">{{ item.icon }}</span>{{ item.label }}
-        </button>
-        <button class="sb-item" :class="{ on: wireMode }" title="دوس على خرم، وبعدين على خرم تاني" @click="toggleWire"><span class="sb-item-icon">✏️</span>سلك</button>
+        <div v-for="g in PALETTE_GROUPS" :key="g.title" class="sb-group">
+          <span class="sb-group-title">{{ g.title }}</span>
+          <button v-for="item in g.items" :key="item.kind" class="sb-item" :title="item.hint" @pointerdown="startNew(item, $event)">
+            <span class="sb-item-icon">{{ item.icon }}</span>{{ item.label }}
+          </button>
+          <button v-if="g.title === 'أساسي'" class="sb-item" :class="{ on: wireMode }" title="دوس على خرم، وبعدين على خرم تاني" @click="toggleWire"><span class="sb-item-icon">✏️</span>سلك</button>
+        </div>
       </div>
       <div class="sb-controls">
         <label>⚡ المصدر
