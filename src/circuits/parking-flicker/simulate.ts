@@ -13,8 +13,7 @@ export interface FlickerParams {
   Cn: number
   Vbe: number
   qDead: boolean
-  Re: number
-  single: boolean
+  emitter: number[]
   Vin: number
   lampKind: 'led' | 'bulb' | 'bare'
   lampFull: number
@@ -66,8 +65,7 @@ export const defaults: FlickerParams = {
   Cn: 22e-6,
   Vbe: 1.3,
   qDead: false,
-  Re: 34,
-  single: false,
+  emitter: [68, 68],
   Vin: 12,
   lampKind: 'led',
   lampFull: 0.06,
@@ -102,8 +100,13 @@ export function minNodeVoltage(p: FlickerParams): number {
 
 const PEAK_NODE_VOLTAGE = 4.5
 
+export function emitterOhms(p: FlickerParams): number {
+  const g = p.emitter.reduce((sum, r) => sum + 1 / r, 0)
+  return g ? 1 / g : Infinity
+}
+
 export function maxLampCurrent(p: FlickerParams): number {
-  return Math.max(0, (PEAK_NODE_VOLTAGE - p.Vbe) / p.Re)
+  return Math.max(0, (PEAK_NODE_VOLTAGE - p.Vbe) / emitterOhms(p))
 }
 
 export function smoothingTau(p: FlickerParams): number {
@@ -143,13 +146,14 @@ export function step(s: FlickerState, p: FlickerParams, dt: number): void {
   s.vN += (vTarget - s.vN) * (1 - Math.exp(-dt / (p.Cn / g)))
   const lamp = lampLimits(p)
   s.t += dt
-  s.I = p.qDead || lamp.dead ? 0 : Math.min(lamp.limit, Math.max(0, (s.vN - p.Vbe) / p.Re)) * flashingGate(p, s.t)
+  s.I = p.qDead || lamp.dead ? 0 : Math.min(lamp.limit, Math.max(0, (s.vN - p.Vbe) / emitterOhms(p))) * flashingGate(p, s.t)
   const target = Math.min(1, s.I / lamp.full)
   s.glow = lamp.tau ? s.glow + (target - s.glow) * (1 - Math.exp(-dt / lamp.tau)) : target
   s.br = p.lampMode === 'led' && !p.ledVisible ? 0 : s.glow
 }
 
 const DEF_R = defaults.R
+const DEFAULT_EMITTER = emitterOhms(defaults)
 const hz = (p: FlickerParams, i: number) => '≈ ' + (1 / period(p, i)).toFixed(1) + ' Hz'
 const setAt = (arr: number[], i: number, v: number) => arr.map((x, j) => (j === i ? v : x))
 
@@ -179,8 +183,8 @@ const controls: SimControl<FlickerParams>[] = [
     get: p => p.Rf, set: (p, v) => ({ ...p, Rf: v }), hint: p => 'أقل جهد ≈ ' + minNodeVoltage(p).toFixed(2) + 'V', isDefault: v => v === defaults.Rf
   },
   {
-    key: 'Re', label: 'R8 ∥ R9 · حد تيار اللمبة', options: [22, 34, 47, 68, 100, 150, 220, 330], format: v => (v === defaults.Re ? '68Ω + 68Ω = 34Ω' : 'مقاومة واحدة ' + fmtR(v)),
-    get: p => p.Re, set: (p, v) => ({ ...p, Re: v, single: v !== defaults.Re }), hint: p => 'أقصى تيار ≈ ' + Math.round(maxLampCurrent(p) * 1000) + ' mA', isDefault: v => v === defaults.Re
+    key: 'Re', label: 'R8 ∥ R9 · حد تيار اللمبة', options: [22, 34, 47, 68, 100, 150, 220, 330], format: v => (v === DEFAULT_EMITTER ? '68Ω + 68Ω = 34Ω' : 'مقاومة واحدة ' + fmtR(v)),
+    get: p => Math.round(emitterOhms(p)), set: (p, v) => ({ ...p, emitter: v === DEFAULT_EMITTER ? defaults.emitter : [v] }), hint: p => 'أقصى تيار ≈ ' + Math.round(maxLampCurrent(p) * 1000) + ' mA', isDefault: v => v === DEFAULT_EMITTER
   }
 ]
 

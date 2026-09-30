@@ -41,6 +41,7 @@ const effects: Record<string, RemovalEffect> = {
   J11: warn('R7 مش واصلها 5V، فمفيش حاجة شادّة N لفوق واللمبة بتطفي خالص كل شوية.'),
   Q1: bad('مفيش حاجة بتتحكم في تيار اللمبة، والطريق مقطوع. اللمبة مطفية.'),
   R8: warn('R9 لوحدها شايلة التيار: التيار نزل للنص تقريباً واللمبة أضعف، والمقاومة بتسخن أكتر. لو شلت الاتنين اللمبة هتطفي.'),
+  R10: warn('R8 وR9 بيشيلوا التيار من غيرها: اللمبة أضعف شوية، والمقاومتين بيسخنوا أكتر.'),
   R9: warn('R8 لوحدها شايلة التيار: التيار نزل للنص تقريباً واللمبة أضعف، والمقاومة بتسخن أكتر. لو شلت الاتنين اللمبة هتطفي.'),
   J12: bad('R8 وR9 من غير أرضي، فمفيش تيار في اللمبة. مطفية.'),
   WLN: bad('سالب اللمبة مش واصل بالترانزستور، فاللمبة مطفية.'),
@@ -60,11 +61,12 @@ for (const i of [0, 1, 2]) {
 
 const setAt = <T>(arr: T[], i: number, v: T): T[] => arr.map((x, j) => (j === i ? v : x))
 
+const EMITTER_IDS = ['R8', 'R9', 'R10']
+
 function emitterPath(p: FlickerParams, has: (id: string) => boolean): Partial<FlickerParams> {
-  if (p.single) return has('R8') ? { qDead: true } : {}
-  const missing = ['R8', 'R9'].filter(has).length
-  if (missing === 2) return { qDead: true }
-  return missing === 1 ? { Re: p.Re * 2 } : {}
+  const left = p.emitter.filter((_r, i) => !has(EMITTER_IDS[i]))
+  if (left.length === p.emitter.length) return {}
+  return left.length ? { emitter: left } : { qDead: true }
 }
 
 function oscillators(p: FlickerParams, has: (id: string) => boolean): Partial<FlickerParams> {

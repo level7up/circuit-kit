@@ -21,7 +21,11 @@ function run(p: FlickerParams, seconds = 6): Stats {
 }
 
 const swap = (key: string, index: number, base: FlickerParams = defaults) => ({ ...applySwaps(base, { [key]: index }, board.alternatives), lampMode: base.lampMode })
-const pick = (key: string, text: string) => board.alternatives[key].findIndex(o => o.t.includes(text))
+function pick(key: string, text: string): number {
+  const i = board.alternatives[key].findIndex(o => o.t.includes(text))
+  if (i < 1) throw new Error(`no alternative "${text}" in ${key}`)
+  return i
+}
 
 describe('parking flicker simulation', () => {
   const original = run(defaults)
@@ -107,6 +111,36 @@ describe('parking flicker simulation', () => {
 
     it('shows no visible light from an IR LED', () => {
       expect(run(swap('led', pick('led', 'IR'), led)).max).toBe(0)
+    })
+  })
+
+  describe('substitutes when 68Ω is not available', () => {
+    const led = { ...defaults, lampMode: 'led' as const }
+    const close = (r: Stats) => Math.abs(r.avg - original.avg) / original.avg
+
+    it('matches the original lamp with 3 × 100Ω in parallel', () => {
+      const p = swap('r89', pick('r89', '3 × 100Ω'))
+      expect(p.emitter).toEqual([100, 100, 100])
+      expect(close(run(p))).toBeLessThan(0.03)
+    })
+
+    it.each([['2 × 82Ω', 0.15], ['2 × 56Ω', 0.1], ['2 × 47Ω', 0.15]])('keeps the lamp flickering and bright with %s', (text, tolerance) => {
+      const r = run(swap('r89', pick('r89', text)))
+      expect(close(r)).toBeLessThan(tolerance)
+      expect(r.min).toBeGreaterThan(0.2)
+    })
+
+    it('makes the desk test work with the kit 470Ω on the emitter and 1kΩ on the LED', () => {
+      const p = { ...applySwaps(led, { r89: pick('r89', '470Ω'), rled: pick('rled', '1kΩ') }, board.alternatives), lampMode: 'led' as const }
+      const r = run(p)
+      expect(r.max - r.min).toBeGreaterThan(0.15)
+      expect(r.offShare).toBeLessThan(0.05)
+    })
+
+    it('shows R10 on the board only when three resistors are used', () => {
+      expect(board.dynamics.hidden(defaults).has('R10')).toBe(true)
+      expect(board.dynamics.hidden(swap('r89', pick('r89', '3 × 100Ω'))).has('R10')).toBe(false)
+      expect(board.dynamics.hidden(swap('r89', pick('r89', '470Ω'))).has('R9')).toBe(true)
     })
   })
 

@@ -11,8 +11,9 @@ const OHM_OF: Record<string, (p: FlickerParams) => number> = {
   R1: p => p.R[0], R2: p => p.R[1], R3: p => p.R[2],
   R4: p => p.Rm[0], R5: p => p.Rm[1], R6: p => p.Rm[2],
   R7: p => p.Rf,
-  R8: p => (p.single ? p.Re : p.Re * 2),
-  R9: p => p.Re * 2,
+  R8: p => p.emitter[0],
+  R9: p => p.emitter[1],
+  R10: p => p.emitter[2],
   RT: p => p.Rled
 }
 
@@ -32,7 +33,8 @@ const dynamics: BoardDynamics<FlickerParams> = {
   hidden: p => new Set([
     ...(p.Rf ? [] : ['R7', 'J11']),
     ...(p.noTvs ? ['D2'] : []),
-    ...(p.single ? ['R9'] : [])
+    ...(p.emitter.length < 2 ? ['R9'] : []),
+    ...(p.emitter.length < 3 ? ['R10'] : [])
   ]),
   ohm: (id, p) => OHM_OF[id]?.(p),
   labelText: (id, base, p) => (OHM_OF[id] && base.includes(' ') ? `${id} ${fmtR(OHM_OF[id](p))}` : base),
