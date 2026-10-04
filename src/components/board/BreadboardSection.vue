@@ -9,6 +9,7 @@ import BoardInfo from './BoardInfo.vue'
 import PartDictionary from './PartDictionary.vue'
 import PartPopover from './PartPopover.vue'
 import MiniBreadboard from './MiniBreadboard.vue'
+import CarFaceSim from '../CarFaceSim.vue'
 import type { BoardPart } from '../../types/circuit'
 
 defineProps<{ num: number }>()
@@ -149,6 +150,9 @@ setLamp(dyn.lampModeForStage(0))
       <PartPopover v-if="popover && popoverPart" :key="popover.id" :board="board" :part="popoverPart" :easy="easy" :swaps="sim.swaps.value" :removed="removedSet.has(popover.id)"
         :x="popover.x" :y="popover.y" :area-width="popover.width" @close="closePopover" @choose="choose" @toggle-removed="sim.toggleRemoved" @details="showDetails" />
     </BoardSvg>
+    <h3 class="bbh3">🚗 شوف التغيير على فوانيس العربية</h3>
+    <p class="sub" style="margin-bottom:12px">أي قطعة تبدّلها أو تشيلها من البورد اللي فوق، نتيجتها بتبان هنا على أنوار الركن على طول.</p>
+    <CarFaceSim />
     <div class="bbunder">
       <div>
         <div id="bbNets" class="bbnets">
