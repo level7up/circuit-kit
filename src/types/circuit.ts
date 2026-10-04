@@ -372,6 +372,23 @@ export interface MiniBoardDef {
   notes: KindCard[]
 }
 
+export interface PresetPart {
+  id: string
+  value: string
+  buy: boolean
+  note?: string
+}
+
+export interface SimPreset<P> {
+  id: string
+  icon: string
+  name: string
+  desc: string
+  apply: (p: P) => P
+  isActive: (p: P) => boolean
+  parts: PresetPart[]
+}
+
 export interface Circuit<P, S> {
   id: string
   title: string
@@ -387,6 +404,7 @@ export interface Circuit<P, S> {
   wiring?: WiringDef
   assembly?: AssemblyDef
   miniBoard?: MiniBoardDef
+  presets?: SimPreset<P>[]
   car?: CarDef
   trouble?: TroubleDef
   footer: string

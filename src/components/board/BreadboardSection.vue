@@ -10,6 +10,7 @@ import PartDictionary from './PartDictionary.vue'
 import PartPopover from './PartPopover.vue'
 import MiniBreadboard from './MiniBreadboard.vue'
 import CarFaceSim from '../CarFaceSim.vue'
+import SimPresets from '../SimPresets.vue'
 import type { BoardPart } from '../../types/circuit'
 
 defineProps<{ num: number }>()
@@ -151,7 +152,8 @@ setLamp(dyn.lampModeForStage(0))
         :x="popover.x" :y="popover.y" :area-width="popover.width" @close="closePopover" @choose="choose" @toggle-removed="sim.toggleRemoved" @details="showDetails" />
     </BoardSvg>
     <h3 class="bbh3">🚗 شوف التغيير على فوانيس العربية</h3>
-    <p class="sub" style="margin-bottom:12px">أي قطعة تبدّلها أو تشيلها من البورد اللي فوق، نتيجتها بتبان هنا على أنوار الركن على طول.</p>
+    <p class="sub" style="margin-bottom:12px">اختار شكل الرعشة، أو بدّل أي قطعة من البورد اللي فوق، والنتيجة هتبان على أنوار الركن على طول.</p>
+    <SimPresets v-if="circuit.presets" :presets="circuit.presets" />
     <CarFaceSim />
     <div class="bbunder">
       <div>
