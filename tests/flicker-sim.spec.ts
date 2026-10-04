@@ -205,4 +205,18 @@ describe('parking flicker simulation', () => {
     const bad = Object.entries(board.alternatives).flatMap(([k, os]) => os.slice(1).filter(o => !o.st || !o.r).map(o => `${k}: ${o.t}`))
     expect(bad).toEqual([])
   })
+
+  it('dims two lamps at the peak with the original two emitter resistors', () => {
+    const r = run(swap('lamp', pick('lamp', 'R8/R9 زي ما هما')))
+    expect(r.max).toBeLessThan(0.95)
+    expect(r.max).toBeGreaterThan(0.6)
+    expect(r.offShare).toBe(0)
+  })
+
+  it.each(['3 × 68Ω', '4 × 100Ω'])('drives two lamps to full brightness with %s', text => {
+    const r = run(swap('lamp', pick('lamp', 'لمبتين T10 + ' + text)))
+    expect(r.max).toBeGreaterThan(0.97)
+    expect(r.min).toBeGreaterThan(0.2)
+    expect(r.offShare).toBe(0)
+  })
 })

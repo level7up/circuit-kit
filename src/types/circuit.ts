@@ -288,6 +288,55 @@ export interface CircuitCard {
   level: string
 }
 
+export type Hole = [x: number, y: number]
+
+export type PerfKind = 'res' | 'resUp' | 'diode' | 'tvs' | 'ceramic' | 'can' | 'to220' | 'dip' | 'pad'
+
+export interface PerfPart {
+  id: string
+  k: PerfKind
+  s: number
+  legs: Hole[]
+  nets: string[]
+  lab: string
+  val: string
+  tip: string
+  ohm?: number
+  color?: string
+  face?: 'up' | 'down' | 'left' | 'right'
+  optional?: boolean
+  labelAt?: [dx: number, dy: number]
+}
+
+export interface PerfTrace {
+  net: string
+  s: number
+  pts: Hole[]
+}
+
+export interface PerfLayout {
+  cols: number
+  rows: number
+  parts: PerfPart[]
+  traces: PerfTrace[]
+  nets: Record<string, NetDef>
+}
+
+export interface AssemblyPhase extends BuildStep {
+  s: number
+}
+
+export interface AssemblyDef {
+  title: string
+  sub: Html
+  intro: KindCard[]
+  layout: PerfLayout
+  boardNote: Html
+  skills: TitledCard[]
+  phases: AssemblyPhase[]
+  mistakes: KindCard[]
+}
+
 export interface Circuit<P, S> {
   id: string
   title: string
@@ -301,6 +350,7 @@ export interface Circuit<P, S> {
   bom?: BomDef
   steps?: StepsDef
   wiring?: WiringDef
+  assembly?: AssemblyDef
   car?: CarDef
   trouble?: TroubleDef
   footer: string

@@ -13,6 +13,7 @@ import PinoutsSection from './PinoutsSection.vue'
 import BomSection from './BomSection.vue'
 import StepsSection from './StepsSection.vue'
 import WiringSection from './WiringSection.vue'
+import AssemblySection from './AssemblySection.vue'
 import CarSection from './CarSection.vue'
 import TroubleSection from './TroubleSection.vue'
 
@@ -43,6 +44,7 @@ const candidates: (Tab & { on: boolean })[] = [
   { id: 'bom', label: 'المكونات والتكلفة', on: !!circuit.bom, comp: BomSection },
   { id: 'steps', label: 'خطوات التنفيذ', on: !!circuit.steps, comp: StepsSection },
   { id: 'wiring', label: 'قائمة التوصيلات', on: !!circuit.wiring, comp: WiringSection },
+  { id: 'assembly', label: 'التجميع على البورد', on: !!circuit.assembly, comp: AssemblySection },
   { id: 'car', label: 'التركيب في العربية', on: !!circuit.car, comp: CarSection },
   { id: 'trouble', label: 'الأعطال', on: !!circuit.trouble, comp: TroubleSection }
 ]
