@@ -290,7 +290,7 @@ export interface CircuitCard {
 
 export type Hole = [x: number, y: number]
 
-export type PerfKind = 'res' | 'resUp' | 'diode' | 'tvs' | 'ceramic' | 'can' | 'to220' | 'dip' | 'pad'
+export type PerfKind = 'res' | 'resUp' | 'diode' | 'tvs' | 'ceramic' | 'can' | 'to220' | 'dip' | 'pad' | 'wire'
 
 export interface PerfPart {
   id: string
@@ -314,9 +314,22 @@ export interface PerfTrace {
   pts: Hole[]
 }
 
+export interface StripCut {
+  strip: number
+  at: number
+}
+
+export interface StripSpec {
+  axis: 'rows' | 'cols'
+  cuts: StripCut[]
+}
+
 export interface PerfLayout {
   cols: number
   rows: number
+  look?: 'perf' | 'breadboard'
+  channelAfter?: number
+  strips?: StripSpec
   parts: PerfPart[]
   traces: PerfTrace[]
   nets: Record<string, NetDef>
@@ -326,15 +339,37 @@ export interface AssemblyPhase extends BuildStep {
   s: number
 }
 
+export interface AssemblyBoard {
+  id: string
+  label: string
+  layout: PerfLayout
+  note: Html
+  phases: AssemblyPhase[]
+}
+
 export interface AssemblyDef {
   title: string
   sub: Html
   intro: KindCard[]
-  layout: PerfLayout
-  boardNote: Html
+  boards: AssemblyBoard[]
   skills: TitledCard[]
-  phases: AssemblyPhase[]
   mistakes: KindCard[]
+}
+
+export interface MiniStage {
+  s: number
+  t: string
+  b: Html
+  c: string[]
+  x: Html
+}
+
+export interface MiniBoardDef {
+  title: string
+  sub: Html
+  layout: PerfLayout
+  stages: MiniStage[]
+  notes: KindCard[]
 }
 
 export interface Circuit<P, S> {
@@ -351,6 +386,7 @@ export interface Circuit<P, S> {
   steps?: StepsDef
   wiring?: WiringDef
   assembly?: AssemblyDef
+  miniBoard?: MiniBoardDef
   car?: CarDef
   trouble?: TroubleDef
   footer: string

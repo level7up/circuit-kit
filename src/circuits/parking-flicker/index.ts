@@ -1,5 +1,6 @@
 import type { Circuit } from '../../types/circuit'
 import { assembly } from './assembly'
+import { miniBoard } from './mini-board'
 import { board } from './board'
 import { bom } from './bom'
 import { car, footer, hero, overview, pinouts } from './content'
@@ -40,6 +41,7 @@ export const parkingFlicker: Circuit<FlickerParams, FlickerState> = {
     groups: wiring
   },
   assembly,
+  miniBoard,
   car,
   trouble: { title: 'الأعطال وحلولها', sub: 'افتح العَرَض اللي عندك.', items: trouble },
   footer

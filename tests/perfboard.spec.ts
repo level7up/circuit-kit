@@ -1,10 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import { perfLayout } from '../src/circuits/parking-flicker/perfboard'
 import { checkNetlist, expandPath, perfNetlist, verifyPerfboard } from '../src/lib/perfboard/grid'
-import { bestStripboard, planStripboard, stripEffort, verifyStripboard } from '../src/lib/perfboard/stripboard'
 import type { PerfLayout } from '../src/types/circuit'
 
-const SCHEMATIC: Record<string, string[]> = {
+export const SCHEMATIC: Record<string, string[]> = {
   D1: ['IN', 'V12'],
   D2: ['GND', 'V12'],
   C1: ['V12', 'GND'],
@@ -83,15 +82,3 @@ describe('perfboard layout', () => {
   })
 })
 
-describe('stripboard plan', () => {
-  it.each(['rows', 'cols'] as const)('keeps every net whole and separate with strips along %s', axis => {
-    const plan = planStripboard(perfLayout, axis)
-    expect(verifyStripboard(perfLayout, plan)).toEqual([])
-  })
-
-  it('picks the plan with less work', () => {
-    const best = bestStripboard(perfLayout)
-    const efforts = (['rows', 'cols'] as const).map(a => stripEffort(planStripboard(perfLayout, a)))
-    expect(stripEffort(best)).toBe(Math.min(...efforts))
-  })
-})

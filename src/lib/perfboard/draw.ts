@@ -1,25 +1,22 @@
-import type { Hole, PerfLayout, PerfPart } from '../../types/circuit'
+import type { Hole, PerfLayout, PerfPart, StripSpec } from '../../types/circuit'
 import { resistorBands } from '../format'
 import { expandPath, holeKey } from './grid'
-import type { StripPlan } from './stripboard'
 
 export const PITCH = 22
 const MARGIN = 34
+const CHANNEL = PITCH * 0.9
 const SOLDER = '#d5dbe3'
 const COPPER = '#c27a3a'
 const LEG = '#b8c0ca'
 
 export type Side = 'top' | 'bottom'
-export type BoardType = 'perf' | 'strip'
 
 export interface PerfView {
   side: Side
-  type: BoardType
   stage: number
   selected: string | null
   net: string | null
   icInserted: boolean
-  strip: StripPlan
 }
 
 interface Pt {
@@ -30,72 +27,85 @@ interface Pt {
 type Project = (h: Hole) => Pt
 
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;')
+const isBreadboard = (layout: PerfLayout) => layout.look === 'breadboard'
+const gapBefore = (layout: PerfLayout, y: number) => (layout.channelAfter !== undefined && y > layout.channelAfter ? CHANNEL : 0)
 
 export function boardSize(layout: PerfLayout): { w: number; h: number } {
-  return { w: MARGIN * 2 + (layout.cols - 1) * PITCH, h: MARGIN * 2 + (layout.rows - 1) * PITCH }
+  return { w: MARGIN * 2 + (layout.cols - 1) * PITCH, h: MARGIN * 2 + (layout.rows - 1) * PITCH + gapBefore(layout, layout.rows - 1) }
 }
 
 function projector(layout: PerfLayout, side: Side): Project {
   return ([x, y]) => ({
     x: MARGIN + (side === 'bottom' ? layout.cols - 1 - x : x) * PITCH,
-    y: MARGIN + y * PITCH
+    y: MARGIN + y * PITCH + gapBefore(layout, y)
   })
 }
 
-const ROW_NAMES = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-export const holeName = ([x, y]: Hole): string => (ROW_NAMES[y] ?? '?') + (x + 1)
+const UPPER = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+const LOWER = UPPER.toLowerCase()
+const rowName = (layout: PerfLayout, y: number) => (isBreadboard(layout) ? LOWER : UPPER)[y] ?? '?'
+export const holeName = (layout: PerfLayout, [x, y]: Hole): string => rowName(layout, y) + (x + 1)
 
 function rulers(layout: PerfLayout, at: Project): string {
+  const { w } = boardSize(layout)
+  const cls = isBreadboard(layout) ? 'pf-ruler bb' : 'pf-ruler'
   const cols = Array.from({ length: layout.cols }, (_, x) => {
     const p = at([x, 0])
-    return `<text x="${p.x}" y="${MARGIN - 21}" class="pf-ruler">${x + 1}</text>`
+    return `<text x="${p.x}" y="${MARGIN - 21}" class="${cls}">${x + 1}</text>`
   })
   const rows = Array.from({ length: layout.rows }, (_, y) => {
     const p = at([0, y])
-    const { w } = boardSize(layout)
-    return `<text x="12" y="${p.y + 4}" class="pf-ruler">${ROW_NAMES[y]}</text><text x="${w - 12}" y="${p.y + 4}" class="pf-ruler">${ROW_NAMES[y]}</text>`
+    return `<text x="12" y="${p.y + 4}" class="${cls}">${rowName(layout, y)}</text><text x="${w - 12}" y="${p.y + 4}" class="${cls}">${rowName(layout, y)}</text>`
   })
   return cols.join('') + rows.join('')
 }
 
 function boardBase(layout: PerfLayout, side: Side): string {
   const { w, h } = boardSize(layout)
+  if (isBreadboard(layout)) {
+    const y = MARGIN + (layout.channelAfter ?? 0) * PITCH + PITCH / 2
+    return `<rect x="2" y="2" width="${w - 4}" height="${h - 4}" rx="10" fill="#efefe9" stroke="#b9b9ad" stroke-width="2"/>` +
+      `<rect x="8" y="${y}" width="${w - 16}" height="${CHANNEL - 2}" rx="3" fill="#d7d7cf"/>`
+  }
   const fill = side === 'top' ? '#d9bd84' : '#a7854f'
   return `<rect x="2" y="2" width="${w - 4}" height="${h - 4}" rx="10" fill="${fill}" stroke="#6b5531" stroke-width="2"/>`
 }
 
-function stripsSvg(layout: PerfLayout, plan: StripPlan, at: Project): string {
-  const count = plan.axis === 'cols' ? layout.cols : layout.rows
-  const length = plan.axis === 'cols' ? layout.rows : layout.cols
+function stripsSvg(layout: PerfLayout, spec: StripSpec, at: Project): string {
+  const count = spec.axis === 'cols' ? layout.cols : layout.rows
+  const length = spec.axis === 'cols' ? layout.rows : layout.cols
   const half = PITCH * 0.4
   return Array.from({ length: count }, (_, s) => {
-    const a = at(plan.axis === 'cols' ? [s, 0] : [0, s])
-    const b = at(plan.axis === 'cols' ? [s, length - 1] : [length - 1, s])
+    const a = at(spec.axis === 'cols' ? [s, 0] : [0, s])
+    const b = at(spec.axis === 'cols' ? [s, length - 1] : [length - 1, s])
     return `<rect x="${Math.min(a.x, b.x) - half}" y="${Math.min(a.y, b.y) - half}" width="${Math.abs(b.x - a.x) + half * 2}" height="${Math.abs(b.y - a.y) + half * 2}" rx="3" fill="${COPPER}" opacity=".9"/>`
   }).join('')
 }
 
 function holesSvg(layout: PerfLayout, withPads: boolean, at: Project): string {
   const out: string[] = []
+  const square = isBreadboard(layout)
   for (let y = 0; y < layout.rows; y++) {
     for (let x = 0; x < layout.cols; x++) {
       const p = at([x, y])
       if (withPads) out.push(`<circle cx="${p.x}" cy="${p.y}" r="${PITCH * 0.36}" fill="${COPPER}"/>`)
-      out.push(`<circle cx="${p.x}" cy="${p.y}" r="${PITCH * 0.15}" fill="#2b2216"/>`)
+      out.push(square
+        ? `<rect x="${p.x - 3.5}" y="${p.y - 3.5}" width="7" height="7" rx="1.2" fill="#3b3b36"/>`
+        : `<circle cx="${p.x}" cy="${p.y}" r="${PITCH * 0.15}" fill="#2b2216"/>`)
     }
   }
   return out.join('')
 }
 
-function cutsSvg(plan: StripPlan, side: Side, at: Project): string {
-  return plan.cuts.map(c => {
+function cutsSvg(spec: StripSpec, side: Side, at: Project): string {
+  return spec.cuts.map(c => {
     const whole = Math.floor(c.at)
-    const base = at(plan.axis === 'cols' ? [c.strip, whole] : [whole, c.strip])
+    const base = at(spec.axis === 'cols' ? [c.strip, whole] : [whole, c.strip])
     const shift = (c.at - whole) * PITCH
-    const p = plan.axis === 'cols' ? { x: base.x, y: base.y + shift } : { x: base.x + (side === 'bottom' ? -shift : shift), y: base.y }
-    if (c.drill) return `<circle class="pf-cut" cx="${p.x}" cy="${p.y}" r="${PITCH * 0.42}" fill="#3a2a18" stroke="#ff5d5d" stroke-width="2.5"/>`
+    const p = spec.axis === 'cols' ? { x: base.x, y: base.y + shift } : { x: base.x + (side === 'bottom' ? -shift : shift), y: base.y }
+    if (Number.isInteger(c.at)) return `<circle class="pf-cut" cx="${p.x}" cy="${p.y}" r="${PITCH * 0.42}" fill="#3a2a18" stroke="#ff5d5d" stroke-width="2.5"/>`
     const len = PITCH * 0.5
-    const line = plan.axis === 'cols'
+    const line = spec.axis === 'cols'
       ? `x1="${p.x - len}" y1="${p.y}" x2="${p.x + len}" y2="${p.y}"`
       : `x1="${p.x}" y1="${p.y - len}" x2="${p.x}" y2="${p.y + len}"`
     return `<g class="pf-cut"><line ${line} stroke="#2b2216" stroke-width="5"/><line ${line} stroke="#ff5d5d" stroke-width="2"/></g>`
@@ -110,19 +120,6 @@ function tracesSvg(layout: PerfLayout, view: PerfView, at: Project): string {
     return `<g class="${cls}" data-net="${t.net}">` +
       `<polyline points="${pts}" fill="none" stroke="${SOLDER}" stroke-width="${PITCH * 0.42}" stroke-linecap="round" stroke-linejoin="round"/>` +
       `<polyline points="${pts}" fill="none" stroke="${layout.nets[t.net]?.c ?? '#888'}" stroke-width="${on ? 4 : 2}" stroke-linecap="round" stroke-linejoin="round" opacity="${on ? 1 : 0.75}"/></g>`
-  }).join('')
-}
-
-function linksSvg(layout: PerfLayout, view: PerfView, at: Project): string {
-  return view.strip.links.filter(l => l.s <= view.stage).map(l => {
-    const a = at(l.a)
-    const b = at(l.b)
-    const on = view.net === l.net
-    const line = `x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}"`
-    return `<g class="pf-link${on ? ' on' : ''}" data-net="${l.net}">` +
-      `<line ${line} stroke="#111" stroke-width="7" stroke-linecap="round"/>` +
-      `<line ${line} stroke="${layout.nets[l.net]?.c ?? '#888'}" stroke-width="${on ? 5 : 4}" stroke-linecap="round"/>` +
-      `<circle cx="${a.x}" cy="${a.y}" r="3" fill="${SOLDER}"/><circle cx="${b.x}" cy="${b.y}" r="3" fill="${SOLDER}"/></g>`
   }).join('')
 }
 
@@ -172,12 +169,15 @@ function standingResistor(a: Pt, b: Pt, ohm: number): string {
 }
 
 function electrolytic(a: Pt, b: Pt, span: number): string {
-  const c = mid(a, b)
-  const r = PITCH * (span > 1 ? 0.95 : 0.72)
-  const minus = { x: c.x + (b.x - c.x) * 0.6, y: c.y + (b.y - c.y) * 0.6 }
-  const plus = { x: c.x + (a.x - c.x) * 0.6, y: c.y + (a.y - c.y) * 0.6 }
-  return `<circle cx="${c.x}" cy="${c.y}" r="${r}" fill="#24418a" stroke="#0f1d40" stroke-width="1.5"/>` +
-    `<circle cx="${minus.x}" cy="${minus.y}" r="${r * 0.4}" fill="#c9d3e6" opacity=".9"/>` +
+  const stretched = span > 2
+  const r = PITCH * (span === 2 ? 0.85 : 0.72)
+  const c = stretched ? { x: a.x + (b.x - a.x) * 0.3, y: a.y + (b.y - a.y) * 0.3 } : mid(a, b)
+  const toward = (p: Pt, k: number) => ({ x: c.x + (p.x - c.x) / Math.hypot(p.x - c.x, p.y - c.y) * r * k, y: c.y + (p.y - c.y) / Math.hypot(p.x - c.x, p.y - c.y) * r * k })
+  const minus = toward(b, 0.55)
+  const plus = toward(a, 0.55)
+  return (stretched ? legLine(a, b) + legDot(a) + legDot(b) : '') +
+    `<circle cx="${c.x}" cy="${c.y}" r="${r}" fill="#24418a" stroke="#0f1d40" stroke-width="1.5"/>` +
+    `<circle cx="${minus.x}" cy="${minus.y}" r="${r * 0.38}" fill="#c9d3e6" opacity=".9"/>` +
     `<text x="${minus.x}" y="${minus.y + 4}" class="pf-pol" fill="#24418a">−</text>` +
     `<text x="${plus.x}" y="${plus.y + 4}" class="pf-pol" fill="#fff">+</text>`
 }
@@ -209,17 +209,22 @@ function to220(legs: Pt[], face: string, val: string): string {
 function dip(legs: Pt[], inserted: boolean): string {
   const xs = legs.map(p => p.x)
   const ys = legs.map(p => p.y)
-  const x0 = Math.min(...xs) - PITCH * 0.55
-  const x1 = Math.max(...xs) + PITCH * 0.55
-  const y0 = Math.min(...ys) - PITCH * 0.45
-  const y1 = Math.max(...ys) + PITCH * 0.45
+  const isVertical = legs[0].x === legs[6].x
+  const x0 = Math.min(...xs) - PITCH * (isVertical ? 0.45 : 0.55)
+  const x1 = Math.max(...xs) + PITCH * (isVertical ? 0.45 : 0.55)
+  const y0 = Math.min(...ys) - PITCH * (isVertical ? 0.55 : 0.45)
+  const y1 = Math.max(...ys) + PITCH * (isVertical ? 0.55 : 0.45)
+  const cx = (x0 + x1) / 2
   const cy = (y0 + y1) / 2
+  const rotate = isVertical ? ` transform="rotate(-90 ${cx} ${cy})"` : ''
   const inner = inserted
-    ? `<rect x="${x0 + 4}" y="${y0 + 8}" width="${x1 - x0 - 8}" height="${y1 - y0 - 16}" rx="2" fill="#141414"/><text x="${(x0 + x1) / 2}" y="${cy + 4}" class="pf-chip">CD40106</text>`
-    : `<text x="${(x0 + x1) / 2}" y="${cy + 4}" class="pf-chip dim">قاعدة فاضية</text>`
+    ? `<rect x="${x0 + (isVertical ? 8 : 4)}" y="${y0 + (isVertical ? 4 : 8)}" width="${x1 - x0 - (isVertical ? 16 : 8)}" height="${y1 - y0 - (isVertical ? 8 : 16)}" rx="2" fill="#141414"/><text x="${cx}" y="${cy + 4}" class="pf-chip"${rotate}>CD40106</text>`
+    : `<text x="${cx}" y="${cy + 4}" class="pf-chip dim"${rotate}>قاعدة فاضية</text>`
+  const notch = isVertical ? `<path d="M${cx - 7} ${y0} a7 7 0 0 0 14 0" fill="#666"/>` : `<path d="M${x0} ${cy - 7} a7 7 0 0 1 0 14" fill="#666"/>`
+  const dot = { x: legs[0].x + Math.sign(cx - legs[0].x) * PITCH * 0.6, y: legs[0].y + Math.sign(cy - legs[0].y) * PITCH * 0.6 }
+  const pin1 = isVertical ? { x: dot.x, y: legs[0].y } : { x: legs[0].x, y: dot.y }
   return `<rect x="${x0}" y="${y0}" width="${x1 - x0}" height="${y1 - y0}" rx="3" fill="#2e2e2e" stroke="#777"/>` +
-    `<path d="M${x0} ${cy - 7} a7 7 0 0 1 0 14" fill="#666"/>` + inner + legs.map(legDot).join('') +
-    `<circle cx="${legs[0].x}" cy="${legs[0].y + PITCH * 0.6}" r="2.6" fill="#ffd24d"/>`
+    notch + inner + legs.map(legDot).join('') + `<circle cx="${pin1.x}" cy="${pin1.y}" r="2.6" fill="#ffd24d"/>`
 }
 
 function pad(part: PerfPart, layout: PerfLayout, at: Project): string {
@@ -232,6 +237,14 @@ function pad(part: PerfPart, layout: PerfLayout, at: Project): string {
   const line = `x1="${p.x}" y1="${p.y}" x2="${end.x}" y2="${end.y}"`
   return `<line ${line} stroke="#000" stroke-width="8" stroke-linecap="round"/><line ${line} stroke="${color}" stroke-width="5.5" stroke-linecap="round"/>` +
     `<circle cx="${p.x}" cy="${p.y}" r="4.5" fill="${color}" stroke="#000"/>`
+}
+
+function wireBody(part: PerfPart, legs: Pt[], highlighted: boolean): string {
+  const [a, b] = legs
+  const line = `x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}"`
+  return `<line ${line} stroke="${highlighted ? '#ffb547' : '#111'}" stroke-width="${highlighted ? 8 : 7}" stroke-linecap="round"/>` +
+    `<line ${line} stroke="${part.color ?? '#888'}" stroke-width="4.5" stroke-linecap="round"/>` +
+    `<circle cx="${a.x}" cy="${a.y}" r="3" fill="${LEG}"/><circle cx="${b.x}" cy="${b.y}" r="3" fill="${LEG}"/>`
 }
 
 function partBody(part: PerfPart, layout: PerfLayout, view: PerfView, at: Project): string {
@@ -249,7 +262,16 @@ function partBody(part: PerfPart, layout: PerfLayout, view: PerfView, at: Projec
     case 'to220': return to220(legs, part.face ?? 'down', part.val)
     case 'dip': return dip(legs, view.icInserted)
     case 'pad': return pad(part, layout, at)
+    case 'wire': return wireBody(part, legs, view.net === part.nets[0])
   }
+}
+
+function canCenter(part: PerfPart, at: Project): Pt {
+  const [a, b] = part.legs.map(at)
+  const [h0, h1] = part.legs
+  const isStretched = Math.abs(h0[0] - h1[0]) + Math.abs(h0[1] - h1[1]) > 2
+  const k = isStretched ? 0.3 : 0.5
+  return { x: a.x + (b.x - a.x) * k, y: a.y + (b.y - a.y) * k + 4 }
 }
 
 function labelPos(part: PerfPart, at: Project): Pt {
@@ -262,7 +284,7 @@ function labelPos(part: PerfPart, at: Project): Pt {
     case 'pad': return { x: pts[0].x + (pts[0].x < 60 ? 16 : -16), y: pts[0].y - 9 }
     case 'resUp': return { x: pts[0].x - 2, y: pts[0].y + PITCH * 0.95 }
     case 'to220': return isVertical ? { x: c.x + PITCH * 1.05, y: c.y + 4 } : { x: c.x, y: c.y + PITCH * 1.2 }
-    case 'can': return { x: c.x, y: c.y + 4 }
+    case 'can': return canCenter(part, at)
     default: return isVertical ? { x: c.x + PITCH * 0.75, y: c.y + 4 } : { x: c.x, y: c.y - PITCH * 0.55 }
   }
 }
@@ -272,34 +294,39 @@ function partsSvg(layout: PerfLayout, view: PerfView, at: Project): string {
     const cls = ['pf-part', part.s === view.stage ? 'fresh' : '', view.selected === part.id ? 'sel' : '', part.optional ? 'opt' : ''].filter(Boolean).join(' ')
     const l = labelPos(part, at)
     const labelClass = part.k === 'can' && !part.labelAt ? 'pf-lab in' : 'pf-lab'
-    return `<g class="${cls}" data-id="${part.id}">${partBody(part, layout, view, at)}<text x="${l.x}" y="${l.y}" class="${labelClass}">${esc(part.lab)}</text></g>`
+    const label = part.lab ? `<text x="${l.x}" y="${l.y}" class="${labelClass}">${esc(part.lab)}</text>` : ''
+    return `<g class="${cls}" data-id="${part.id}">${partBody(part, layout, view, at)}${label}</g>`
   }).join('')
 }
 
 function bottomLabels(layout: PerfLayout, view: PerfView, at: Project): string {
-  const legsOf = layout.parts.filter(p => p.s <= view.stage && p.k !== 'dip' && !p.optional).map(part => {
+  const legsOf = layout.parts.filter(p => p.s <= view.stage && p.k !== 'dip' && !p.optional && p.lab).map(part => {
     const p = at(part.legs[0])
     return `<text x="${p.x}" y="${p.y - PITCH * 0.45}" class="pf-blab" data-id="${part.id}">${esc(part.lab)}</text>`
   })
   const dipPart = layout.parts.find(p => p.k === 'dip' && p.s <= view.stage)
-  const top = dipPart ? Math.min(...dipPart.legs.map(h => h[1])) : 0
-  const pins = (dipPart?.legs ?? []).map((h, i) => {
-    const p = at(h)
-    return `<text x="${p.x}" y="${h[1] === top ? p.y - PITCH * 0.5 : p.y - PITCH * 0.55}" class="pf-pin">${i + 1}</text>`
+  const pts = (dipPart?.legs ?? []).map(at)
+  const center = pts.length ? { x: pts.reduce((t, p) => t + p.x, 0) / pts.length, y: pts.reduce((t, p) => t + p.y, 0) / pts.length } : { x: 0, y: 0 }
+  const isVertical = pts.length > 7 && pts[0].x === pts[6].x
+  const pins = pts.map((p, i) => {
+    const x = isVertical ? p.x + Math.sign(center.x - p.x) * PITCH * 0.6 : p.x
+    const y = isVertical ? p.y + 3 : p.y + Math.sign(center.y - p.y) * PITCH * 0.62 + 3
+    return `<text x="${x}" y="${y}" class="pf-pin">${i + 1}</text>`
   })
   return legsOf.join('') + pins.join('')
 }
 
 export function perfboardSvg(layout: PerfLayout, view: PerfView): string {
-  const at = projector(layout, view.side)
-  const isStrip = view.type === 'strip'
-  const layers = view.side === 'top'
-    ? [boardBase(layout, 'top'), holesSvg(layout, false, at), isStrip ? linksSvg(layout, view, at) : '', partsSvg(layout, view, at)]
+  const side = isBreadboard(layout) ? 'top' : view.side
+  const at = projector(layout, side)
+  const strips = layout.strips
+  const layers = side === 'top'
+    ? [boardBase(layout, 'top'), holesSvg(layout, false, at), partsSvg(layout, view, at)]
     : [
         boardBase(layout, 'bottom'),
-        isStrip ? stripsSvg(layout, view.strip, at) : '',
-        holesSvg(layout, !isStrip, at),
-        isStrip ? cutsSvg(view.strip, 'bottom', at) : tracesSvg(layout, view, at),
+        strips ? stripsSvg(layout, strips, at) : '',
+        holesSvg(layout, !strips, at),
+        strips ? cutsSvg(strips, 'bottom', at) : tracesSvg(layout, view, at),
         jointsSvg(layout, view, at),
         bottomLabels(layout, view, at)
       ]

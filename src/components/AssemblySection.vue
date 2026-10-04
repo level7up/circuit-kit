@@ -1,66 +1,74 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useCircuit, useGuide } from '../composables/context'
-import { boardSize, holeName, perfboardSvg, type BoardType, type Side } from '../lib/perfboard/draw'
-import { bestStripboard } from '../lib/perfboard/stripboard'
+import { boardSize, holeName, perfboardSvg, type Side } from '../lib/perfboard/draw'
 import SectionHead from './SectionHead.vue'
 
 defineProps<{ num: number }>()
 const asm = useCircuit().assembly!
 const { openTab } = useGuide()
-const layout = asm.layout
-const strip = bestStripboard(layout)
-const size = boardSize(layout)
-const lastStage = Math.max(...asm.phases.map(p => p.s))
+
+const boardIndex = ref(0)
+const board = computed(() => asm.boards[boardIndex.value])
+const layout = computed(() => board.value.layout)
+const phases = computed(() => board.value.phases)
+const size = computed(() => boardSize(layout.value))
+const lastStage = computed(() => Math.max(...phases.value.map(p => p.s)))
 
 const phase = ref(0)
 const side = ref<Side>('top')
-const type = ref<BoardType>('perf')
 const selected = ref<string | null>(null)
 const net = ref<string | null>(null)
 
-const current = computed(() => asm.phases[phase.value])
-const checked = ref(asm.phases.map(p => p.c.map(() => false)))
-const isDone = (i: number) => checked.value[i].every(Boolean)
+const current = computed(() => phases.value[phase.value])
+const checked = ref(asm.boards.map(b => b.phases.map(p => p.c.map(() => false))))
+const boardChecks = computed(() => checked.value[boardIndex.value])
+const isDone = (i: number) => boardChecks.value[i].every(Boolean)
 const progress = computed(() => {
-  const all = checked.value.flat()
+  const all = boardChecks.value.flat()
   return (all.filter(Boolean).length / all.length) * 100
 })
 const toggle = (j: number) => {
-  checked.value = checked.value.map((row, i) => (i === phase.value ? row.map((v, k) => (k === j ? !v : v)) : row))
+  checked.value = checked.value.map((rows, b) => (b !== boardIndex.value ? rows
+    : rows.map((row, i) => (i === phase.value ? row.map((v, k) => (k === j ? !v : v)) : row))))
 }
 const goPhase = (i: number) => {
   phase.value = i
   selected.value = null
   net.value = null
 }
+const pickBoard = (i: number) => {
+  boardIndex.value = i
+  goPhase(Math.min(phase.value, asm.boards[i].phases.length - 1))
+}
 
-const svg = computed(() => perfboardSvg(layout, {
+const svg = computed(() => perfboardSvg(layout.value, {
   side: side.value,
-  type: type.value,
   stage: current.value.s,
   selected: selected.value,
   net: net.value,
-  icInserted: current.value.s >= lastStage,
-  strip
+  icInserted: current.value.s >= lastStage.value
 }))
 
-const freshParts = computed(() => layout.parts.filter(p => p.s === current.value.s))
-const part = computed(() => layout.parts.find(p => p.id === selected.value) ?? null)
+const freshParts = computed(() => layout.value.parts.filter(p => p.s === current.value.s))
+const part = computed(() => layout.value.parts.find(p => p.id === selected.value) ?? null)
 const partLegs = computed(() => {
   const p = part.value
   if (!p) return []
-  const legs = p.legs.map((h, i) => ({ hole: holeName(h), net: p.nets[i], label: p.k === 'dip' ? 'رجل ' + (i + 1) : '' }))
+  const legs = p.legs.map((h, i) => ({ hole: holeName(layout.value, h), net: p.nets[i], label: p.k === 'dip' ? 'رجل ' + (i + 1) : '' }))
   return p.k === 'dip' ? legs.filter(l => !l.net.startsWith('nc')) : legs
 })
-const netName = (n: string) => layout.nets[n]?.n ?? 'مش متوصلة'
-const netColor = (n: string) => layout.nets[n]?.c ?? '#666'
-const stripInfo = computed(() => ({
-  cuts: strip.cuts.length,
-  knife: strip.cuts.filter(c => !c.drill).length,
-  links: strip.links.filter(l => l.s <= current.value.s).length,
-  axis: strip.axis === 'cols' ? 'بالطول (من فوق لتحت)' : 'بالعرض (من شمال ليمين)'
-}))
+const netName = (n: string) => layout.value.nets[n]?.n ?? 'مش متوصلة'
+const netColor = (n: string) => layout.value.nets[n]?.c ?? '#666'
+const stripInfo = computed(() => {
+  const strips = layout.value.strips
+  if (!strips) return null
+  return {
+    cuts: strips.cuts.length,
+    knife: strips.cuts.filter(c => !Number.isInteger(c.at)).length,
+    links: layout.value.parts.filter(p => p.k === 'wire').length
+  }
+})
 
 const selectPart = (id: string | null) => {
   selected.value = selected.value === id ? null : id
@@ -91,7 +99,7 @@ const onBoardClick = (e: MouseEvent) => {
 
     <div class="gap" />
     <div class="steps-top">
-      <div v-for="(p, i) in asm.phases" :key="p.t" class="sdot" :class="{ on: i === phase, done: isDone(i) }" :title="p.t" role="button" tabindex="0" @click="goPhase(i)" @keydown.enter="goPhase(i)">
+      <div v-for="(p, i) in phases" :key="p.t" class="sdot" :class="{ on: i === phase, done: isDone(i) }" :title="p.t" role="button" tabindex="0" @click="goPhase(i)" @keydown.enter="goPhase(i)">
         {{ isDone(i) && i !== phase ? '✓' : i + 1 }}
       </div>
     </div>
@@ -101,8 +109,7 @@ const onBoardClick = (e: MouseEvent) => {
       <div class="card asm-board">
         <div class="asm-tools">
           <div class="seg" role="group" aria-label="نوع البورد">
-            <button :class="{ on: type === 'perf' }" @click="type = 'perf'">بورد نقط</button>
-            <button :class="{ on: type === 'strip' }" @click="type = 'strip'">بورد خطوط</button>
+            <button v-for="(b, i) in asm.boards" :key="b.id" :class="{ on: boardIndex === i }" @click="pickBoard(i)">{{ b.label }}</button>
           </div>
           <div class="seg" role="group" aria-label="الناحية">
             <button :class="{ on: side === 'top' }" @click="side = 'top'">⬆️ من فوق (المكونات)</button>
@@ -110,14 +117,13 @@ const onBoardClick = (e: MouseEvent) => {
           </div>
         </div>
         <p v-if="side === 'bottom'" class="asm-hint">ده شكل البورد <b>وهو مقلوب في إيدك</b>: الشمال بقى يمين. الخطوط الفضي = قصدير أو سلك عريان. دوس على أي خط عشان تعرف هو إيه.</p>
-        <p v-if="type === 'strip'" class="asm-hint warn">
-          بورد خطوط: خلّي الخطوط <b>{{ stripInfo.axis }}</b>. اقطع النحاس في <b>{{ stripInfo.cuts }}</b> مكان من تحت: الدواير الحمرا بتتقطع بلف بنطة 3 مم بإيدك في الخرم، والشُرط الحمرا ({{ stripInfo.knife }}) بالكاتر بين خرمين.
-          والوصلات بقت <b>{{ stripInfo.links }}</b> سلكة من فوق لحد المرحلة دي.
+        <p v-if="stripInfo" class="asm-hint warn">
+          فيرو: اقطع النحاس من تحت في <b>{{ stripInfo.cuts }}</b> مكان (الدواير الحمرا: لف بنطة 3–4 مم بإيدك في الخرم)، وركّب <b>{{ stripInfo.links }}</b> سلوك معزولة من فوق.
         </p>
         <div class="asm-svg" @click="onBoardClick">
           <svg :viewBox="`0 0 ${size.w} ${size.h}`" role="img" aria-label="رسمة البورد المثقّب" v-html="svg" />
         </div>
-        <p class="asm-note" v-html="asm.boardNote" />
+        <p class="asm-note" v-html="board.note" />
       </div>
 
       <div class="asm-side">
@@ -143,19 +149,19 @@ const onBoardClick = (e: MouseEvent) => {
         </div>
 
         <div class="card step">
-          <span class="tag">المرحلة {{ phase + 1 }} من {{ asm.phases.length }}</span>
+          <span class="tag">المرحلة {{ phase + 1 }} من {{ phases.length }}</span>
           <h3>{{ current.t }}</h3>
           <div class="meta">{{ current.m }}</div>
           <div v-html="current.b" />
           <div style="margin-top:10px">
-            <label v-for="(c, j) in current.c" :key="c" class="check" :class="{ done: checked[phase][j] }">
-              <input type="checkbox" :checked="checked[phase][j]" @change="toggle(j)"><span>{{ c }}</span>
+            <label v-for="(c, j) in current.c" :key="c" class="check" :class="{ done: boardChecks[phase][j] }">
+              <input type="checkbox" :checked="boardChecks[phase][j]" @change="toggle(j)"><span>{{ c }}</span>
             </label>
           </div>
           <div class="meas">📏 <b>اتأكد:</b> <span v-html="current.x" /></div>
           <div class="navbtns">
             <button class="btn" :disabled="phase === 0" @click="goPhase(phase - 1)">→ السابقة</button>
-            <button v-if="phase < asm.phases.length - 1" class="btn pri" @click="goPhase(phase + 1)">التالية ←</button>
+            <button v-if="phase < phases.length - 1" class="btn pri" @click="goPhase(phase + 1)">التالية ←</button>
             <button v-else class="btn pri" @click="openTab('car')">التركيب في العربية ←</button>
           </div>
         </div>

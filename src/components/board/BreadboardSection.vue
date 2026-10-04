@@ -8,10 +8,14 @@ import BoardSvg from './BoardSvg.vue'
 import BoardInfo from './BoardInfo.vue'
 import PartDictionary from './PartDictionary.vue'
 import PartPopover from './PartPopover.vue'
+import MiniBreadboard from './MiniBreadboard.vue'
 import type { BoardPart } from '../../types/circuit'
 
 defineProps<{ num: number }>()
-const board = useCircuit().board!
+const circuit = useCircuit()
+const board = circuit.board!
+const mini = circuit.miniBoard
+const boardSize = ref<'full' | 'mini'>('full')
 const sim = useSim()
 const guide = useGuide()
 const dyn = board.dynamics
@@ -116,6 +120,12 @@ setLamp(dyn.lampModeForStage(0))
 <template>
   <section id="board">
     <SectionHead :num="num" :title="board.title" :sub="board.sub" />
+    <div v-if="mini" class="bbmode" role="group" aria-label="مقاس البريد بورد">
+      <button :class="{ on: boardSize === 'full' }" @click="boardSize = 'full'">بريد بورد كبير 830</button>
+      <button :class="{ on: boardSize === 'mini' }" @click="boardSize = 'mini'">ميني 170 (الصغير)</button>
+    </div>
+    <MiniBreadboard v-if="mini && boardSize === 'mini'" :mini="mini" />
+    <template v-else>
     <div id="bbMode" class="bbmode" role="group" aria-label="نوع الشرح">
       <button :class="{ on: easy }" @click="easy = true">🔰 شرح للمبتدئين</button>
       <button :class="{ on: !easy }" @click="easy = false">🔧 شرح فني</button>
@@ -164,5 +174,6 @@ setLamp(dyn.lampModeForStage(0))
     <h3 class="bbh3">📚 قاموس القطع: كل قطعة بتعمل إيه، وبديلها لو مش لاقيها</h3>
     <p class="sub" style="margin-bottom:12px">دوس على أي كارت وهيوريك القطعة على البورد، أو اختار بديل وشوف النتيجة.</p>
     <PartDictionary :board="board" :swaps="sim.swaps.value" @show="showPart" @choose="chooseFromDictionary" />
+    </template>
   </section>
 </template>
