@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { flickerStyles } from '../src/circuits/parking-flicker/styles'
 import { defaults, flickerSim, type FlickerParams } from '../src/circuits/parking-flicker/simulate'
 
-interface Character { min: number; swingsPerS: number; jitterPerS: number }
+interface Character { min: number; max: number; swingsPerS: number; jitterPerS: number }
 
 function character(p: FlickerParams): Character {
   const s = flickerSim.init(p)
@@ -17,7 +17,7 @@ function character(p: FlickerParams): Character {
     jitter += Math.abs(xs[i] - xs[i - 10])
     if ((xs[i] - mean) * (xs[i - 10] - mean) < 0) swings++
   }
-  return { min: Math.min(...xs), swingsPerS: swings / 20, jitterPerS: jitter / 20 }
+  return { min: Math.min(...xs), max: Math.max(...xs), swingsPerS: swings / 20, jitterPerS: jitter / 20 }
 }
 
 const byId = (id: string) => {
@@ -51,7 +51,7 @@ describe('flicker styles', () => {
     expect(breath.jitterPerS).toBeLessThan(candle.jitterPerS / 2)
   })
 
-  it.each(flickerStyles.map(s => s.id))('never lets the strip go dark with %s', id => {
+  it.each(flickerStyles.map(s => s.id).filter(id => id !== 'hard'))('never lets the strip go dark with %s', id => {
     expect(byId(id).min).toBeGreaterThan(0.15)
   })
 
@@ -65,5 +65,17 @@ describe('flicker styles', () => {
       const applied = s.apply(defaults)
       expect(flickerStyles.filter(o => o.isActive(applied)).map(o => o.id)).toEqual([s.id])
     })
+  })
+
+  it('makes the hard style much faster than the old TV but still visible as flicker', () => {
+    const hard = byId('hard')
+    const tv = byId('tv')
+    expect(hard.swingsPerS).toBeGreaterThan(tv.swingsPerS * 1.5)
+    expect(hard.swingsPerS).toBeLessThan(40)
+  })
+
+  it('lets the hard style dip to dark only briefly', () => {
+    expect(byId('hard').min).toBeLessThan(0.05)
+    expect(byId('hard').max).toBeGreaterThan(0.95)
   })
 })
