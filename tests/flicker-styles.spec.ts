@@ -98,13 +98,13 @@ describe('flicker styles', () => {
     expect(blinkSegments().halfLit).toBeLessThan(0.05)
   })
 
-  it('keeps the blink lit for about one to three seconds and dark for about half a second', () => {
+  it('keeps the blink lit for one to two seconds and dark for under a second', () => {
     const { on, off } = blinkSegments()
     const mean = (a: number[]) => a.reduce((x, y) => x + y, 0) / a.length
     expect(mean(on)).toBeGreaterThan(1)
-    expect(mean(on)).toBeLessThan(3)
-    expect(mean(off)).toBeGreaterThan(0.4)
-    expect(mean(off)).toBeLessThan(1)
+    expect(mean(on)).toBeLessThan(2)
+    expect(mean(off)).toBeGreaterThan(0.3)
+    expect(mean(off)).toBeLessThan(0.8)
   })
 
   it('varies the blink lengths instead of repeating one rhythm', () => {
