@@ -20,6 +20,26 @@ function character(p: FlickerParams): Character {
   return { min: Math.min(...xs), max: Math.max(...xs), swingsPerS: swings / 20, jitterPerS: jitter / 20 }
 }
 
+function dipsOf(id: string): { perSecond: number; gaps: number[]; min: number; max: number } {
+  const style = flickerStyles.find(s => s.id === id)!
+  const p = style.apply(defaults)
+  const s = flickerSim.init(p)
+  s.ph = [0.1, 0.4, 0.7]
+  for (let i = 0; i < 6000; i++) flickerSim.step(s, p, 0.0005)
+  const dips: number[] = []
+  let below = false
+  let min = 1
+  let max = 0
+  for (let i = 0; i < 40000; i++) {
+    flickerSim.step(s, p, 0.0005)
+    min = Math.min(min, s.br)
+    max = Math.max(max, s.br)
+    if (s.br < 0.3 && !below) { dips.push(i * 0.5); below = true }
+    if (s.br > 0.6) below = false
+  }
+  return { perSecond: dips.length / 20, gaps: dips.slice(1).map((d, i) => d - dips[i]), min, max }
+}
+
 const byId = (id: string) => {
   const style = flickerStyles.find(s => s.id === id)
   if (!style) throw new Error('no style ' + id)
@@ -67,15 +87,20 @@ describe('flicker styles', () => {
     })
   })
 
-  it('makes the hard style much faster than the old TV but still visible as flicker', () => {
-    const hard = byId('hard')
-    const tv = byId('tv')
-    expect(hard.swingsPerS).toBeGreaterThan(tv.swingsPerS * 1.5)
-    expect(hard.swingsPerS).toBeLessThan(40)
+  it('makes the hard style drop near dark about five times a second', () => {
+    const { perSecond, min, max } = dipsOf('hard')
+    expect(perSecond).toBeGreaterThan(3)
+    expect(perSecond).toBeLessThan(7)
+    expect(min).toBeLessThan(0.05)
+    expect(max).toBeGreaterThan(0.95)
   })
 
-  it('lets the hard style dip to dark only briefly', () => {
-    expect(byId('hard').min).toBeLessThan(0.05)
-    expect(byId('hard').max).toBeGreaterThan(0.95)
+  it('spaces the hard style dips unevenly with no short repeating rhythm', () => {
+    const { gaps } = dipsOf('hard')
+    const mean = gaps.reduce((a, b) => a + b, 0) / gaps.length
+    const spread = Math.sqrt(gaps.reduce((a, b) => a + (b - mean) ** 2, 0) / gaps.length) / mean
+    expect(spread).toBeGreaterThan(0.15)
+    const repeatsWithin = (k: number) => gaps.slice(0, gaps.length - k).every((g, i) => Math.abs(g - gaps[i + k]) < 6)
+    expect([...Array(20).keys()].slice(1).filter(repeatsWithin)).toEqual([])
   })
 })
