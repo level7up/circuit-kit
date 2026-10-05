@@ -158,11 +158,13 @@ const onBoardClick = (e: MouseEvent) => {
         <p v-if="stripInfo" class="asm-hint warn">
           فيرو: اقطع النحاس من تحت في <b>{{ stripInfo.cuts }}</b> مكان (الدواير الحمرا: لف بنطة 3–4 مم بإيدك في الخرم)، وركّب <b>{{ stripInfo.links }}</b> سلوك معزولة من فوق.
         </p>
+        <div class="asm-work">
         <div class="asm-svg" @click="onBoardClick">
           <svg :viewBox="`0 0 ${size.w} ${size.h}`" role="img" aria-label="رسمة البورد المثقّب" v-html="svg" />
         </div>
         <BuildStepper :layout="layout" :item="item" :index="itemIndex" :count="items.length" :phase-title="'المرحلة ' + (phase + 1) + ': ' + current.t"
           :is-first="isFirstItem" :is-last="isLastItem" @prev="prevItem" @next="nextItem" />
+        </div>
         <p class="asm-note" v-html="board.note" />
       </div>
 
@@ -180,7 +182,7 @@ const onBoardClick = (e: MouseEvent) => {
           <span class="tag">في المرحلة دي</span>
           <p v-if="!freshParts.length" class="muted">مفيش مكونات. جهّز البورد والأدوات.</p>
           <div v-else class="asm-chips">
-            <button v-for="p in freshParts" :key="p.id" class="chip" @click="selectPart(p.id)"><b>{{ p.lab }}</b> {{ p.val }}</button>
+            <button v-for="p in freshParts" :key="p.id" class="chip" @click="selectPart(p.id)"><template v-if="p.k === 'wire'">🔌 {{ holeName(layout, p.legs[0]) }}–{{ holeName(layout, p.legs[1]) }}</template><template v-else><b>{{ p.lab }}</b> {{ p.val }}</template></button>
           </div>
           <p class="muted small">دوس على أي قطعة في الرسمة عشان تعرف مكانها بالظبط واتجاهها. أو اختار خط تحت عشان تشوف هو رايح فين.</p>
           <div class="asm-chips">
@@ -234,10 +236,8 @@ const onBoardClick = (e: MouseEvent) => {
 
 <style scoped>
 .asm-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
-.asm-bench{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:16px;align-items:start}
-@media(max-width:1100px){.asm-bench{grid-template-columns:minmax(0,1fr)}}
-.asm-board{padding:14px}
-@media(min-width:1101px){.asm-board{position:sticky;top:64px;z-index:2}}
+.asm-bench{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;align-items:start}
+.asm-board{--asmw:min(1560px,calc(100vw - 32px));width:var(--asmw);margin-inline:calc((100% - var(--asmw))/2);padding:14px}
 .asm-tools{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px}
 .seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
 .seg button{background:var(--panel2);color:var(--text);border:0;padding:7px 14px;font:inherit;font-size:13.5px;cursor:pointer}
@@ -245,10 +245,14 @@ const onBoardClick = (e: MouseEvent) => {
 .asm-hint{font-size:13.5px;margin:0 0 10px;padding:8px 12px;border-radius:10px;background:var(--panel2);color:var(--muted)}
 .asm-hint b{color:var(--text)}
 .asm-hint.warn{border-right:3px solid var(--amber)}
+.asm-work{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:14px;align-items:start}
+.asm-work :deep(.stepper){margin-top:0}
+@media(max-width:1100px){.asm-work{grid-template-columns:minmax(0,1fr)}.asm-work :deep(.stepper){margin-top:12px}}
 .asm-svg{direction:ltr;background:#0d1320;border-radius:12px;padding:6px;cursor:pointer}
 .asm-svg svg{width:100%;height:auto;display:block}
 .asm-note{font-size:13px;color:var(--muted);margin:10px 0 0}
-.asm-side{display:grid;gap:14px}
+.asm-side{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:14px;align-items:start}
+@media(max-width:900px){.asm-side{grid-template-columns:minmax(0,1fr)}}
 .asm-side p{margin:8px 0}
 .asm-legs{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:4px;font-size:13.5px}
 .asm-legs li{display:flex;align-items:center;gap:8px;padding:4px 8px;border-radius:8px;background:var(--panel2);cursor:pointer}
