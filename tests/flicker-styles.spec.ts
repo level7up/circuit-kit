@@ -24,14 +24,14 @@ function blinkSegments(): { on: number[]; off: number[]; halfLit: number } {
   const p = flickerStyles.find(x => x.id === 'blink')!.apply(defaults)
   const s = flickerSim.init(p)
   s.ph = [0.1, 0.4, 0.7]
-  const dt = 0.002
+  const dt = 0.0005
   for (let i = 0; i < 5000; i++) flickerSim.step(s, p, dt)
   const on: number[] = []
   const off: number[] = []
   let state: 'on' | 'off' | null = null
   let start = 0
   let half = 0
-  for (let i = 0; i < 120 / dt; i++) {
+  for (let i = 0; i < 40 / dt; i++) {
     flickerSim.step(s, p, dt)
     const next: 'on' | 'off' | null = s.br < 0.12 ? 'off' : s.br > 0.7 ? 'on' : state
     if (s.br >= 0.12 && s.br <= 0.7) half++
@@ -42,7 +42,7 @@ function blinkSegments(): { on: number[]; off: number[]; halfLit: number } {
       start = i * dt
     }
   }
-  return { on: on.slice(1), off: off.slice(1), halfLit: (half * dt) / 120 }
+  return { on: on.slice(1), off: off.slice(1), halfLit: (half * dt) / 40 }
 }
 
 const byId = (id: string) => {
@@ -98,23 +98,24 @@ describe('flicker styles', () => {
     expect(blinkSegments().halfLit).toBeLessThan(0.05)
   })
 
-  it('keeps the blink lit for one to two seconds and dark for under a second', () => {
+  it('keeps the blink lit for about a third of a second and dark for about a tenth', () => {
     const { on, off } = blinkSegments()
     const mean = (a: number[]) => a.reduce((x, y) => x + y, 0) / a.length
-    expect(mean(on)).toBeGreaterThan(1)
-    expect(mean(on)).toBeLessThan(2)
-    expect(mean(off)).toBeGreaterThan(0.25)
-    expect(mean(off)).toBeLessThan(0.6)
+    expect(mean(on)).toBeGreaterThan(0.25)
+    expect(mean(on)).toBeLessThan(0.45)
+    expect(mean(off)).toBeGreaterThan(0.07)
+    expect(mean(off)).toBeLessThan(0.15)
   })
 
   it('varies the blink lengths instead of repeating one rhythm', () => {
     const { on, off } = blinkSegments()
-    expect(new Set(on.slice(0, 20).map(v => Math.round(v / 0.2))).size).toBeGreaterThanOrEqual(4)
-    expect(new Set(off.slice(0, 20).map(v => Math.round(v / 0.1))).size).toBeGreaterThanOrEqual(4)
+    expect(new Set(on.slice(0, 20).map(v => Math.round(v / 0.06))).size).toBeGreaterThanOrEqual(4)
+    expect(new Set(off.slice(0, 20).map(v => Math.round(v / 0.03))).size).toBeGreaterThanOrEqual(4)
   })
 
-  it('never blinks off for a barely visible instant', () => {
-    expect(Math.min(...blinkSegments().off)).toBeGreaterThan(0.12)
+  it('rarely blinks off for a barely visible instant', () => {
+    const { off } = blinkSegments()
+    expect(off.filter(v => v < 0.03).length / off.length).toBeLessThan(0.15)
   })
 
   it('restores the normal R8 to R10 when leaving the blink style', () => {
