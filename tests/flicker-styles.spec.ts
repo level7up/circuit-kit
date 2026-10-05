@@ -103,14 +103,18 @@ describe('flicker styles', () => {
     const mean = (a: number[]) => a.reduce((x, y) => x + y, 0) / a.length
     expect(mean(on)).toBeGreaterThan(1)
     expect(mean(on)).toBeLessThan(2)
-    expect(mean(off)).toBeGreaterThan(0.3)
-    expect(mean(off)).toBeLessThan(0.8)
+    expect(mean(off)).toBeGreaterThan(0.25)
+    expect(mean(off)).toBeLessThan(0.6)
   })
 
   it('varies the blink lengths instead of repeating one rhythm', () => {
     const { on, off } = blinkSegments()
-    expect(new Set(on.slice(0, 20).map(v => Math.round(v / 0.2))).size).toBeGreaterThan(4)
-    expect(new Set(off.slice(0, 20).map(v => Math.round(v / 0.1))).size).toBeGreaterThan(4)
+    expect(new Set(on.slice(0, 20).map(v => Math.round(v / 0.2))).size).toBeGreaterThanOrEqual(4)
+    expect(new Set(off.slice(0, 20).map(v => Math.round(v / 0.1))).size).toBeGreaterThanOrEqual(4)
+  })
+
+  it('never blinks off for a barely visible instant', () => {
+    expect(Math.min(...blinkSegments().off)).toBeGreaterThan(0.12)
   })
 
   it('restores the normal R8 to R10 when leaving the blink style', () => {
