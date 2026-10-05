@@ -219,4 +219,20 @@ describe('parking flicker simulation', () => {
     expect(r.min).toBeGreaterThan(0.2)
     expect(r.offShare).toBe(0)
   })
+
+  it('drives a 10 LED strip to full brightness with the original resistors', () => {
+    const r = run(swap('lamp', pick('lamp', '10 لمبات')))
+    expect(r.max).toBeGreaterThan(0.97)
+    expect(r.offShare).toBe(0)
+  })
+
+  it('leaves a 20 LED strip dim with only two 68 ohm resistors', () => {
+    expect(run(swap('lamp', pick('lamp', '20 لمبة · R8/R9'))).max).toBeLessThan(0.8)
+  })
+
+  it.each(['3 × 68Ω', '4 × 100Ω'])('drives a 20 LED strip near full brightness with %s', text => {
+    const r = run(swap('lamp', pick('lamp', '20 لمبة + ' + text)))
+    expect(r.max).toBeGreaterThan(0.95)
+    expect(r.offShare).toBe(0)
+  })
 })
