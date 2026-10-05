@@ -20,24 +20,29 @@ function character(p: FlickerParams): Character {
   return { min: Math.min(...xs), max: Math.max(...xs), swingsPerS: swings / 20, jitterPerS: jitter / 20 }
 }
 
-function dipsOf(id: string): { perSecond: number; gaps: number[]; min: number; max: number } {
-  const style = flickerStyles.find(s => s.id === id)!
-  const p = style.apply(defaults)
+function blinkSegments(): { on: number[]; off: number[]; halfLit: number } {
+  const p = flickerStyles.find(x => x.id === 'blink')!.apply(defaults)
   const s = flickerSim.init(p)
   s.ph = [0.1, 0.4, 0.7]
-  for (let i = 0; i < 6000; i++) flickerSim.step(s, p, 0.0005)
-  const dips: number[] = []
-  let below = false
-  let min = 1
-  let max = 0
-  for (let i = 0; i < 40000; i++) {
-    flickerSim.step(s, p, 0.0005)
-    min = Math.min(min, s.br)
-    max = Math.max(max, s.br)
-    if (s.br < 0.3 && !below) { dips.push(i * 0.5); below = true }
-    if (s.br > 0.6) below = false
+  const dt = 0.002
+  for (let i = 0; i < 5000; i++) flickerSim.step(s, p, dt)
+  const on: number[] = []
+  const off: number[] = []
+  let state: 'on' | 'off' | null = null
+  let start = 0
+  let half = 0
+  for (let i = 0; i < 120 / dt; i++) {
+    flickerSim.step(s, p, dt)
+    const next: 'on' | 'off' | null = s.br < 0.12 ? 'off' : s.br > 0.7 ? 'on' : state
+    if (s.br >= 0.12 && s.br <= 0.7) half++
+    if (next !== state) {
+      if (state === 'on') on.push(i * dt - start)
+      if (state === 'off') off.push(i * dt - start)
+      state = next
+      start = i * dt
+    }
   }
-  return { perSecond: dips.length / 20, gaps: dips.slice(1).map((d, i) => d - dips[i]), min, max }
+  return { on: on.slice(1), off: off.slice(1), halfLit: (half * dt) / 120 }
 }
 
 const byId = (id: string) => {
@@ -71,7 +76,7 @@ describe('flicker styles', () => {
     expect(breath.jitterPerS).toBeLessThan(candle.jitterPerS / 2)
   })
 
-  it.each(flickerStyles.map(s => s.id).filter(id => id !== 'hard'))('never lets the strip go dark with %s', id => {
+  it.each(flickerStyles.map(s => s.id).filter(id => id !== 'blink'))('never lets the strip go dark with %s', id => {
     expect(byId(id).min).toBeGreaterThan(0.15)
   })
 
@@ -87,20 +92,32 @@ describe('flicker styles', () => {
     })
   })
 
-  it('makes the hard style drop near dark about five times a second', () => {
-    const { perSecond, min, max } = dipsOf('hard')
-    expect(perSecond).toBeGreaterThan(3)
-    expect(perSecond).toBeLessThan(7)
-    expect(min).toBeLessThan(0.05)
-    expect(max).toBeGreaterThan(0.95)
+
+
+  it('blinks fully on or fully off with almost no half-lit time', () => {
+    expect(blinkSegments().halfLit).toBeLessThan(0.05)
   })
 
-  it('spaces the hard style dips unevenly with no short repeating rhythm', () => {
-    const { gaps } = dipsOf('hard')
-    const mean = gaps.reduce((a, b) => a + b, 0) / gaps.length
-    const spread = Math.sqrt(gaps.reduce((a, b) => a + (b - mean) ** 2, 0) / gaps.length) / mean
-    expect(spread).toBeGreaterThan(0.15)
-    const repeatsWithin = (k: number) => gaps.slice(0, gaps.length - k).every((g, i) => Math.abs(g - gaps[i + k]) < 6)
-    expect([...Array(20).keys()].slice(1).filter(repeatsWithin)).toEqual([])
+  it('keeps the blink lit for about one to three seconds and dark for about half a second', () => {
+    const { on, off } = blinkSegments()
+    const mean = (a: number[]) => a.reduce((x, y) => x + y, 0) / a.length
+    expect(mean(on)).toBeGreaterThan(1)
+    expect(mean(on)).toBeLessThan(3)
+    expect(mean(off)).toBeGreaterThan(0.4)
+    expect(mean(off)).toBeLessThan(1)
+  })
+
+  it('varies the blink lengths instead of repeating one rhythm', () => {
+    const { on, off } = blinkSegments()
+    expect(new Set(on.slice(0, 20).map(v => Math.round(v / 0.2))).size).toBeGreaterThan(4)
+    expect(new Set(off.slice(0, 20).map(v => Math.round(v / 0.1))).size).toBeGreaterThan(4)
+  })
+
+  it('restores the normal R8 to R10 when leaving the blink style', () => {
+    const blink = flickerStyles.find(x => x.id === 'blink')!.apply(defaults)
+    const back = flickerStyles[0].apply(blink)
+    expect(back.emitter).toEqual(defaults.emitter)
+    expect(flickerStyles[0].isActive(back)).toBe(true)
+    expect(flickerStyles[0].isActive(blink)).toBe(false)
   })
 })

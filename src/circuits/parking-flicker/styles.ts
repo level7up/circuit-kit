@@ -5,14 +5,20 @@ interface StyleValues {
   R: [number, number, number]
   Cn: number
   Rf?: number
+  emitter?: number[]
 }
 
+const BLINK_EMITTER = [10, 10, 10]
+const sameList = (a: number[], b: number[]) => a.length === b.length && a.every((v, i) => v === b[i])
 const floorOf = (v: StyleValues) => v.Rf ?? defaults.Rf
-const sameValues = (p: FlickerParams, v: StyleValues) => p.Cn === v.Cn && p.Rf === floorOf(v) && v.R.every((r, i) => p.R[i] === r)
+const emitterFor = (p: FlickerParams, v: StyleValues) => v.emitter ?? (sameList(p.emitter, BLINK_EMITTER) ? defaults.emitter : p.emitter)
+const sameValues = (p: FlickerParams, v: StyleValues) =>
+  p.Cn === v.Cn && p.Rf === floorOf(v) && v.R.every((r, i) => p.R[i] === r) &&
+  (v.emitter ? sameList(p.emitter, v.emitter) : !sameList(p.emitter, BLINK_EMITTER))
 
 const style = (id: string, icon: string, name: string, desc: string, values: StyleValues, parts: PresetPart[]): SimPreset<FlickerParams> => ({
   id, icon, name, desc, parts,
-  apply: p => ({ ...p, R: [...values.R], Cn: values.Cn, Rf: floorOf(values) }),
+  apply: p => ({ ...p, R: [...values.R], Cn: values.Cn, Rf: floorOf(values), emitter: emitterFor(p, values) }),
   isActive: p => sameValues(p, values)
 })
 
@@ -49,13 +55,16 @@ export const flickerStyles: SimPreset<FlickerParams>[] = [
       { id: 'R3', value: '1MΩ', buy: true, note: 'نفس قيمة R1 الأصلية، بس محتاج واحدة زيادة' },
       { id: 'C8', value: '47µF', buy: true, note: '16V أو أكتر' }
     ]),
-  style('hard', '⚡', 'رعشة حادة مش منتظمة', 'حادة ومش ناعمة: النور بيقطع للضلمة تقريباً حوالي 5 مرات في الثانية، والمسافة بين كل قطعة والتانية بتتغيّر كل مرة (من حوالي عُشر ثانية لتلت ثانية)، فمفيش إيقاع تحفظه. ملفتة، فاستخدمها والعربية راكنة بس.',
-    { R: [220e3, 330e3, 470e3], Cn: 0.1e-6, Rf: 22e3 },
+  style('blink', '⚡', 'ومضات بطيئة مش منتظمة', 'النور بيفضل منوّر ثابت من ثانية لـ 3 ثواني، وبعدين يطفي خالص من خُمس ثانية لثانية، والمدد بتتغيّر كل مرة فمفيش إيقاع. ينفع بس مع الشريط أو لمبة T10 LED (اللي جواهم مقاومة)، مش LED لوحده.',
+    { R: [2.7e6, 3.9e6, 1.5e6], Cn: 4.7e-6, Rf: 47e3, emitter: BLINK_EMITTER },
     [
-      { id: 'R1', value: '220kΩ', buy: true },
-      { id: 'R2', value: '330kΩ', buy: true },
-      { id: 'R3', value: '470kΩ', buy: true },
-      { id: 'C8', value: '100nF', buy: true, note: 'المكثف الصغير 104، زي C2 وC3 وC7' },
-      { id: 'R7', value: '22kΩ', buy: true, note: 'بدل الـ 10kΩ: ده اللي بيخلّي النور يوصل للضلمة في اللحظات الواطية' }
+      { id: 'R1', value: '2.7MΩ', buy: true },
+      { id: 'R2', value: '3.9MΩ', buy: true },
+      { id: 'R3', value: '1.5MΩ', buy: true },
+      { id: 'C8', value: '4.7µF', buy: true, note: '16V أو أكتر' },
+      { id: 'R7', value: '47kΩ', buy: true, note: 'نفس قيمة R6، بس محتاج واحدة زيادة' },
+      { id: 'R8', value: '10Ω', buy: true, note: 'R8 وR9 وR10 التلاتة 10Ω: ده اللي بيخلّي الشريط ينوّر كامل أو يطفي خالص، من غير نص نور' },
+      { id: 'R9', value: '10Ω', buy: true },
+      { id: 'R10', value: '10Ω', buy: true }
     ])
 ]
