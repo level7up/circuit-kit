@@ -65,13 +65,13 @@ export const defaults: FlickerParams = {
   Cn: 22e-6,
   Vbe: 1.3,
   qDead: false,
-  emitter: [68, 68],
+  emitter: [68, 68, 68],
   Vin: 12,
   lampKind: 'led',
-  lampFull: 0.06,
+  lampFull: 0.14,
   lampTau: 0,
-  lampName: 'T10 LED',
-  lampGlow: '#ffd27a',
+  lampName: 'شريط 20 لمبة',
+  lampGlow: '#fff1c4',
   Rled: 470,
   ledDead: false,
   ledRev: false,
@@ -153,7 +153,8 @@ export function step(s: FlickerState, p: FlickerParams, dt: number): void {
 }
 
 const DEF_R = defaults.R
-const DEFAULT_EMITTER = emitterOhms(defaults)
+const DEFAULT_EMITTER = Math.round(emitterOhms(defaults))
+const TWO_68 = 34
 const hz = (p: FlickerParams, i: number) => '≈ ' + (1 / period(p, i)).toFixed(1) + ' Hz'
 const setAt = (arr: number[], i: number, v: number) => arr.map((x, j) => (j === i ? v : x))
 
@@ -183,8 +184,10 @@ const controls: SimControl<FlickerParams>[] = [
     get: p => p.Rf, set: (p, v) => ({ ...p, Rf: v }), hint: p => 'أقل جهد ≈ ' + minNodeVoltage(p).toFixed(2) + 'V', isDefault: v => v === defaults.Rf
   },
   {
-    key: 'Re', label: 'R8 ∥ R9 · حد تيار اللمبة', options: [22, 34, 47, 68, 100, 150, 220, 330], format: v => (v === DEFAULT_EMITTER ? '68Ω + 68Ω = 34Ω' : 'مقاومة واحدة ' + fmtR(v)),
-    get: p => Math.round(emitterOhms(p)), set: (p, v) => ({ ...p, emitter: v === DEFAULT_EMITTER ? defaults.emitter : [v] }), hint: p => 'أقصى تيار ≈ ' + Math.round(maxLampCurrent(p) * 1000) + ' mA', isDefault: v => v === DEFAULT_EMITTER
+    key: 'Re', label: 'R8 ∥ R9 ∥ R10 · حد تيار اللمبة', options: [DEFAULT_EMITTER, TWO_68, 47, 68, 100, 150, 220, 330],
+    format: v => (v === DEFAULT_EMITTER ? '3 × 68Ω = 23Ω' : v === TWO_68 ? '2 × 68Ω = 34Ω' : 'مقاومة واحدة ' + fmtR(v)),
+    get: p => Math.round(emitterOhms(p)),
+    set: (p, v) => ({ ...p, emitter: v === DEFAULT_EMITTER ? defaults.emitter : v === TWO_68 ? [68, 68] : [v] }), hint: p => 'أقصى تيار ≈ ' + Math.round(maxLampCurrent(p) * 1000) + ' mA', isDefault: v => v === DEFAULT_EMITTER
   }
 ]
 

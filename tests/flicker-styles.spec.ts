@@ -51,8 +51,8 @@ describe('flicker styles', () => {
     expect(breath.jitterPerS).toBeLessThan(candle.jitterPerS / 2)
   })
 
-  it.each(flickerStyles.map(s => s.id))('never lets the lamp go dark with %s', id => {
-    expect(byId(id).min).toBeGreaterThan(0.25)
+  it.each(flickerStyles.map(s => s.id))('never lets the strip go dark with %s', id => {
+    expect(byId(id).min).toBeGreaterThan(0.15)
   })
 
   it('marks a part to buy exactly when its value differs from the original', () => {

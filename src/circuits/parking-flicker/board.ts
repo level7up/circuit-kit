@@ -77,7 +77,7 @@ export const board: BoardDef<FlickerParams> = {
   alternatives,
   basics,
   lampModes: [
-    { key: 't10', switchLabel: '🚘 بدّل للمبة T10' },
+    { key: 't10', switchLabel: '🚘 بدّل للشريط' },
     { key: 'led', switchLabel: '🧪 بدّل لـ LED التجربة + 470Ω' }
   ],
   dynamics,

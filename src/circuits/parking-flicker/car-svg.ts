@@ -10,7 +10,7 @@ export function carSvg(): string {
   <text x="468" y="96" fill="#ffd24d" font-size="12" font-weight="700" text-anchor="end">LAMP+</text><text x="468" y="226" fill="#5aa9ff" font-size="12" font-weight="700" text-anchor="end">LAMP−</text>
   <rect x="615" y="50" width="150" height="220" rx="14" fill="#141b2c" stroke="#3a4666" stroke-width="2"/>
   <text x="690" y="40" text-anchor="middle" fill="#ffb547" font-size="14" font-weight="700">فيشة لمبة الركن</text>
-  <circle cx="690" cy="160" r="30" fill="#2a2210" stroke="#ffb547" stroke-width="2"/><text x="690" y="165" text-anchor="middle" fill="#ffd27a" font-size="13" font-weight="700">T10</text>
+  <circle cx="690" cy="160" r="30" fill="#2a2210" stroke="#ffb547" stroke-width="2"/><text x="690" y="165" text-anchor="middle" fill="#ffd27a" font-size="13" font-weight="700">LED</text>
   <text x="627" y="96" fill="#cbd5ea" font-size="12">(+)</text><text x="627" y="226" fill="#cbd5ea" font-size="12">(−)</text>
   <line x1="165" y1="90" x2="205" y2="90" stroke="#ff5d5d" stroke-width="4"/><rect x="205" y="80" width="46" height="20" rx="4" fill="#2a1414" stroke="#ff5d5d" stroke-width="2"/><text x="228" y="94" text-anchor="middle" fill="#ff9a9a" font-size="11" font-weight="700">1A</text><line x1="251" y1="90" x2="300" y2="90" stroke="#ff5d5d" stroke-width="4"/>
   <text x="232" y="72" text-anchor="middle" fill="#ff9a9a" font-size="11">تغذية + ← أحمر</text>

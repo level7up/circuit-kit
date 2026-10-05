@@ -28,12 +28,22 @@ function pick(key: string, text: string): number {
 }
 
 describe('parking flicker simulation', () => {
-  const original = run(defaults)
+  const t10 = swap('lamp', pick('lamp', 'التصميم الأصلي'))
+  const original = run(t10)
+  const strip = run(defaults)
 
-  it('flickers without ever going dark in the original design', () => {
+  it('flickers a single T10 without ever going dark in the original design', () => {
+    expect(t10.emitter).toEqual([68, 68])
     expect(original.min).toBeGreaterThan(0.3)
     expect(original.max).toBe(1)
     expect(original.offShare).toBe(0)
+  })
+
+  it('drives the default 20 LED strip to full brightness without going dark', () => {
+    expect(defaults.emitter).toEqual([68, 68, 68])
+    expect(strip.max).toBeGreaterThan(0.97)
+    expect(strip.min).toBeGreaterThan(0.2)
+    expect(strip.offShare).toBe(0)
   })
 
   it('goes fully dark at times without R7', () => {
@@ -59,7 +69,7 @@ describe('parking flicker simulation', () => {
   })
 
   it('is dim with an incandescent W5W bulb', () => {
-    expect(run(swap('lamp', pick('lamp', 'W5W عادية'))).max).toBeLessThan(0.3)
+    expect(run(swap('lamp', pick('lamp', 'W5W عادية'))).max).toBeLessThan(0.4)
   })
 
   it('kills the test LED without its resistor', () => {
@@ -81,14 +91,14 @@ describe('parking flicker simulation', () => {
       expect(run(swap('lamp', pick('lamp', '21 وات'))).max).toBeLessThan(0.1)
     })
 
-    it('runs a bare 1W LED at about a quarter of its power', () => {
+    it('runs a bare 1W LED at less than half its power', () => {
       const r = run(swap('lamp', pick('lamp', 'LED باور')))
-      expect(r.max).toBeGreaterThan(0.2)
-      expect(r.max).toBeLessThan(0.35)
+      expect(r.max).toBeGreaterThan(0.3)
+      expect(r.max).toBeLessThan(0.5)
     })
 
     it('lights a 50cm strip only partly', () => {
-      expect(run(swap('lamp', pick('lamp', '50 سم'))).max).toBeLessThan(0.4)
+      expect(run(swap('lamp', pick('lamp', '50 سم'))).max).toBeLessThan(0.6)
     })
 
     it('gets a red LED brighter than a white one on the same resistor', () => {
@@ -119,13 +129,13 @@ describe('parking flicker simulation', () => {
     const close = (r: Stats) => Math.abs(r.avg - original.avg) / original.avg
 
     it('matches the original lamp with 3 × 100Ω in parallel', () => {
-      const p = swap('r89', pick('r89', '3 × 100Ω'))
+      const p = swap('r89', pick('r89', '3 × 100Ω على'), t10)
       expect(p.emitter).toEqual([100, 100, 100])
       expect(close(run(p))).toBeLessThan(0.03)
     })
 
     it.each([['2 × 82Ω', 0.15], ['2 × 56Ω', 0.1], ['2 × 47Ω', 0.15]])('keeps the lamp flickering and bright with %s', (text, tolerance) => {
-      const r = run(swap('r89', pick('r89', text)))
+      const r = run(swap('r89', pick('r89', text), t10))
       expect(close(r)).toBeLessThan(tolerance)
       expect(r.min).toBeGreaterThan(0.2)
     })
@@ -138,14 +148,14 @@ describe('parking flicker simulation', () => {
     })
 
     it('gets close to the original with 10 × 470Ω from the BOM', () => {
-      const r = run(swap('r89', pick('r89', '10 × 470Ω')))
+      const r = run(swap('r89', pick('r89', '10 × 470Ω'), t10))
       expect(r.max).toBe(1)
       expect(r.min).toBeGreaterThan(0.25)
       expect(close(r)).toBeLessThan(0.2)
     })
 
     it('matches the original with 14 × 470Ω', () => {
-      expect(close(run(swap('r89', pick('r89', '14 × 470Ω'))))).toBeLessThan(0.03)
+      expect(close(run(swap('r89', pick('r89', '14 × 470Ω'), t10)))).toBeLessThan(0.03)
     })
 
     it('draws a bundle as one resistor in the R8 spot', () => {
@@ -156,8 +166,10 @@ describe('parking flicker simulation', () => {
     })
 
     it('shows R10 on the board only when three resistors are used', () => {
-      expect(board.dynamics.hidden(defaults).has('R10')).toBe(true)
-      expect(board.dynamics.hidden(swap('r89', pick('r89', '3 × 100Ω'))).has('R10')).toBe(false)
+      expect(board.dynamics.hidden(defaults).has('R10')).toBe(false)
+      expect(board.dynamics.hidden(t10).has('R10')).toBe(true)
+      expect(board.dynamics.hidden(swap('r89', pick('r89', '2 × 68Ω بس'))).has('R10')).toBe(true)
+      expect(board.dynamics.hidden(swap('r89', pick('r89', '3 × 100Ω على'))).has('R10')).toBe(false)
       expect(board.dynamics.hidden(swap('r89', pick('r89', '470Ω لوحدها'))).has('R9')).toBe(true)
     })
   })
@@ -193,7 +205,8 @@ describe('parking flicker simulation', () => {
 
     it('dims the lamp with one emitter resistor gone and kills it with both', () => {
       expect(run(without('R8')).avg).toBeLessThan(original.avg)
-      expect(run(without('R8', 'R9')).max).toBe(0)
+      expect(run(without('R8', 'R9')).max).toBeGreaterThan(0)
+      expect(run(without('R8', 'R9', 'R10')).max).toBe(0)
     })
 
     it('changes nothing when no part is removed', () => {
@@ -207,7 +220,7 @@ describe('parking flicker simulation', () => {
   })
 
   it('dims two lamps at the peak with the original two emitter resistors', () => {
-    const r = run(swap('lamp', pick('lamp', 'R8/R9 زي ما هما')))
+    const r = run(swap('lamp', pick('lamp', 'لمبتين T10 (يمين وشمال) · 2 × 68Ω')))
     expect(r.max).toBeLessThan(0.95)
     expect(r.max).toBeGreaterThan(0.6)
     expect(r.offShare).toBe(0)
@@ -220,18 +233,18 @@ describe('parking flicker simulation', () => {
     expect(r.offShare).toBe(0)
   })
 
-  it('drives a 10 LED strip to full brightness with the original resistors', () => {
+  it('drives a 10 LED strip to full brightness with two 68 ohm resistors', () => {
     const r = run(swap('lamp', pick('lamp', '10 لمبات')))
     expect(r.max).toBeGreaterThan(0.97)
     expect(r.offShare).toBe(0)
   })
 
   it('leaves a 20 LED strip dim with only two 68 ohm resistors', () => {
-    expect(run(swap('lamp', pick('lamp', '20 لمبة · R8/R9'))).max).toBeLessThan(0.8)
+    expect(run(swap('lamp', pick('lamp', '20 لمبة + 2 × 68Ω بس'))).max).toBeLessThan(0.8)
   })
 
-  it.each(['3 × 68Ω', '4 × 100Ω'])('drives a 20 LED strip near full brightness with %s', text => {
-    const r = run(swap('lamp', pick('lamp', '20 لمبة + ' + text)))
+  it('drives a 20 LED strip near full brightness with 4 × 100Ω', () => {
+    const r = run(swap('lamp', pick('lamp', '20 لمبة + 4 × 100Ω')))
     expect(r.max).toBeGreaterThan(0.95)
     expect(r.offShare).toBe(0)
   })

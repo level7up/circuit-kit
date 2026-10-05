@@ -19,6 +19,6 @@ export const wiring: WireGroup[] = [
   },
   {
     g: "💡 التشغيل واللمبة",
-    i: ["N ← TIP122 pin 1 (B)", "TIP122 pin 3 (E) ← R8 68Ω ← GND", "TIP122 pin 3 (E) ← R9 68Ω ← GND (توازي مع R8)", "TIP122 pin 2 (C) ← LAMP− (أزرق)", "+12V ← LAMP+ (أصفر)", "GND ← السلك الأسود (أرضي العربية)"]
+    i: ["N ← TIP122 pin 1 (B)", "TIP122 pin 3 (E) ← R8 68Ω ← GND", "TIP122 pin 3 (E) ← R9 68Ω ← GND (توازي مع R8)", "TIP122 pin 3 (E) ← R10 68Ω ← GND (توازي مع R8 وR9)", "TIP122 pin 2 (C) ← LAMP− (أزرق)", "+12V ← LAMP+ (أصفر)", "GND ← السلك الأسود (أرضي العربية)"]
   }
 ]
