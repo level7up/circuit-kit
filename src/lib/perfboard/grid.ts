@@ -38,7 +38,7 @@ function claim(holes: Map<string, string>, h: Hole, net: string, problems: Probl
 
 export function perfNetlist(layout: PerfLayout, problems: Problem[] = []): Netlist {
   const holes = new Map<string, string>()
-  const edges: Connection[] = []
+  const edges: Connection[] = layout.parts.filter(p => p.k === 'wire').map(w => ({ a: w.legs[0], b: w.legs[1] }))
   layout.parts.forEach(p => p.legs.forEach((h, i) => claim(holes, h, p.nets[i], problems, p.id)))
   layout.traces.forEach((t: PerfTrace) => {
     const path = expandPath(t.pts)

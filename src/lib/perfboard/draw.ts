@@ -43,19 +43,22 @@ function projector(layout: PerfLayout, side: Side): Project {
 
 const UPPER = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 const LOWER = UPPER.toLowerCase()
-const rowName = (layout: PerfLayout, y: number) => (isBreadboard(layout) ? LOWER : UPPER)[y] ?? '?'
-export const holeName = (layout: PerfLayout, [x, y]: Hole): string => rowName(layout, y) + (x + 1)
+const letters = (i: number): string => (i < UPPER.length ? UPPER[i] : UPPER[Math.floor(i / UPPER.length) - 1] + UPPER[i % UPPER.length])
+const colLabel = (layout: PerfLayout, x: number): string => (isBreadboard(layout) ? String(x + 1) : letters(x))
+const rowLabel = (layout: PerfLayout, y: number): string => (isBreadboard(layout) ? LOWER[y] ?? '?' : String(y + 1))
+export const holeName = (layout: PerfLayout, [x, y]: Hole): string =>
+  isBreadboard(layout) ? rowLabel(layout, y) + colLabel(layout, x) : colLabel(layout, x) + rowLabel(layout, y)
 
 function rulers(layout: PerfLayout, at: Project): string {
   const { w } = boardSize(layout)
   const cls = isBreadboard(layout) ? 'pf-ruler bb' : 'pf-ruler'
   const cols = Array.from({ length: layout.cols }, (_, x) => {
     const p = at([x, 0])
-    return `<text x="${p.x}" y="${MARGIN - 21}" class="${cls}">${x + 1}</text>`
+    return `<text x="${p.x}" y="${MARGIN - 21}" class="${cls}">${colLabel(layout, x)}</text>`
   })
   const rows = Array.from({ length: layout.rows }, (_, y) => {
     const p = at([0, y])
-    return `<text x="12" y="${p.y + 4}" class="${cls}">${rowName(layout, y)}</text><text x="${w - 12}" y="${p.y + 4}" class="${cls}">${rowName(layout, y)}</text>`
+    return `<text x="12" y="${p.y + 4}" class="${cls}">${rowLabel(layout, y)}</text><text x="${w - 12}" y="${p.y + 4}" class="${cls}">${rowLabel(layout, y)}</text>`
   })
   return cols.join('') + rows.join('')
 }

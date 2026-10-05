@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { perfLayout } from '../src/circuits/parking-flicker/perfboard'
+import { dotLayout, veroLayout } from '../src/circuits/parking-flicker/vero'
+import { verifyStripLayout } from '../src/lib/perfboard/strips'
 import { checkNetlist, expandPath, perfNetlist, verifyPerfboard } from '../src/lib/perfboard/grid'
 import type { PerfLayout } from '../src/types/circuit'
 
@@ -82,3 +84,46 @@ describe('perfboard layout', () => {
   })
 })
 
+
+describe('3x7 dot board', () => {
+  const dotUpTo = (s: number): PerfLayout => ({
+    ...dotLayout,
+    parts: dotLayout.parts.filter(p => p.s <= s),
+    traces: dotLayout.traces.filter(t => t.s <= s)
+  })
+
+  it('has no clashes, shorts or broken nets', () => {
+    expect(verifyPerfboard(dotLayout)).toEqual([])
+  })
+
+  it('never shorts two nets at any stage', () => {
+    const stages = [...new Set(dotLayout.parts.map(p => p.s))]
+    stages.forEach(s => expect(verifyPerfboard(dotUpTo(s)).filter(p => p.kind !== 'split'), 'stage ' + s).toEqual([]))
+  })
+
+  it('only joins dots in the same row and never crosses a part of another net', () => {
+    dotLayout.traces.forEach(t => expect(t.pts[0][1]).toBe(t.pts[1][1]))
+  })
+
+  it('has no copper strips to cut', () => {
+    expect(dotLayout.strips).toBeUndefined()
+  })
+})
+
+describe('3x7 dot board stages', () => {
+  it('grounds IC pin 7 and feeds 5V to pin 14 by the power stage', () => {
+    const power: PerfLayout = { ...dotLayout, parts: dotLayout.parts.filter(p => p.s <= 3), traces: dotLayout.traces.filter(t => t.s <= 3) }
+    const splits = verifyPerfboard(power).filter(p => p.kind === 'split').map(p => p.msg)
+    expect(splits.filter(m => /^(GND|V5|V12) /.test(m))).toEqual([])
+  })
+
+  it('is as connected as the vero board at every stage', () => {
+    const stages = [...new Set(dotLayout.parts.map(p => p.s))]
+    stages.forEach(s => {
+      const dot: PerfLayout = { ...dotLayout, parts: dotLayout.parts.filter(p => p.s <= s), traces: dotLayout.traces.filter(t => t.s <= s) }
+      const vero: PerfLayout = { ...veroLayout, parts: veroLayout.parts.filter(p => p.s <= s) }
+      const splits = (problems: { kind: string; msg: string }[]) => problems.filter(p => p.kind === 'split').map(p => p.msg).sort()
+      expect(splits(verifyPerfboard(dot)), 'stage ' + s).toEqual(splits(verifyStripLayout(vero)))
+    })
+  })
+})

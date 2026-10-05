@@ -60,6 +60,9 @@ const partLegs = computed(() => {
 })
 const netName = (n: string) => layout.value.nets[n]?.n ?? 'مش متوصلة'
 const netColor = (n: string) => layout.value.nets[n]?.c ?? '#666'
+const trails = computed(() => (layout.value.strips ? [] : layout.value.traces
+  .filter(t => t.s === current.value.s)
+  .map(t => ({ from: holeName(layout.value, t.pts[0]), to: holeName(layout.value, t.pts[t.pts.length - 1]), net: t.net }))))
 const stripInfo = computed(() => {
   const strips = layout.value.strips
   if (!strips) return null
@@ -158,6 +161,12 @@ const onBoardClick = (e: MouseEvent) => {
               <input type="checkbox" :checked="boardChecks[phase][j]" @change="toggle(j)"><span>{{ c }}</span>
             </label>
           </div>
+          <div v-if="trails.length" class="asm-trails">
+            <b>🧵 الوصلات اللي تحت في المرحلة دي ({{ trails.length }}):</b>
+            <ul>
+              <li v-for="t in trails" :key="t.from + t.to"><i :style="{ background: netColor(t.net) }" /><b>{{ t.from }}</b> ← → <b>{{ t.to }}</b> <span>{{ netName(t.net) }}</span></li>
+            </ul>
+          </div>
           <div class="meas">📏 <b>اتأكد:</b> <span v-html="current.x" /></div>
           <div class="navbtns">
             <button class="btn" :disabled="phase === 0" @click="goPhase(phase - 1)">→ السابقة</button>
@@ -206,6 +215,12 @@ const onBoardClick = (e: MouseEvent) => {
 .asm-chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
 .muted{color:var(--muted)}
 .small{font-size:12.5px}
+.asm-trails{margin-top:12px;padding:10px 12px;border-radius:10px;background:var(--panel2);font-size:13.5px}
+.asm-trails ul{list-style:none;margin:6px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:4px}
+.asm-trails li{display:flex;align-items:center;gap:6px}
+.asm-trails li i{width:9px;height:9px;border-radius:50%;flex:none}
+.asm-trails li b{direction:ltr;unicode-bidi:isolate;color:var(--amber)}
+.asm-trails li span{color:var(--muted);font-size:12px}
 .asm-h{margin:0 0 12px;font-size:19px}
 :deep(.pf-ruler){font:600 9.5px system-ui;fill:#e7ecf5;opacity:.6;text-anchor:middle}
 :deep(.pf-lab){font:800 11px system-ui;fill:#111;paint-order:stroke;stroke:#f3e6c8;stroke-width:3px;text-anchor:middle;pointer-events:none}
