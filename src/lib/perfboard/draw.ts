@@ -10,6 +10,7 @@ const COPPER = '#c27a3a'
 const LEG = '#b8c0ca'
 
 export type Side = 'top' | 'bottom'
+export type LettersFrom = 'left' | 'right'
 
 export interface PerfView {
   side: Side
@@ -20,6 +21,7 @@ export interface PerfView {
   hidden?: { parts: ReadonlySet<string>; traces: ReadonlySet<number>; cuts: ReadonlySet<number> }
   focusTrace?: number
   focusCut?: number
+  lettersFrom?: LettersFrom
 }
 
 const partShown = (view: PerfView, p: PerfPart) => p.s <= view.stage && !view.hidden?.parts.has(p.id)
@@ -49,17 +51,31 @@ function projector(layout: PerfLayout, side: Side): Project {
 const UPPER = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 const LOWER = UPPER.toLowerCase()
 const letters = (i: number): string => (i < UPPER.length ? UPPER[i] : UPPER[Math.floor(i / UPPER.length) - 1] + UPPER[i % UPPER.length])
-const colLabel = (layout: PerfLayout, x: number): string => (isBreadboard(layout) ? String(x + 1) : letters(x))
+const letterIndex = (name: string): number =>
+  name.length === 1 ? UPPER.indexOf(name) : (UPPER.indexOf(name[0]) + 1) * UPPER.length + UPPER.indexOf(name[1])
+const colIndex = (layout: PerfLayout, x: number, from: LettersFrom) => (from === 'right' ? layout.cols - 1 - x : x)
+const colLabel = (layout: PerfLayout, x: number, from: LettersFrom = 'left'): string =>
+  isBreadboard(layout) ? String(x + 1) : letters(colIndex(layout, x, from))
 const rowLabel = (layout: PerfLayout, y: number): string => (isBreadboard(layout) ? LOWER[y] ?? '?' : String(y + 1))
-export const holeName = (layout: PerfLayout, [x, y]: Hole): string =>
-  isBreadboard(layout) ? rowLabel(layout, y) + colLabel(layout, x) : colLabel(layout, x) + rowLabel(layout, y)
+export const holeName = (layout: PerfLayout, [x, y]: Hole, from: LettersFrom = 'left'): string =>
+  isBreadboard(layout) ? rowLabel(layout, y) + colLabel(layout, x) : colLabel(layout, x, from) + rowLabel(layout, y)
 
-function rulers(layout: PerfLayout, at: Project): string {
+const HOLE_TAG = /⟦([A-Z]{1,2})(\d{1,2})⟧/g
+
+const COLUMN_TAG = /⟦([A-Z]{1,2})⟧/g
+
+export function holeText(text: string, layout: PerfLayout, from: LettersFrom = 'left'): string {
+  return text
+    .replace(HOLE_TAG, (_, col: string, row: string) => holeName(layout, [letterIndex(col), Number(row) - 1], from))
+    .replace(COLUMN_TAG, (_, col: string) => colLabel(layout, letterIndex(col), from))
+}
+
+function rulers(layout: PerfLayout, at: Project, from: LettersFrom): string {
   const { w } = boardSize(layout)
   const cls = isBreadboard(layout) ? 'pf-ruler bb' : 'pf-ruler'
   const cols = Array.from({ length: layout.cols }, (_, x) => {
     const p = at([x, 0])
-    return `<text x="${p.x}" y="${MARGIN - 21}" class="${cls}">${colLabel(layout, x)}</text>`
+    return `<text x="${p.x}" y="${MARGIN - 21}" class="${cls}">${colLabel(layout, x, from)}</text>`
   })
   const rows = Array.from({ length: layout.rows }, (_, y) => {
     const p = at([0, y])
@@ -343,7 +359,7 @@ export function perfboardSvg(layout: PerfLayout, view: PerfView): string {
         jointsSvg(layout, view, at),
         bottomLabels(layout, view, at)
       ]
-  return layers.join('') + rulers(layout, at)
+  return layers.join('') + rulers(layout, at, view.lettersFrom ?? 'left')
 }
 
 const THUMB_PAD: Partial<Record<PerfPart['k'], number>> = { to220: 2.1, dip: 1.2, can: 1.2, pad: 1.4 }

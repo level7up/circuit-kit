@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useCircuit, useGuide } from '../composables/context'
-import { boardSize, holeName, perfboardSvg, type Side } from '../lib/perfboard/draw'
+import { boardSize, holeName as nameOf, holeText, perfboardSvg, type LettersFrom, type Side } from '../lib/perfboard/draw'
+import type { Hole, PerfLayout } from '../types/circuit'
 import { buildItems, hiddenAfter, sideFor, type BuildItem } from '../lib/perfboard/build-items'
 import BuildStepper from './BuildStepper.vue'
 import PartsTable from './PartsTable.vue'
@@ -10,6 +11,25 @@ import SectionHead from './SectionHead.vue'
 defineProps<{ num: number }>()
 const asm = useCircuit().assembly!
 const { openTab } = useGuide()
+
+const LETTERS_KEY = 'circuit-lab:letters-from'
+const readLetters = (): LettersFrom => {
+  try {
+    return localStorage.getItem(LETTERS_KEY) === 'right' ? 'right' : 'left'
+  } catch {
+    return 'left'
+  }
+}
+const lettersFrom = ref<LettersFrom>(readLetters())
+watch(lettersFrom, v => {
+  try {
+    localStorage.setItem(LETTERS_KEY, v)
+  } catch {
+    return
+  }
+})
+const holeName = (l: PerfLayout, h: Hole) => nameOf(l, h, lettersFrom.value)
+const txt = (text: string) => holeText(text, layout.value, lettersFrom.value)
 
 const boardIndex = ref(0)
 const board = computed(() => asm.boards[boardIndex.value])
@@ -81,7 +101,8 @@ const svg = computed(() => perfboardSvg(layout.value, {
   icInserted: current.value.s >= lastStage.value,
   hidden: hiddenAfter(items.value, itemIndex.value),
   focusTrace: item.value?.kind === 'trace' ? item.value.index : undefined,
-  focusCut: item.value?.kind === 'cut' ? item.value.index : undefined
+  focusCut: item.value?.kind === 'cut' ? item.value.index : undefined,
+  lettersFrom: lettersFrom.value
 }))
 const focusPart = computed(() => (item.value?.kind === 'part' ? item.value.id : null))
 
@@ -149,6 +170,10 @@ const onBoardClick = (e: MouseEvent) => {
           <div class="seg" role="group" aria-label="نوع البورد">
             <button v-for="(b, i) in asm.boards" :key="b.id" :class="{ on: boardIndex === i }" @click="pickBoard(i)">{{ b.label }}</button>
           </div>
+          <div class="seg" role="group" aria-label="اتجاه الحروف">
+            <button :class="{ on: lettersFrom === 'left' }" @click="lettersFrom = 'left'">A من الشمال</button>
+            <button :class="{ on: lettersFrom === 'right' }" @click="lettersFrom = 'right'">A من اليمين</button>
+          </div>
           <div class="seg" role="group" aria-label="الناحية">
             <button :class="{ on: side === 'top' }" @click="side = 'top'">⬆️ من فوق (المكونات)</button>
             <button :class="{ on: side === 'bottom' }" @click="side = 'bottom'">🔄 من تحت (اللحام)</button>
@@ -163,15 +188,15 @@ const onBoardClick = (e: MouseEvent) => {
           <svg :viewBox="`0 0 ${size.w} ${size.h}`" role="img" aria-label="رسمة البورد المثقّب" v-html="svg" />
         </div>
         <BuildStepper :layout="layout" :item="item" :index="itemIndex" :count="items.length" :phase-title="'المرحلة ' + (phase + 1) + ': ' + current.t"
-          :is-first="isFirstItem" :is-last="isLastItem" @prev="prevItem" @next="nextItem" />
+          :letters-from="lettersFrom" :is-first="isFirstItem" :is-last="isLastItem" @prev="prevItem" @next="nextItem" />
         </div>
-        <p class="asm-note" v-html="board.note" />
+        <p class="asm-note" v-html="txt(board.note)" />
       </div>
 
       <div class="asm-side">
         <div v-if="part" class="card">
           <span class="tag">{{ part.lab }} · {{ part.val }}</span>
-          <p>{{ part.tip }}</p>
+          <p>{{ txt(part.tip) }}</p>
           <ul class="asm-legs">
             <li v-for="l in partLegs" :key="l.hole" role="button" tabindex="0" @click="pickNet(l.net)" @keydown.enter="pickNet(l.net)">
               <i :style="{ background: netColor(l.net) }" /><b>{{ l.hole }}</b><span v-if="l.label">{{ l.label }} ·</span> {{ netName(l.net) }}
@@ -193,11 +218,11 @@ const onBoardClick = (e: MouseEvent) => {
         <div class="card step">
           <span class="tag">المرحلة {{ phase + 1 }} من {{ phases.length }}</span>
           <h3>{{ current.t }}</h3>
-          <div class="meta">{{ current.m }}</div>
-          <div v-html="current.b" />
+          <div class="meta">{{ txt(current.m) }}</div>
+          <div v-html="txt(current.b)" />
           <div style="margin-top:10px">
             <label v-for="(c, j) in current.c" :key="c" class="check" :class="{ done: boardChecks[phase][j] }">
-              <input type="checkbox" :checked="boardChecks[phase][j]" @change="toggle(j)"><span>{{ c }}</span>
+              <input type="checkbox" :checked="boardChecks[phase][j]" @change="toggle(j)"><span>{{ txt(c) }}</span>
             </label>
           </div>
           <div v-if="trails.length" class="asm-trails">
@@ -206,7 +231,7 @@ const onBoardClick = (e: MouseEvent) => {
               <li v-for="t in trails" :key="t.from + t.to"><i :style="{ background: netColor(t.net) }" /><b>{{ t.from }}</b> ← → <b>{{ t.to }}</b> <span>{{ netName(t.net) }}</span></li>
             </ul>
           </div>
-          <div class="meas">📏 <b>اتأكد:</b> <span v-html="current.x" /></div>
+          <div class="meas">📏 <b>اتأكد:</b> <span v-html="txt(current.x)" /></div>
           <div class="navbtns">
             <button class="btn" :disabled="phase === 0" @click="goPhase(phase - 1)">→ السابقة</button>
             <button v-if="phase < phases.length - 1" class="btn pri" @click="goPhase(phase + 1)">التالية ←</button>
@@ -218,7 +243,7 @@ const onBoardClick = (e: MouseEvent) => {
 
     <div class="gap" />
     <h3 class="asm-h">📋 جدول كل القطع والسلوك ({{ board.label }})</h3>
-    <PartsTable :layout="layout" :phases="phases" @show="jumpTo" />
+    <PartsTable :layout="layout" :phases="phases" :letters-from="lettersFrom" @show="jumpTo" />
 
     <div class="gap" />
     <h3 class="asm-h">🎓 لو أول مرة تلحم</h3>
@@ -268,7 +293,7 @@ const onBoardClick = (e: MouseEvent) => {
 .asm-trails li b{direction:ltr;unicode-bidi:isolate;color:var(--amber)}
 .asm-trails li span{color:var(--muted);font-size:12px}
 .asm-h{margin:0 0 12px;font-size:19px}
-:deep(.pf-ruler){font:600 9.5px system-ui;fill:#e7ecf5;opacity:.6;text-anchor:middle}
+:deep(.pf-ruler){font:800 11px system-ui;fill:#2a2014;text-anchor:middle}
 :deep(.pf-lab){font:800 11px system-ui;fill:#111;paint-order:stroke;stroke:#f3e6c8;stroke-width:3px;text-anchor:middle;pointer-events:none}
 :deep(.pf-lab.in){fill:#fff;stroke:#0f1d40;font-size:10.5px}
 :deep(.pf-blab){font:700 8.5px system-ui;fill:#1b2333;paint-order:stroke;stroke:#e9edf2;stroke-width:2.4px;text-anchor:middle;pointer-events:none}

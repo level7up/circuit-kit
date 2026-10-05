@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import type { PerfLayout } from '../types/circuit'
 import type { BuildItem } from '../lib/perfboard/build-items'
-import { holeName } from '../lib/perfboard/draw'
+import { holeName as nameOf, holeText, type LettersFrom } from '../lib/perfboard/draw'
 
 const props = defineProps<{
   layout: PerfLayout
@@ -11,6 +11,7 @@ const props = defineProps<{
   count: number
   phaseTitle: string
   isFirst: boolean
+  lettersFrom: LettersFrom
   isLast: boolean
 }>()
 const emit = defineEmits<{ prev: []; next: [] }>()
@@ -29,6 +30,7 @@ interface Card {
   legs: Leg[]
 }
 
+const holeName = (l: PerfLayout, h: [number, number]) => nameOf(l, h, props.lettersFrom)
 const netName = (n: string) => props.layout.nets[n]?.n ?? 'مش متوصلة'
 const netColor = (n: string) => props.layout.nets[n]?.c ?? '#666'
 
@@ -61,7 +63,7 @@ function partCard(id: string): Card {
     .filter(l => !l.raw.startsWith('nc'))
   const title = p.k === 'wire' ? 'سلكة معزولة من فوق' : p.lab + ' · ' + p.val
   const icon = p.k === 'wire' ? '🔌' : p.k === 'pad' ? '🔗' : p.optional ? '➕' : '📍'
-  return { icon, title: (p.optional ? 'اختياري: ' : '') + title, body: p.tip, legs: p.k === 'dip' ? [legs[0], legs[legs.length - 1]] : legs }
+  return { icon, title: (p.optional ? 'اختياري: ' : '') + title, body: holeText(p.tip, props.layout, props.lettersFrom), legs: p.k === 'dip' ? [legs[0], legs[legs.length - 1]] : legs }
 }
 
 const card = computed<Card | null>(() => {

@@ -2,9 +2,9 @@
 import { computed } from 'vue'
 import type { AssemblyPhase, PerfLayout } from '../types/circuit'
 import type { BuildItem } from '../lib/perfboard/build-items'
-import { holeName, partThumbnail } from '../lib/perfboard/draw'
+import { holeName as nameOf, holeText, partThumbnail, type LettersFrom } from '../lib/perfboard/draw'
 
-const props = defineProps<{ layout: PerfLayout; phases: AssemblyPhase[] }>()
+const props = defineProps<{ layout: PerfLayout; phases: AssemblyPhase[]; lettersFrom: LettersFrom }>()
 const emit = defineEmits<{ show: [item: BuildItem] }>()
 
 interface Row {
@@ -27,6 +27,7 @@ const KIND_NAME: Record<string, string> = {
 }
 
 const phaseOf = (s: number) => props.phases.findIndex(p => p.s === s) + 1
+const holeName = (l: PerfLayout, h: [number, number]) => nameOf(l, h, props.lettersFrom)
 const netName = (n: string) => props.layout.nets[n]?.n ?? 'مش متوصلة'
 
 const partRows = (layout: PerfLayout): Row[] => layout.parts.map(p => {
@@ -45,7 +46,7 @@ const partRows = (layout: PerfLayout): Row[] => layout.parts.map(p => {
     where: p.k === 'wire' ? holes : where,
     net: isLead ? netName(p.nets[0]) : '',
     netColor: isLead ? layout.nets[p.nets[0]]?.c ?? '#666' : '',
-    note: p.tip,
+    note: holeText(p.tip, layout, props.lettersFrom),
     phase: phaseOf(p.s)
   }
 })
