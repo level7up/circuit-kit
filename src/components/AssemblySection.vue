@@ -5,11 +5,14 @@ import { boardSize, holeName as nameOf, holeText, perfboardSvg, type LettersFrom
 import type { Hole, PerfLayout } from '../types/circuit'
 import { buildItems, hiddenAfter, sideFor, type BuildItem } from '../lib/perfboard/build-items'
 import BuildStepper from './BuildStepper.vue'
+import CarFaceSim from './CarFaceSim.vue'
+import SimPresets from './SimPresets.vue'
 import PartsTable from './PartsTable.vue'
 import SectionHead from './SectionHead.vue'
 
 defineProps<{ num: number }>()
-const asm = useCircuit().assembly!
+const circuit = useCircuit()
+const asm = circuit.assembly!
 const { openTab } = useGuide()
 
 const LETTERS_KEY = 'circuit-lab:letters-from'
@@ -242,6 +245,12 @@ const onBoardClick = (e: MouseEvent) => {
     </div>
 
     <div class="gap" />
+    <h3 class="asm-h">🚗 المحاكي: شوف النتيجة قبل ما تلحم</h3>
+    <p class="asm-sub">نفس الدايرة اللي بتجمّعها، شغالة لايف بالشريط الـ 20 لمبة. اختار شكل الرعشة، والنتيجة هتبان على أنوار الركن. أي تغيير هنا بيتطبّق كمان في تبويب البريد بورد والمحاكي.</p>
+    <SimPresets v-if="circuit.presets" :presets="circuit.presets" />
+    <CarFaceSim />
+
+    <div class="gap" />
     <h3 class="asm-h">📋 جدول كل القطع والسلوك ({{ board.label }})</h3>
     <PartsTable :layout="layout" :phases="phases" :letters-from="lettersFrom" @show="jumpTo" />
 
@@ -293,6 +302,7 @@ const onBoardClick = (e: MouseEvent) => {
 .asm-trails li b{direction:ltr;unicode-bidi:isolate;color:var(--amber)}
 .asm-trails li span{color:var(--muted);font-size:12px}
 .asm-h{margin:0 0 12px;font-size:19px}
+.asm-sub{margin:-4px 0 12px;color:var(--muted);font-size:14px}
 :deep(.pf-ruler){font:800 11px system-ui;fill:#2a2014;text-anchor:middle}
 :deep(.pf-lab){font:800 11px system-ui;fill:#111;paint-order:stroke;stroke:#f3e6c8;stroke-width:3px;text-anchor:middle;pointer-events:none}
 :deep(.pf-lab.in){fill:#fff;stroke:#0f1d40;font-size:10.5px}
