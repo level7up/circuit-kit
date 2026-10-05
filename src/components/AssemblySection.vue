@@ -1,7 +1,10 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useCircuit, useGuide } from '../composables/context'
 import { boardSize, holeName, perfboardSvg, type Side } from '../lib/perfboard/draw'
+import { buildItems, hiddenAfter, sideFor, type BuildItem } from '../lib/perfboard/build-items'
+import BuildStepper from './BuildStepper.vue'
+import PartsTable from './PartsTable.vue'
 import SectionHead from './SectionHead.vue'
 
 defineProps<{ num: number }>()
@@ -32,11 +35,39 @@ const toggle = (j: number) => {
   checked.value = checked.value.map((rows, b) => (b !== boardIndex.value ? rows
     : rows.map((row, i) => (i === phase.value ? row.map((v, k) => (k === j ? !v : v)) : row))))
 }
-const goPhase = (i: number) => {
+const itemIndex = ref(0)
+const firstStage = computed(() => Math.min(...phases.value.map(p => p.s)))
+const itemsOf = (i: number) => buildItems(layout.value, phases.value[i].s, firstStage.value)
+const items = computed(() => itemsOf(phase.value))
+const item = computed<BuildItem | undefined>(() => items.value[itemIndex.value])
+const isFirstItem = computed(() => phase.value === 0 && itemIndex.value === 0)
+const isLastItem = computed(() => phase.value === phases.value.length - 1 && itemIndex.value >= items.value.length - 1)
+
+const goPhase = (i: number, at: 'start' | 'end' = 'start') => {
   phase.value = i
+  itemIndex.value = at === 'end' ? Math.max(0, itemsOf(i).length - 1) : 0
   selected.value = null
   net.value = null
 }
+const nextItem = () => {
+  if (itemIndex.value < items.value.length - 1) itemIndex.value++
+  else if (phase.value < phases.value.length - 1) goPhase(phase.value + 1)
+  selected.value = null
+}
+const prevItem = () => {
+  if (itemIndex.value > 0) itemIndex.value--
+  else if (phase.value > 0) goPhase(phase.value - 1, 'end')
+  selected.value = null
+}
+const jumpTo = (target: BuildItem) => {
+  const key = (it: BuildItem) => it.kind + ':' + (it.kind === 'part' ? it.id : it.index)
+  const at = phases.value.findIndex((_, i) => itemsOf(i).some(it => key(it) === key(target)))
+  if (at < 0) return
+  goPhase(at)
+  itemIndex.value = itemsOf(at).findIndex(it => key(it) === key(target))
+  document.querySelector('#assembly .asm-board')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
+watch(item, it => { side.value = sideFor(it) })
 const pickBoard = (i: number) => {
   boardIndex.value = i
   goPhase(Math.min(phase.value, asm.boards[i].phases.length - 1))
@@ -45,10 +76,14 @@ const pickBoard = (i: number) => {
 const svg = computed(() => perfboardSvg(layout.value, {
   side: side.value,
   stage: current.value.s,
-  selected: selected.value,
+  selected: selected.value ?? focusPart.value,
   net: net.value,
-  icInserted: current.value.s >= lastStage.value
+  icInserted: current.value.s >= lastStage.value,
+  hidden: hiddenAfter(items.value, itemIndex.value),
+  focusTrace: item.value?.kind === 'trace' ? item.value.index : undefined,
+  focusCut: item.value?.kind === 'cut' ? item.value.index : undefined
 }))
+const focusPart = computed(() => (item.value?.kind === 'part' ? item.value.id : null))
 
 const freshParts = computed(() => layout.value.parts.filter(p => p.s === current.value.s))
 const part = computed(() => layout.value.parts.find(p => p.id === selected.value) ?? null)
@@ -126,6 +161,8 @@ const onBoardClick = (e: MouseEvent) => {
         <div class="asm-svg" @click="onBoardClick">
           <svg :viewBox="`0 0 ${size.w} ${size.h}`" role="img" aria-label="رسمة البورد المثقّب" v-html="svg" />
         </div>
+        <BuildStepper :layout="layout" :item="item" :index="itemIndex" :count="items.length" :phase-title="'المرحلة ' + (phase + 1) + ': ' + current.t"
+          :is-first="isFirstItem" :is-last="isLastItem" @prev="prevItem" @next="nextItem" />
         <p class="asm-note" v-html="board.note" />
       </div>
 
@@ -178,6 +215,10 @@ const onBoardClick = (e: MouseEvent) => {
     </div>
 
     <div class="gap" />
+    <h3 class="asm-h">📋 جدول كل القطع والسلوك ({{ board.label }})</h3>
+    <PartsTable :layout="layout" :phases="phases" @show="jumpTo" />
+
+    <div class="gap" />
     <h3 class="asm-h">🎓 لو أول مرة تلحم</h3>
     <div class="asm-grid">
       <div v-for="s in asm.skills" :key="s.title" class="card"><h3>{{ s.title }}</h3><div v-html="s.body" /></div>
@@ -196,6 +237,7 @@ const onBoardClick = (e: MouseEvent) => {
 .asm-bench{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:16px;align-items:start}
 @media(max-width:1100px){.asm-bench{grid-template-columns:minmax(0,1fr)}}
 .asm-board{padding:14px}
+@media(min-width:1101px){.asm-board{position:sticky;top:64px;z-index:2}}
 .asm-tools{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px}
 .seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
 .seg button{background:var(--panel2);color:var(--text);border:0;padding:7px 14px;font:inherit;font-size:13.5px;cursor:pointer}

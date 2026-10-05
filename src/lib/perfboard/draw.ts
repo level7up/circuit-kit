@@ -17,7 +17,12 @@ export interface PerfView {
   selected: string | null
   net: string | null
   icInserted: boolean
+  hidden?: { parts: ReadonlySet<string>; traces: ReadonlySet<number>; cuts: ReadonlySet<number> }
+  focusTrace?: number
+  focusCut?: number
 }
+
+const partShown = (view: PerfView, p: PerfPart) => p.s <= view.stage && !view.hidden?.parts.has(p.id)
 
 interface Pt {
   x: number
@@ -100,25 +105,30 @@ function holesSvg(layout: PerfLayout, withPads: boolean, at: Project): string {
   return out.join('')
 }
 
-function cutsSvg(spec: StripSpec, side: Side, at: Project): string {
-  return spec.cuts.map(c => {
+function cutsSvg(spec: StripSpec, view: PerfView, at: Project): string {
+  const side = view.side
+  return spec.cuts.map((c, index) => {
+    if (view.hidden?.cuts.has(index)) return ''
+    const focus = view.focusCut === index
     const whole = Math.floor(c.at)
     const base = at(spec.axis === 'cols' ? [c.strip, whole] : [whole, c.strip])
     const shift = (c.at - whole) * PITCH
     const p = spec.axis === 'cols' ? { x: base.x, y: base.y + shift } : { x: base.x + (side === 'bottom' ? -shift : shift), y: base.y }
-    if (Number.isInteger(c.at)) return `<circle class="pf-cut" cx="${p.x}" cy="${p.y}" r="${PITCH * 0.42}" fill="#3a2a18" stroke="#ff5d5d" stroke-width="2.5"/>`
+    const ring = focus ? `<circle cx="${p.x}" cy="${p.y}" r="${PITCH * 0.75}" fill="none" stroke="#ffb547" stroke-width="3"/>` : ''
+    if (Number.isInteger(c.at)) return ring + `<circle class="pf-cut" cx="${p.x}" cy="${p.y}" r="${PITCH * 0.42}" fill="#3a2a18" stroke="#ff5d5d" stroke-width="2.5"/>`
     const len = PITCH * 0.5
     const line = spec.axis === 'cols'
       ? `x1="${p.x - len}" y1="${p.y}" x2="${p.x + len}" y2="${p.y}"`
       : `x1="${p.x}" y1="${p.y - len}" x2="${p.x}" y2="${p.y + len}"`
-    return `<g class="pf-cut"><line ${line} stroke="#2b2216" stroke-width="5"/><line ${line} stroke="#ff5d5d" stroke-width="2"/></g>`
+    return ring + `<g class="pf-cut"><line ${line} stroke="#2b2216" stroke-width="5"/><line ${line} stroke="#ff5d5d" stroke-width="2"/></g>`
   }).join('')
 }
 
 function tracesSvg(layout: PerfLayout, view: PerfView, at: Project): string {
-  return layout.traces.filter(t => t.s <= view.stage).map(t => {
+  return layout.traces.map((t, index) => {
+    if (t.s > view.stage || view.hidden?.traces.has(index)) return ''
     const pts = expandPath(t.pts).map(at).map(p => `${p.x},${p.y}`).join(' ')
-    const on = view.net === t.net
+    const on = view.focusTrace === index || (view.focusTrace === undefined && view.net === t.net)
     const cls = ['pf-trace', on ? 'on' : '', t.s === view.stage ? 'fresh' : ''].filter(Boolean).join(' ')
     return `<g class="${cls}" data-net="${t.net}">` +
       `<polyline points="${pts}" fill="none" stroke="${SOLDER}" stroke-width="${PITCH * 0.42}" stroke-linecap="round" stroke-linejoin="round"/>` +
@@ -128,7 +138,7 @@ function tracesSvg(layout: PerfLayout, view: PerfView, at: Project): string {
 
 function jointsSvg(layout: PerfLayout, view: PerfView, at: Project): string {
   const holes = new Map<string, { h: Hole; net: string; id: string }>()
-  layout.parts.filter(p => p.s <= view.stage && !p.optional)
+  layout.parts.filter(p => partShown(view, p) && !p.optional)
     .forEach(p => p.legs.forEach((h, i) => holes.set(holeKey(h), { h, net: p.nets[i], id: p.id })))
   return [...holes.values()].map(({ h, net, id }) => {
     const p = at(h)
@@ -293,7 +303,7 @@ function labelPos(part: PerfPart, at: Project): Pt {
 }
 
 function partsSvg(layout: PerfLayout, view: PerfView, at: Project): string {
-  return layout.parts.filter(p => p.s <= view.stage).map(part => {
+  return layout.parts.filter(p => partShown(view, p)).map(part => {
     const cls = ['pf-part', part.s === view.stage ? 'fresh' : '', view.selected === part.id ? 'sel' : '', part.optional ? 'opt' : ''].filter(Boolean).join(' ')
     const l = labelPos(part, at)
     const labelClass = part.k === 'can' && !part.labelAt ? 'pf-lab in' : 'pf-lab'
@@ -303,7 +313,7 @@ function partsSvg(layout: PerfLayout, view: PerfView, at: Project): string {
 }
 
 function bottomLabels(layout: PerfLayout, view: PerfView, at: Project): string {
-  const legsOf = layout.parts.filter(p => p.s <= view.stage && p.k !== 'dip' && !p.optional && p.lab).map(part => {
+  const legsOf = layout.parts.filter(p => partShown(view, p) && p.k !== 'dip' && !p.optional && p.lab).map(part => {
     const p = at(part.legs[0])
     return `<text x="${p.x}" y="${p.y - PITCH * 0.45}" class="pf-blab" data-id="${part.id}">${esc(part.lab)}</text>`
   })
@@ -329,9 +339,30 @@ export function perfboardSvg(layout: PerfLayout, view: PerfView): string {
         boardBase(layout, 'bottom'),
         strips ? stripsSvg(layout, strips, at) : '',
         holesSvg(layout, !strips, at),
-        strips ? cutsSvg(strips, 'bottom', at) : tracesSvg(layout, view, at),
+        strips ? cutsSvg(strips, view, at) : tracesSvg(layout, view, at),
         jointsSvg(layout, view, at),
         bottomLabels(layout, view, at)
       ]
   return layers.join('') + rulers(layout, at)
+}
+
+const THUMB_PAD: Partial<Record<PerfPart['k'], number>> = { to220: 2.1, dip: 1.2, can: 1.2, pad: 1.4 }
+
+export function partThumbnail(layout: PerfLayout, part: PerfPart): { viewBox: string; svg: string } {
+  const at = projector(layout, 'top')
+  const pts = part.legs.map(at)
+  const pad = PITCH * (THUMB_PAD[part.k] ?? 0.9)
+  const x0 = Math.min(...pts.map(p => p.x)) - pad
+  const y0 = Math.min(...pts.map(p => p.y)) - pad
+  const w = Math.max(...pts.map(p => p.x)) - x0 + pad
+  const h = Math.max(...pts.map(p => p.y)) - y0 + pad
+  const view: PerfView = { side: 'top', stage: Infinity, selected: null, net: null, icInserted: false }
+  const fill = isBreadboard(layout) ? '#efefe9' : '#d9bd84'
+  const body = part.k === 'pad'
+    ? `<line x1="${pts[0].x - pad}" y1="${pts[0].y}" x2="${pts[0].x + pad}" y2="${pts[0].y}" stroke="#000" stroke-width="8" stroke-linecap="round"/><line x1="${pts[0].x - pad}" y1="${pts[0].y}" x2="${pts[0].x + pad}" y2="${pts[0].y}" stroke="${part.color ?? '#888'}" stroke-width="5.5" stroke-linecap="round"/>`
+    : partBody(part, layout, view, at)
+  return {
+    viewBox: `${x0} ${y0} ${w} ${h}`,
+    svg: `<rect x="${x0}" y="${y0}" width="${w}" height="${h}" rx="6" fill="${fill}"/>` + body
+  }
 }
