@@ -22,9 +22,12 @@ export interface PerfView {
   focusTrace?: number
   focusCut?: number
   lettersFrom?: LettersFrom
+  ghosts?: ReadonlySet<string>
+  gone?: ReadonlySet<string>
+  ohmOf?: (id: string) => number | undefined
 }
 
-const partShown = (view: PerfView, p: PerfPart) => p.s <= view.stage && !view.hidden?.parts.has(p.id)
+const partShown = (view: PerfView, p: PerfPart) => p.s <= view.stage && !view.hidden?.parts.has(p.id) && !view.gone?.has(p.id)
 
 interface Pt {
   x: number
@@ -282,8 +285,8 @@ function partBody(part: PerfPart, layout: PerfLayout, view: PerfView, at: Projec
   const last = part.legs[part.legs.length - 1]
   const span = Math.abs(first[0] - last[0]) + Math.abs(first[1] - last[1])
   switch (part.k) {
-    case 'res': return resistor(legs[0], legs[1], part.ohm ?? 0)
-    case 'resUp': return standingResistor(legs[0], legs[1], part.ohm ?? 0)
+    case 'res': return resistor(legs[0], legs[1], view.ohmOf?.(part.id) ?? part.ohm ?? 0)
+    case 'resUp': return standingResistor(legs[0], legs[1], view.ohmOf?.(part.id) ?? part.ohm ?? 0)
     case 'diode': return diode(legs[0], legs[1], false)
     case 'tvs': return diode(legs[0], legs[1], true)
     case 'can': return electrolytic(legs[0], legs[1], span)
@@ -320,7 +323,7 @@ function labelPos(part: PerfPart, at: Project): Pt {
 
 function partsSvg(layout: PerfLayout, view: PerfView, at: Project): string {
   return layout.parts.filter(p => partShown(view, p)).map(part => {
-    const cls = ['pf-part', part.s === view.stage ? 'fresh' : '', view.selected === part.id ? 'sel' : '', part.optional ? 'opt' : ''].filter(Boolean).join(' ')
+    const cls = ['pf-part', part.s === view.stage ? 'fresh' : '', view.selected === part.id ? 'sel' : '', part.optional ? 'opt' : '', view.ghosts?.has(part.id) ? 'ghost' : ''].filter(Boolean).join(' ')
     const l = labelPos(part, at)
     const labelClass = part.k === 'can' && !part.labelAt ? 'pf-lab in' : 'pf-lab'
     const label = part.lab ? `<text x="${l.x}" y="${l.y}" class="${labelClass}">${esc(part.lab)}</text>` : ''
@@ -381,4 +384,8 @@ export function partThumbnail(layout: PerfLayout, part: PerfPart): { viewBox: st
     viewBox: `${x0} ${y0} ${w} ${h}`,
     svg: `<rect x="${x0}" y="${y0}" width="${w}" height="${h}" rx="6" fill="${fill}"/>` + body
   }
+}
+
+export function holePoint(layout: PerfLayout, h: Hole, side: Side = 'top'): { x: number; y: number } {
+  return projector(layout, side)(h)
 }

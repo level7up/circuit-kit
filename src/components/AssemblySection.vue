@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
-import { useCircuit, useGuide } from '../composables/context'
-import { boardSize, holeName as nameOf, holeText, perfboardSvg, type LettersFrom, type Side } from '../lib/perfboard/draw'
+import { computed, onDeactivated, ref, watch } from 'vue'
+import { useCircuit, useGuide, useSim } from '../composables/context'
+import { boardSize, holeName as nameOf, holePoint, holeText, perfboardSvg, type LettersFrom, type Side } from '../lib/perfboard/draw'
 import type { Hole, PerfLayout } from '../types/circuit'
 import { buildItems, hiddenAfter, sideFor, type BuildItem } from '../lib/perfboard/build-items'
 import BuildStepper from './BuildStepper.vue'
+import BoardLamp from './BoardLamp.vue'
+import PartPopover from './board/PartPopover.vue'
 import CarFaceSim from './CarFaceSim.vue'
 import SimPresets from './SimPresets.vue'
 import PartsTable from './PartsTable.vue'
@@ -13,6 +15,10 @@ import SectionHead from './SectionHead.vue'
 defineProps<{ num: number }>()
 const circuit = useCircuit()
 const asm = circuit.assembly!
+const bb = circuit.board!
+const sim = useSim()
+const LAMP_PANEL = 150
+const MIN_GLOW = 0.05
 const { openTab } = useGuide()
 
 const LETTERS_KEY = 'circuit-lab:letters-from'
@@ -67,6 +73,7 @@ const isFirstItem = computed(() => phase.value === 0 && itemIndex.value === 0)
 const isLastItem = computed(() => phase.value === phases.value.length - 1 && itemIndex.value >= items.value.length - 1)
 
 const goPhase = (i: number, at: 'start' | 'end' = 'start') => {
+  popover.value = null
   phase.value = i
   itemIndex.value = at === 'end' ? Math.max(0, itemsOf(i).length - 1) : 0
   selected.value = null
@@ -105,8 +112,48 @@ const svg = computed(() => perfboardSvg(layout.value, {
   hidden: hiddenAfter(items.value, itemIndex.value),
   focusTrace: item.value?.kind === 'trace' ? item.value.index : undefined,
   focusCut: item.value?.kind === 'cut' ? item.value.index : undefined,
-  lettersFrom: lettersFrom.value
+  lettersFrom: lettersFrom.value,
+  ghosts: removedSet.value,
+  gone: bb.dynamics.hidden(sim.params.value),
+  ohmOf: id => bb.dynamics.ohm(id, sim.params.value)
 }))
+const removedSet = computed(() => new Set(sim.removed.value))
+
+const padOf = (id: string) => layout.value.parts.find(p => p.id === id)
+const lamp = computed(() => {
+  const plus = padOf('YELLOW')
+  const minus = padOf('BLUE')
+  if (side.value !== 'top' || !plus || !minus || current.value.s < plus.s) return null
+  const edge = size.value.w
+  return {
+    left: edge,
+    top: 24,
+    bottom: size.value.h - 34,
+    plus: { x: edge, y: holePoint(layout.value, plus.legs[0]).y },
+    minus: { x: edge, y: holePoint(layout.value, minus.legs[0]).y },
+    name: String(sim.params.value.lampName ?? ''),
+    color: bb.dynamics.glowColor(sim.params.value),
+    level: MIN_GLOW + (1 - MIN_GLOW) * sim.brightness.value,
+    removed: removedSet.value.has('LAMP')
+  }
+})
+const viewWidth = computed(() => size.value.w + (lamp.value ? LAMP_PANEL : 0))
+
+const svgBox = ref<HTMLDivElement | null>(null)
+const popover = ref<{ id: string; x: number; y: number; width: number } | null>(null)
+const popoverPart = computed(() => (popover.value ? bb.parts.find(p => p.id === popover.value?.id) : undefined))
+const closePopover = () => { popover.value = null }
+onDeactivated(closePopover)
+const openPopover = (id: string, e: MouseEvent) => {
+  const box = svgBox.value?.getBoundingClientRect()
+  if (!box || !bb.parts.some(p => p.id === id)) return closePopover()
+  popover.value = popover.value?.id === id ? null : { id, x: e.clientX - box.left, y: e.clientY - box.top, width: box.width }
+}
+const chooseAlt = (key: string, index: number) => sim.setSwap(key, index, bb.alternatives)
+const showSideInfo = () => {
+  closePopover()
+  document.querySelector('#assembly .asm-side')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
 const focusPart = computed(() => (item.value?.kind === 'part' ? item.value.id : null))
 
 const freshParts = computed(() => layout.value.parts.filter(p => p.s === current.value.s))
@@ -143,7 +190,12 @@ const pickNet = (n: string | null) => {
 const onBoardClick = (e: MouseEvent) => {
   const target = e.target as Element
   const partEl = target.closest('[data-id]')
-  if (partEl) return selectPart(partEl.getAttribute('data-id'))
+  if (partEl) {
+    const id = partEl.getAttribute('data-id') ?? ''
+    openPopover(id, e)
+    return selectPart(id)
+  }
+  closePopover()
   const netEl = target.closest('[data-net]')
   if (netEl) return pickNet(netEl.getAttribute('data-net'))
   selected.value = null
@@ -187,8 +239,13 @@ const onBoardClick = (e: MouseEvent) => {
           فيرو: اقطع النحاس من تحت في <b>{{ stripInfo.cuts }}</b> مكان (الدواير الحمرا: لف بنطة 3–4 مم بإيدك في الخرم)، وركّب <b>{{ stripInfo.links }}</b> سلوك معزولة من فوق.
         </p>
         <div class="asm-work">
-        <div class="asm-svg" @click="onBoardClick">
-          <svg :viewBox="`0 0 ${size.w} ${size.h}`" role="img" aria-label="رسمة البورد المثقّب" v-html="svg" />
+        <div ref="svgBox" class="asm-svg" @click="onBoardClick">
+          <svg :viewBox="`0 0 ${viewWidth} ${size.h}`" role="img" aria-label="رسمة البورد المثقّب">
+            <g v-html="svg" />
+            <BoardLamp v-if="lamp" v-bind="lamp" />
+          </svg>
+          <PartPopover v-if="popover && popoverPart" :key="popover.id" :board="bb" :part="popoverPart" :easy="true" :swaps="sim.swaps.value" :removed="removedSet.has(popover.id)"
+            :x="popover.x" :y="popover.y" :area-width="popover.width" @close="closePopover" @choose="chooseAlt" @toggle-removed="sim.toggleRemoved" @details="showSideInfo" />
         </div>
         <BuildStepper :layout="layout" :item="item" :index="itemIndex" :count="items.length" :phase-title="'المرحلة ' + (phase + 1) + ': ' + current.t"
           :letters-from="lettersFrom" :is-first="isFirstItem" :is-last="isLastItem" @prev="prevItem" @next="nextItem" />
@@ -282,7 +339,7 @@ const onBoardClick = (e: MouseEvent) => {
 .asm-work{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:14px;align-items:start}
 .asm-work :deep(.stepper){margin-top:0}
 @media(max-width:1100px){.asm-work{grid-template-columns:minmax(0,1fr)}.asm-work :deep(.stepper){margin-top:12px}}
-.asm-svg{direction:ltr;background:#0d1320;border-radius:12px;padding:6px;cursor:pointer}
+.asm-svg{position:relative;direction:ltr;background:#0d1320;border-radius:12px;padding:6px;cursor:pointer}
 .asm-svg svg{width:100%;height:auto;display:block}
 .asm-note{font-size:13px;color:var(--muted);margin:10px 0 0}
 .asm-side{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:14px;align-items:start}
@@ -315,6 +372,7 @@ const onBoardClick = (e: MouseEvent) => {
 :deep(.pf-part.fresh){filter:drop-shadow(0 0 4px #ffb547)}
 :deep(.pf-part.sel){filter:drop-shadow(0 0 6px #5aa9ff) drop-shadow(0 0 2px #5aa9ff)}
 :deep(.pf-part.opt){opacity:.45}
+:deep(.pf-part.ghost){opacity:.22}
 :deep(.pf-trace),:deep(.pf-link){cursor:pointer}
 :deep(.pf-trace.fresh polyline:first-child){stroke:#fff3d6}
 :deep(.pf-trace.on polyline:first-child),:deep(.pf-link.on line:first-child){stroke:#ffb547}
