@@ -1,6 +1,6 @@
 import type { SceneFrame } from '../../types/circuit'
 import {
-  COLORS, adapter, arrow, cross, hexRing, hexVertices, label, meter, padAt, piece, ringGlyph, scene, strip, tick, wire, type Pt
+  COLORS, adapter, arrow, cross, hexRing, hexSides, hexVertices, label, meter, padAt, piece, ringGlyph, scene, strip, tick, wire, type Pt
 } from '../../lib/scene/draw'
 
 const STRIP_X = 234
@@ -111,14 +111,31 @@ export const cutScene: SceneFrame[] = [
   }
 ]
 
-const A: Pt = [110, 230]
-const A_LEN = 160
-const B_ROT = -60
-const B: Pt = [A[0] + A_LEN + 18, A[1] - 8]
+const ZOOM = 1.8
+const CORNER: Pt = [330, 112]
+const BIG = 120
+const GAP = 12
+const A_START: Pt = [-GAP - BIG, 0]
+const B_ROT = 60
+const B_START: Pt = [GAP * Math.cos(Math.PI / 3), GAP * Math.sin(Math.PI / 3)]
+const aEnd = (sign: '+' | '-') => padAt(A_START[0], A_START[1], 0, BIG, 'end', sign)
+const bStart = (sign: '+' | '-') => padAt(B_START[0], B_START[1], B_ROT, BIG, 'start', sign)
+const zoomed = (svg: string) => `<g transform="translate(${CORNER[0]} ${CORNER[1]}) scale(${ZOOM})">${svg}</g>`
+
+const RING_C: Pt = [300, 176]
+const RING_R = 108
+
+const growing = (count: number, say: string): SceneFrame => ({
+  say,
+  svg: hexRing(RING_C[0], RING_C[1], { len: RING_R, count, numbers: true }),
+  spots: count === 6
+    ? [{ x: hexVertices(RING_C[0], RING_C[1], RING_R)[0][0] - 26, y: hexVertices(RING_C[0], RING_C[1], RING_R)[0][1] - 16, t: 'الركن المفتوح', d: 'بين آخر حتة (6) وأول حتة (1) <b>مفيش سلوك</b>. أول حتة هي اللي هيتلحم فيها السلكين اللي جايين من البورد.' }]
+    : [{ x: 520, y: 60, t: 'خلي الحتت لفوق', d: 'اللمبات ناحيتك، والنحاس + على <b>برّه</b> المسدس في كل الحتت. كده الـ + دايماً يقابل + في كل ركن.' }]
+})
 
 export const joinScene: SceneFrame[] = [
   {
-    say: 'افتح <b>كابل نت</b> قديم: جواه 8 سلوك رفيعة. خد <b>البرتقالي</b> للـ + و<b>الأزرق</b> للـ −، واقطع حتت <b>2 سم</b>.',
+    say: 'افتح <b>كابل نت</b> قديم: جواه 8 سلوك رفيعة. خد <b>البرتقالي</b> للـ + و<b>الأزرق</b> للـ −، واقطع حتت <b>2 سم</b> وقشّر 3 مم من كل طرف.',
     svg: scene(
       wire([[30, 170], [230, 170]], '#7d8696', 18),
       ...['#ff9f43', '#f5f5f5', '#2f9e44', '#3b82f6', '#a16207', '#e7ecf5', '#9aa6bd', '#22c55e'].map((c, i) =>
@@ -130,95 +147,123 @@ export const joinScene: SceneFrame[] = [
     spots: [{ x: 130, y: 205, t: 'ليه كابل نت؟', d: 'سلوكه رفيعة ونحاس صافي وملونة، ومعزولة كويس. وتقريباً كل بيت فيه كابل قديم مرمي.' }]
   },
   {
-    say: '<b>قصدر</b> النحاس الأول: لمسة كاوية + شوية قصدير = نقطة لامعة صغيرة. وقصدر طرف السلك كمان.',
+    say: '<b>قصدر</b> نقط النحاس في طرفين كل حتة: لمسة كاوية + شوية قصدير = نقطة لامعة صغيرة. وقصدر طرف السلك كمان.',
     svg: scene(
       `<rect x="120" y="150" width="360" height="120" rx="6" fill="${COLORS.pcb}" stroke="#bdb6a0"/>`,
       `<rect x="250" y="168" width="70" height="36" fill="${COLORS.copper}"/><ellipse cx="285" cy="186" rx="26" ry="12" fill="#cfd5dd"/>`,
       `<rect x="250" y="218" width="70" height="36" fill="${COLORS.copper}"/>`,
       `<line x1="440" y1="40" x2="300" y2="172" stroke="#9aa6bd" stroke-width="10" stroke-linecap="round"/><line x1="520" y1="-20" x2="440" y2="40" stroke="#2b2b2b" stroke-width="22" stroke-linecap="round"/>`,
       `<line x1="150" y1="60" x2="268" y2="172" stroke="#d9dee5" stroke-width="4"/>`,
-      label(150, 50, 'قصدير', { size: 13 }), label(450, 90, 'كاوية', { size: 13 })
+      label(150, 50, 'قصدير', { size: 13 }), label(450, 90, 'كاوية', { size: 13 }), label(232, 192, '+', { size: 18, color: '#8a4b10' }), label(232, 242, '−', { size: 18, color: '#8a4b10' })
     ),
     spots: [
-      { x: 230, y: 186, t: 'نقطة قصدير', d: 'صغيرة ولامعة زي النقطة. لو كبيرة أوي ممكن تسيح على النقطة اللي جنبها (+ في −).' },
+      { x: 200, y: 186, t: 'نقطة قصدير', d: 'صغيرة ولامعة زي النقطة. لو كبيرة أوي ممكن تسيح على النقطة اللي جنبها (+ في −).' },
       { x: 300, y: 300, t: '3 ثواني بس', d: 'النحاس في الشريط رقيق، لو الكاوية فضلت أكتر من 3 ثواني بيتقلع. ابعد، استنى، وارجع.' }
     ]
   },
   {
-    say: 'وصّل آخر الحتة بأول اللي بعدها: <b>+ في +</b> بالبرتقالي و<b>− في −</b> بالأزرق. اثني السلك عشان يعمل الركن.',
+    say: '<b>الركن الواحد بالتكبير:</b> آخر حتة 1 وأول حتة 2 بينهم مسافة صغيرة. سلكة <b>برتقالي من + لـ +</b> (برّه)، وسلكة <b>أزرق من − لـ −</b> (جوه).',
     svg: scene(
-      piece(A[0], A[1], 0, { len: A_LEN }), piece(B[0], B[1], B_ROT, { len: A_LEN }),
-      wire([padAt(A[0], A[1], 0, A_LEN, 'end', '+'), padAt(B[0], B[1], B_ROT, A_LEN, 'start', '+')], COLORS.orange, 3),
-      wire([padAt(A[0], A[1], 0, A_LEN, 'end', '-'), [B[0] + 6, A[1] + 16], padAt(B[0], B[1], B_ROT, A_LEN, 'start', '-')], COLORS.blue, 3)
+      zoomed(piece(A_START[0], A_START[1], 0, { len: BIG }) + piece(B_START[0], B_START[1], B_ROT, { len: BIG }) +
+        wire([aEnd('+'), [3, -15], bStart('+')], COLORS.orange, 2.4) + wire([aEnd('-'), bStart('-')], COLORS.blue, 2.4)),
+      label(200, 72, 'حتة 1', { color: COLORS.amber, size: 16 }),
+      label(440, 200, 'حتة 2', { color: COLORS.amber, size: 16, anchor: 'start' }),
+      label(372, 70, '+ ← +', { color: COLORS.orange, size: 16, anchor: 'start' }),
+      label(262, 172, '− ← −', { color: COLORS.minus, size: 16 })
     ),
     spots: [
-      { x: 225, y: 196, t: '+ في +', d: 'البرتقالي من نقطة + في آخر الحتة الأولى لنقطة + في أول التانية. الـ + دايماً على نفس الناحية في الشريط كله.' },
-      { x: 300, y: 270, t: '− في −', d: 'الأزرق من − لـ −. السلكين ميلمسوش بعض: لو لمسوا بعض الأدابتر هيفصل أو الفيوز هيتحرق.' }
+      { x: 470, y: 66, t: 'البرتقالي برّه', d: 'نقطة <b>+</b> بتاعة كل الحتت على الناحية <b>البرّانية</b> من المسدس، فالسلكة البرتقاني بتلف حوالين الركن من برّه.' },
+      { x: 262, y: 206, t: 'الأزرق جوه', d: 'نقطة <b>−</b> على الناحية <b>الجوّانية</b>. السلكة الأزرق أقصر لأنها جوه الركن.' },
+      { x: 120, y: 172, t: 'المسافة بين الحتتين', d: 'سيب حوالي 3 مم بين الحتتين عشان السلكتين يتلحموا براحة ومايلمسوش بعض.' }
     ]
   },
+  growing(2, '<b>ابدأ بحتة 1 وحتة 2:</b> حطهم على رسمة المسدس ووصّلهم في الركن اللي بينهم زي اللقطة اللي فاتت.'),
+  growing(4, '<b>كمّل بنفس الطريقة:</b> حتة 3 بعد 2، وحتة 4 بعد 3. كل ركن فيه سلكتين: برتقالي برّه وأزرق جوه.'),
+  growing(6, '<b>آخر حتة (6):</b> الحلقة خلصت، بس <b>الركن بين 6 و1 يفضل مفتوح</b> من غير سلوك.'),
   {
-    say: 'كمّل لحد ما الـ 6 حتت يبقوا مسدس، و<b>سيب الركن الأخير مفتوح</b>. وصّل الأدابتر في أول حتة: الحلقة كلها تنوّر.',
-    svg: scene(hexRing(CENTER[0], CENTER[1], { len: SIDE, lit: true })),
-    spots: [
-      { x: CENTER[0] - SIDE / 2 - 22, y: CENTER[1] - SIDE * 0.87 - 18, t: 'الركن المفتوح', d: 'هنا أول حتة وآخر حتة ومش متوصلين ببعض. أول حتة هي اللي هيتلحم فيها سلكين الدايرة.' },
-      { x: CENTER[0] + SIDE + 18, y: CENTER[1], t: 'الدواير البرتقاني', d: 'دي الوصلات (+ و−) بين كل حتة واللي بعدها. لو حتة مطفية، الوصلة اللي قبلها هي المشكلة.' }
-    ]
+    say: 'جرّب: الأدابتر على + و− بتوع <b>حتة 1</b> عند الركن المفتوح. <b>الـ 18 لمبة</b> كلهم ينوّروا.',
+    svg: scene(hexRing(RING_C[0], RING_C[1], { len: RING_R, lit: true })),
+    spots: [{ x: 540, y: 176, t: 'لو حتة مطفية', d: 'هي واللي بعدها مطفيين؟ يبقى الركن اللي قبلها: سلكة مقطوعة أو + اتوصل في −. صلّحه وجرّب تاني.' }]
   }
 ]
 
-const layer = (y: number, color: string, w: number, opacity = 1) =>
-  `<ellipse cx="300" cy="${y}" rx="170" ry="46" fill="none" stroke="${color}" stroke-width="${w}" opacity="${opacity}"/>`
+const BAND = 36
 
 export const baseScene: SceneFrame[] = [
   {
-    say: 'من <b>غطا علبة بلاستيك</b> اقطع حلقة عرضها 1.5 سم على مقاس المسدس: الدايرة الكبيرة الأول، وبعدين اللي جوه.',
+    say: 'من <b>غطا علبة بلاستيك</b> اقطع <b>حلقة</b>: ارسم دايرة كبيرة (قطر 12 سم) ودايرة صغيرة جواها (قطر 8 سم)، وقص على الخطين.',
     svg: scene(
       `<circle cx="300" cy="172" r="140" fill="#7d8696"/>`,
-      `<circle cx="300" cy="172" r="118" fill="none" stroke="#1b2333" stroke-width="2" stroke-dasharray="6 5"/>`,
-      `<circle cx="300" cy="172" r="92" fill="none" stroke="#1b2333" stroke-width="2" stroke-dasharray="6 5"/>`,
+      `<circle cx="300" cy="172" r="${RING_R + BAND / 2}" fill="none" stroke="#1b2333" stroke-width="2" stroke-dasharray="6 5"/>`,
+      `<circle cx="300" cy="172" r="${RING_R - BAND / 2}" fill="none" stroke="#1b2333" stroke-width="2" stroke-dasharray="6 5"/>`,
       label(300, 178, 'غطا علبة'), label(452, 60, '✂', { size: 28, color: COLORS.amber })
     ),
     spots: [{ x: 300, y: 64, t: 'أي غطا ينفع', d: 'غطا علبة جبنة أو لانشون أو برطمان كبير، أو CD قديمة. المهم يكون ناشف ومايتنيش.' }]
   },
   {
-    say: 'لزّق <b>ورق ألومنيوم</b> على الحلقة (اللامع لفوق)، وفوقه الحتت واللمبات لفوق.',
-    svg: scene(layer(270, '#7d8696', 24), layer(232, '#cfd5dd', 22), layer(180, COLORS.pcb, 20), label(500, 276, 'الغطا', { size: 13 }), label(500, 238, 'ألومنيوم', { size: 13 }), label(500, 186, 'الحتت', { size: 13 })),
-    spots: [{ x: 120, y: 232, t: 'ليه ألومنيوم؟', d: 'بيعكس النور اللي رايح لورا ويرجّعه لقدام، فالحلقة تبان أقوى من غير ما تسحب كهربا زيادة.' }]
+    say: 'دي <b>القاعدة</b>: حلقة عرضها حوالي 2 سم. لزّق عليها <b>ورق ألومنيوم</b> (اللامع لفوق).',
+    svg: scene(
+      `<circle cx="${RING_C[0]}" cy="${RING_C[1]}" r="${RING_R}" fill="none" stroke="#7d8696" stroke-width="${BAND + 6}"/>`,
+      `<circle cx="${RING_C[0]}" cy="${RING_C[1]}" r="${RING_R}" fill="none" stroke="#cfd5dd" stroke-width="${BAND - 4}"/>`,
+      label(RING_C[0], RING_C[1] + 5, 'القاعدة + ألومنيوم', { size: 13, color: COLORS.muted })
+    ),
+    spots: [{ x: RING_C[0] + RING_R + 34, y: RING_C[1], t: 'ليه ألومنيوم؟', d: 'بيعكس النور اللي رايح لورا ويرجّعه لقدام، فالحلقة تبان أقوى.' }]
   },
   {
-    say: 'اقطع حلقة تانية من <b>جركن لبن أبيض</b> وحطها فوق اللمبات على مسافة <b>5–8 مم</b> (ارفعها بنقط شمع).',
-    svg: scene(layer(270, '#7d8696', 24), layer(232, '#cfd5dd', 22), layer(180, COLORS.pcb, 20), layer(96, '#fdfdfb', 26, 0.85),
-      arrow([520, 120], [520, 160]), arrow([520, 160], [520, 120]), label(560, 146, '5–8 مم', { size: 13, color: COLORS.amber }), label(500, 70, 'جركن لبن', { size: 13 })),
-    spots: [{ x: 120, y: 96, t: 'المسافة مهمة', d: 'لو الناشر لازق في اللمبات هتشوف نقط. ولو بعيد أوي النور هيبقى باهت. 5–8 مم هي اللي بتدّي خط واحد ناعم.' }]
+    say: 'حط <b>المسدس اللي وصّلته</b> على القاعدة واللمبات لفوق، ولزّق كل حتة بنقطة شمع (للتجربة) أو سيليكون (للعربية).',
+    svg: scene(
+      `<circle cx="${RING_C[0]}" cy="${RING_C[1]}" r="${RING_R - 8}" fill="none" stroke="#7d8696" stroke-width="${BAND + 6}"/>`,
+      `<circle cx="${RING_C[0]}" cy="${RING_C[1]}" r="${RING_R - 8}" fill="none" stroke="#cfd5dd" stroke-width="${BAND - 4}"/>`,
+      hexRing(RING_C[0], RING_C[1], { len: RING_R })
+    ),
+    spots: [{ x: RING_C[0], y: RING_C[1], t: 'المسدس جوه الحلقة', d: 'الأركان بتقع على حرف القاعدة البرّاني، ونص كل ضلع على الحرف الجوّاني. لو مش راكب، كبّر أو صغّر الحلقة شوية.' }]
+  },
+  {
+    say: '<b>من الجنب:</b> فوق اللمبات حلقة من <b>جركن لبن أبيض</b> على مسافة <b>5–8 مم</b>، مرفوعة بنقط شمع. ده اللي بيخلّي النقط تبقى خط واحد.',
+    svg: scene(
+      `<rect x="80" y="270" width="440" height="16" rx="3" fill="#7d8696"/>`, label(540, 283, 'الغطا', { size: 13, anchor: 'start' }),
+      `<rect x="80" y="264" width="440" height="6" fill="#cfd5dd"/>`, label(540, 266, 'ألومنيوم', { size: 13, anchor: 'start' }),
+      `<rect x="110" y="250" width="380" height="14" rx="2" fill="${COLORS.pcb}" stroke="#bdb6a0"/>`,
+      ...[170, 300, 430].map(x => `<rect x="${x - 14}" y="240" width="28" height="10" rx="2" fill="${COLORS.ledOn}" stroke="#a49d84"/>` +
+        `<path d="M${x - 10} 238 L${x - 40} 196 M${x} 238 L${x} 196 M${x + 10} 238 L${x + 40} 196" stroke="#fff6c8" stroke-width="2" opacity=".6"/>`),
+      label(540, 250, 'الشريط', { size: 13, anchor: 'start' }),
+      `<rect x="90" y="196" width="20" height="54" rx="6" fill="#f2d98a"/><rect x="490" y="196" width="20" height="54" rx="6" fill="#f2d98a"/>`,
+      label(100, 186, 'شمع', { size: 12 }),
+      `<rect x="80" y="182" width="440" height="12" rx="3" fill="#fdfdfb" opacity=".92"/>`, label(540, 192, 'جركن لبن', { size: 13, anchor: 'start' }),
+      `<rect x="80" y="150" width="440" height="26" fill="${COLORS.glow}" opacity=".35" filter="url(#sc-blur)"/>`,
+      arrow([60, 238], [60, 198]), arrow([60, 198], [60, 238]), label(52, 222, '5–8 مم', { size: 12, color: COLORS.amber, anchor: 'end' }),
+      label(300, 70, '👁 انت بتبص من هنا', { size: 15 }), arrow([300, 84], [300, 130], COLORS.muted)
+    ),
+    spots: [{ x: 300, y: 300, t: 'ليه المسافة؟', d: 'كل لمبة بتطلّع نور على شكل مخروط. على بعد 5–8 مم المخاريط بتدخل في بعض على الجركن، فيبان خط واحد. لو أقرب هتشوف نقط، ولو أبعد النور يبهت.' }]
   },
   {
     say: 'الفرق: من غير ناشر هتشوف <b>نقط</b>. بالناشر <b>خط واحد ناعم</b> زي الـ Angel eye الأصلي.',
-    svg: scene(hexRing(165, 170, { len: 76, lit: true, links: false }), hexRing(435, 170, { len: 76, smooth: true, links: false }),
+    svg: scene(hexRing(165, 170, { len: 80, lit: true, links: false }), hexRing(435, 170, { len: 80, smooth: true, links: false }),
       label(165, 300, 'من غير ناشر'), label(435, 300, 'بالناشر'), cross(165, 40), tick(435, 40))
   }
 ]
 
-const LEAD_LEN = 92
-const LEAD_CORNER = hexVertices(CENTER[0], CENTER[1] + 14, LEAD_LEN)[0]
+const FIRST = hexSides(RING_C[0], RING_C[1] + 10, 96)[0]
+const firstPad = (sign: '+' | '-') => padAt(FIRST.start[0], FIRST.start[1], FIRST.rot, FIRST.len, 'start', sign)
 
 export const leadsScene: SceneFrame[] = [
   {
-    say: 'هات سلك <b>شاحن موبايل قديم</b>: الأحمر على <b>+</b> أول حتة والأسود على <b>−</b>. وثبّت السلك بنقطة شمع.',
+    say: 'هات سلك <b>شاحن موبايل قديم</b>: الأحمر على <b>+</b> حتة 1 والأسود على <b>−</b> حتة 1، عند الركن المفتوح. وثبّت السلك بنقطة شمع.',
     svg: scene(
-      hexRing(CENTER[0], CENTER[1] + 14, { len: LEAD_LEN }),
-      wire([[20, 320], [120, 320]], '#2b2b2b', 12),
-      wire([[120, 316], [180, 316], [180, 40], padAt(LEAD_CORNER[0], LEAD_CORNER[1], 0, LEAD_LEN, 'start', '+')], COLORS.plus, 3),
-      wire([[120, 324], [196, 324], [196, 120], padAt(LEAD_CORNER[0], LEAD_CORNER[1], 0, LEAD_LEN, 'start', '-')], '#2b2b2b', 3),
-      label(70, 306, 'سلك شاحن', { size: 13 })
+      hexRing(RING_C[0], RING_C[1] + 10, { len: 96, numbers: true }),
+      wire([[20, 320], [110, 320]], '#2b2b2b', 12),
+      wire([[110, 316], [170, 316], [170, firstPad('+')[1] - 26], [firstPad('+')[0], firstPad('+')[1] - 26], firstPad('+')], COLORS.plus, 3),
+      wire([[110, 324], [186, 324], [186, firstPad('-')[1] + 30], [firstPad('-')[0] - 4, firstPad('-')[1] + 30], firstPad('-')], '#2b2b2b', 3),
+      label(65, 306, 'سلك شاحن', { size: 13 })
     ),
     spots: [
-      { x: 236, y: 52, t: 'الأحمر على +', d: 'على نقطة + في أول حتة (عند الركن المفتوح). عليه جلبة حرارية أو نقطة سيليكون.' },
-      { x: 150, y: 220, t: 'متشدّش من اللحام', d: 'ثبّت السلك على القاعدة بنقطة شمع قبل اللحام بـ 2 سم. كده لو اتشد، الشمع هو اللي يشيل مش اللحام.' }
+      { x: firstPad('+')[0] + 30, y: firstPad('+')[1] - 40, t: 'الأحمر على +', d: 'على نقطة + في أول حتة 1 (عند الركن المفتوح). عليه جلبة حرارية أو نقطة سيليكون.' },
+      { x: 140, y: 230, t: 'متشدّش من اللحام', d: 'ثبّت السلك على القاعدة بنقطة شمع قبل اللحام بـ 2 سم. كده لو اتشد، الشمع هو اللي يشيل مش اللحام.' }
     ]
   },
   {
     say: 'اعمل الحلقة التانية بنفس الطريقة. دلوقتي عندك حلقتين، كل واحدة ليها سلكين.',
     svg: scene(ringGlyph(170, 160, 80), ringGlyph(430, 160, 80), label(170, 290, 'الفانوس اليمين'), label(430, 290, 'الفانوس الشمال')),
-    spots: [{ x: 300, y: 160, t: 'كل حلقة ≈ 128mA', d: 'الحلقتين مع بعض حوالي <b>256mA</b> والموتور دوّار. الـ TIP122 بيشيلهم بسهولة.' }]
+    spots: [{ x: 300, y: 160, t: 'كل حلقة ≈ 128mA', d: 'الحلقتين مع بعض حوالي <b>256mA</b> والموتور دوّار. الفيوز 1A كفاية جداً.' }]
   }
 ]

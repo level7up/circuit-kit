@@ -14,8 +14,8 @@ export function carSvg(): string {
   <text x="85" y="40" text-anchor="middle" fill="#ffb547" font-size="14" font-weight="700">سلك لمبة الركن</text>
   <text x="85" y="150" text-anchor="middle" fill="#8f9bb6" font-size="12">فرع من السلك</text><text x="85" y="168" text-anchor="middle" fill="#8f9bb6" font-size="12">(اللمبة الأصلية</text><text x="85" y="186" text-anchor="middle" fill="#8f9bb6" font-size="12">زي ما هي)</text>
   <rect x="290" y="50" width="160" height="220" rx="14" fill="#1a1508" stroke="#ffb547" stroke-width="2"/>
-  <text x="370" y="40" text-anchor="middle" fill="#ffb547" font-size="14" font-weight="700">علبة الدايرة</text>
-  <text x="370" y="158" text-anchor="middle" fill="#cbd5ea" font-size="13">TIP122 + 100µF</text>
+  <text x="370" y="40" text-anchor="middle" fill="#ffb547" font-size="14" font-weight="700">الحماية</text>
+  <text x="370" y="158" text-anchor="middle" fill="#cbd5ea" font-size="13">1N4007 + P6KE18A</text>
   <text x="302" y="96" fill="#ff5d5d" font-size="12" font-weight="700">IN</text><text x="302" y="226" fill="#cfd7e8" font-size="12" font-weight="700">GND</text>
   <text x="438" y="96" fill="#ffd24d" font-size="12" font-weight="700" text-anchor="end">RING+</text><text x="438" y="226" fill="#5aa9ff" font-size="12" font-weight="700" text-anchor="end">RING−</text>
   <line x1="155" y1="90" x2="195" y2="90" stroke="#ff5d5d" stroke-width="4"/><rect x="195" y="80" width="46" height="20" rx="4" fill="#2a1414" stroke="#ff5d5d" stroke-width="2"/><text x="218" y="94" text-anchor="middle" fill="#ff9a9a" font-size="11" font-weight="700">1A</text><line x1="241" y1="90" x2="290" y2="90" stroke="#ff5d5d" stroke-width="4"/>

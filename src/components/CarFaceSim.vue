@@ -13,7 +13,6 @@ const DEFAULT_TAG = 'بترعش'
 const DEFAULT_NOTE = 'ده نفس المحاكي بتاع الدايرة. أي حاجة تغيّرها في تبويب <b>البريد بورد</b> أو <b>المحاكي</b> (قيمة مقاومة، لمبة تانية، لمبتين، شيل قطعة) هتبان هنا على العربية على طول.'
 const POWER_OFF = 0
 const POWER_ON = 1
-const POWER_AUTO = 2
 const RING_R = 25
 const HEADLIGHTS = [245, 555]
 
@@ -50,7 +49,6 @@ const halo = (level: number) => ({ opacity: (level * 0.85).toFixed(3) })
       <div class="seg" role="group" aria-label="أنوار الركن">
         <button :class="{ on: powerLevel === POWER_ON }" @click="setPower(POWER_ON)">💡 أنوار الركن شغالة</button>
         <button :class="{ on: powerLevel === POWER_OFF }" @click="setPower(POWER_OFF)">مطفية</button>
-        <button v-if="power" :class="{ on: powerLevel === POWER_AUTO }" @click="setPower(POWER_AUTO)">🔁 تلقائي</button>
       </div>
       <div v-if="!isRing" class="seg" role="group" aria-label="الجنبين">
         <button :class="{ on: sides === 'both' }" @click="sides = 'both'">الجنبين بيرعشوا</button>

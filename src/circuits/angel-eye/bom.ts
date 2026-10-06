@@ -3,15 +3,11 @@ import type { BomRow } from '../../types/circuit'
 const MK = 'https://makerselectronics.com/product/'
 
 export const bom: BomRow[] = [
-  { g: 'الدايرة (نفس قطع كيت الرعشة)' },
-  { n: 'ترانزستور', s: 'TIP122 – TO-220 · Q1', q: 1, p: 9, u: MK + 'tip122-5a-100v-npn-darlington-power-transistor-to-220', on: 1 },
+  { g: 'الحماية (نفس قطع كيت الرعشة)' },
   { n: 'دايود', s: '1N4007 · D1', q: 1, p: 0.5, u: MK + '1n4007-diode-1a-1-1v1a-1kv-do-41/', on: 1 },
   { n: 'دايود حماية TVS', s: 'P6KE18A · D2', q: 1, p: 2, u: MK + 'esd-suppressors-tvs-diodes-600w-18v-uni-directional-p6ke18a-e3-73/', on: 1 },
   { n: 'مكثف سيراميك', s: '100nF (104) / 50V · C1', q: 1, p: 0.5, u: MK + 'ceramic-capacitor-100nf-50v/', on: 1 },
-  { n: 'مكثف كيميائي', s: '100µF / 50V · C2 (مكثف الفيد)', q: 1, p: 1.5, u: MK + 'capacitor-100uf-50v-6x12mm', on: 1 },
-  { n: 'مقاومة', s: '10kΩ ¼W · R1', q: 1, p: 0.15, u: MK + '2pcs-carbon-resistor-10k%cf%89-0-25w-thr/', on: 1 },
-  { n: 'مقاومة', s: '22kΩ ¼W · R2', q: 1, p: 0.15, u: MK + 'carbon-resistor-22k%cf%89-0-25w-through/', on: 1 },
-  { n: 'بورد مثقّب', s: 'حتة 16 × 8 خرم من بورد نقط 3×7 سم (أو فيرو)', q: 1, p: 10, est: 1, u: 'https://makerselectronics.com/product-category/breadboards-pcb-boards/page/2/', on: 1 },
+  { n: 'بورد مثقّب', s: 'حتة 10 × 5 خرم من بورد نقط 3×7 سم (أو فيرو)', q: 1, p: 10, est: 1, u: 'https://makerselectronics.com/product-category/breadboards-pcb-boards/page/2/', on: 1 },
   { g: 'الحلقة' },
   { n: 'شريط LED', s: 'شريط 12V أبيض 2835 · 60 لمبة/متر · نص متر يكفي حلقتين', q: 1, p: 35, est: 1, on: 1 },
   { g: 'من البيت (ببلاش)' },

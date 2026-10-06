@@ -4,7 +4,7 @@ import { bom } from './bom'
 import { car, carFace, footer, hero, overview, pinouts } from './content'
 import { angelSim, type AngelParams, type AngelState } from './simulate'
 import { steps } from './steps'
-import { fadeStyles } from './styles'
+import { lightStyles } from './styles'
 import { trouble, wiring } from './wiring'
 
 export const angelEye: Circuit<AngelParams, AngelState> = {
@@ -12,7 +12,7 @@ export const angelEye: Circuit<AngelParams, AngelState> = {
   title: 'Angel Eye من حاجات البيت',
   card: {
     icon: '⭕',
-    summary: 'حلقة نور حوالين الفانوس من شريط LED وغطا علبة بلاستيك، بتولّع بالراحة (فيد) بقطع من بواقي كيت الرعشة.',
+    summary: 'حلقة نور حوالين الفانوس من شريط LED وغطا علبة بلاستيك، بتولّع وتطفي مع أنوار الركن، ومحمية بقطع من بواقي كيت الرعشة.',
     level: 'مبتدئ · أول لحام'
   },
   hero,
@@ -36,7 +36,7 @@ export const angelEye: Circuit<AngelParams, AngelState> = {
     groups: wiring
   },
   assembly,
-  presets: fadeStyles,
+  presets: lightStyles,
   carFace,
   car,
   trouble: { title: 'الأعطال وحلولها', sub: 'افتح العَرَض اللي عندك.', items: trouble },

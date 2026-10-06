@@ -100,7 +100,5 @@ onBeforeUnmount(stop)
 :deep(.sc-txt){font-family:system-ui,'Segoe UI',Tahoma,sans-serif}
 :deep(.sc-pulse){animation:sc-pulse 1.2s ease-in-out infinite}
 @keyframes sc-pulse{50%{opacity:.25}}
-:deep(.sc-fade){animation:sc-fade 3.2s ease-in-out infinite}
-@keyframes sc-fade{0%,8%{opacity:.08}40%,85%{opacity:1}100%{opacity:.08}}
 :deep(.sc-blink){animation:sc-pulse .9s steps(2) infinite}
 </style>

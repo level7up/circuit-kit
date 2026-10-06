@@ -105,11 +105,13 @@ export const cross = (x: number, y: number): string => label(x, y, '✗', { size
 export interface HexOpts {
   len?: number
   lit?: boolean
-  open?: boolean
+  count?: number
   links?: boolean
+  numbers?: boolean
   smooth?: boolean
-  fade?: boolean
 }
+
+const CORNER_GAP = 9
 
 export function hexVertices(cx: number, cy: number, r: number): Pt[] {
   return Array.from({ length: 6 }, (_, k) => {
@@ -118,21 +120,43 @@ export function hexVertices(cx: number, cy: number, r: number): Pt[] {
   })
 }
 
-export function hexRing(cx: number, cy: number, opts: HexOpts = {}): string {
-  const { len = 90, lit = false, open = true, links = true, smooth = false, fade = false } = opts
-  const v = hexVertices(cx, cy, len)
-  const pieces = v.map((p, i) => {
+export interface Side {
+  start: Pt
+  rot: number
+  len: number
+  mid: Pt
+}
+
+export function hexSides(cx: number, cy: number, r: number): Side[] {
+  const v = hexVertices(cx, cy, r)
+  return v.map((p, i) => {
     const q = v[(i + 1) % 6]
-    const rot = (Math.atan2(q[1] - p[1], q[0] - p[0]) * 180) / Math.PI
-    return piece(p[0], p[1], rot, { len, lit: lit && !smooth })
-  }).join('')
-  const joints = links ? v.slice(open ? 1 : 0).map(p =>
-    `<circle cx="${p[0]}" cy="${p[1]}" r="6" fill="none" stroke="${COLORS.orange}" stroke-width="3"/>`).join('') : ''
+    const a = Math.atan2(q[1] - p[1], q[0] - p[0])
+    const start: Pt = [p[0] + CORNER_GAP * Math.cos(a), p[1] + CORNER_GAP * Math.sin(a)]
+    return { start, rot: (a * 180) / Math.PI, len: r - 2 * CORNER_GAP, mid: [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2] }
+  })
+}
+
+export function hexRing(cx: number, cy: number, opts: HexOpts = {}): string {
+  const { len = 90, lit = false, count = 6, links = true, numbers = false, smooth = false } = opts
+  const sides = hexSides(cx, cy, len).slice(0, count)
+  const pieces = sides.map(s => piece(s.start[0], s.start[1], s.rot, { len: s.len, lit: lit && !smooth })).join('')
+  const joints = links ? sides.slice(1).map((s, i) => {
+    const prev = sides[i]
+    const end = (sign: '+' | '-') => padAt(prev.start[0], prev.start[1], prev.rot, prev.len, 'end', sign)
+    const begin = (sign: '+' | '-') => padAt(s.start[0], s.start[1], s.rot, s.len, 'start', sign)
+    return wire([end('+'), begin('+')], COLORS.orange, 2.5) + wire([end('-'), begin('-')], COLORS.blue, 2.5)
+  }).join('') : ''
+  const marks = numbers ? sides.map((s, i) => {
+    const x = s.mid[0] + (cx - s.mid[0]) * 0.42
+    const y = s.mid[1] + (cy - s.mid[1]) * 0.42
+    return `<rect x="${x - 13}" y="${y - 11}" width="26" height="22" rx="5" fill="#1b2333" stroke="#e7ecf5" stroke-width="1.5"/>` + label(x, y + 5, String(i + 1), { size: 14, weight: 900 })
+  }).join('') : ''
   const glow = smooth
     ? `<circle cx="${cx}" cy="${cy}" r="${len * 0.93}" fill="none" stroke="${COLORS.glow}" stroke-width="26" opacity=".5" filter="url(#sc-blur)"/>` +
       `<circle cx="${cx}" cy="${cy}" r="${len * 0.93}" fill="none" stroke="#fdfdfb" stroke-width="16" opacity=".95"/>`
     : ''
-  return `<g class="${fade ? 'sc-fade' : ''}">${pieces}${joints}${glow}</g>`
+  return pieces + joints + marks + glow
 }
 
 export function scene(...parts: string[]): string {
@@ -155,10 +179,9 @@ export function battery(x: number, y: number, minusOff = false): string {
     wire([[x + 119, y - 14], [x + 119, y - (minusOff ? 70 : 40)], [x + 200, y - (minusOff ? 70 : 40)]], '#2b2b2b', 5)
 }
 
-export function ringGlyph(cx: number, cy: number, r: number, opts: { fade?: boolean; lit?: boolean } = {}): string {
-  const { fade = false, lit = true } = opts
+export function ringGlyph(cx: number, cy: number, r: number, lit = true): string {
   const glow = lit ? `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${COLORS.glow}" stroke-width="${r * 0.5}" opacity=".5" filter="url(#sc-blur)"/>` +
     `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#fdfdfb" stroke-width="${Math.max(4, r * 0.18)}"/>` : ''
   return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#3a4252" stroke-width="${Math.max(5, r * 0.22)}"/>` +
-    `<g class="${fade ? 'sc-fade' : ''}">${glow}</g>`
+    glow
 }
