@@ -8,6 +8,7 @@ import BuildStepper from './BuildStepper.vue'
 import BoardLamp from './BoardLamp.vue'
 import PartPopover from './board/PartPopover.vue'
 import CarFaceSim from './CarFaceSim.vue'
+import StripPreview from './StripPreview.vue'
 import SimPresets from './SimPresets.vue'
 import PartsTable from './PartsTable.vue'
 import SectionHead from './SectionHead.vue'
@@ -296,7 +297,7 @@ const onBoardClick = (e: MouseEvent) => {
           <div class="navbtns">
             <button class="btn" :disabled="phase === 0" @click="goPhase(phase - 1)">→ السابقة</button>
             <button v-if="phase < phases.length - 1" class="btn pri" @click="goPhase(phase + 1)">التالية ←</button>
-            <button v-else class="btn pri" @click="openTab('car')">التركيب في العربية ←</button>
+            <button v-else-if="circuit.car" class="btn pri" @click="openTab('car')">التركيب في العربية ←</button>
           </div>
         </div>
       </div>
@@ -306,7 +307,8 @@ const onBoardClick = (e: MouseEvent) => {
     <h3 class="asm-h">{{ asm.simTitle }}</h3>
     <p class="asm-sub">{{ asm.simSub }}</p>
     <SimPresets v-if="circuit.presets" :presets="circuit.presets" />
-    <CarFaceSim />
+    <StripPreview v-if="circuit.stripPreview" />
+    <CarFaceSim v-else />
 
     <div class="gap" />
     <h3 class="asm-h">📋 جدول كل القطع والسلوك ({{ board.label }})</h3>

@@ -311,7 +311,7 @@ export interface CircuitCard {
 
 export type Hole = [x: number, y: number]
 
-export type PerfKind = 'res' | 'resUp' | 'diode' | 'tvs' | 'ceramic' | 'can' | 'to220' | 'dip' | 'pad' | 'wire'
+export type PerfKind = 'res' | 'resUp' | 'diode' | 'tvs' | 'ceramic' | 'can' | 'to220' | 'to92' | 'dip' | 'pad' | 'wire'
 
 export interface PerfPart {
   id: string
@@ -327,6 +327,7 @@ export interface PerfPart {
   face?: 'up' | 'down' | 'left' | 'right'
   optional?: boolean
   labelAt?: [dx: number, dy: number]
+  chip?: string
 }
 
 export interface PerfTrace {
@@ -425,6 +426,14 @@ export interface CarFaceDef<P> {
   power?: CarFacePower<P>
 }
 
+export interface StripPreviewDef<P, S> {
+  pieces: string[]
+  ledsPerPiece: number
+  lit: (s: S, p: P) => boolean[]
+  note: Html
+  power?: CarFacePower<P>
+}
+
 export interface Circuit<P, S> {
   id: string
   title: string
@@ -442,6 +451,7 @@ export interface Circuit<P, S> {
   miniBoard?: MiniBoardDef
   presets?: SimPreset<P>[]
   carFace?: CarFaceDef<P>
+  stripPreview?: StripPreviewDef<P, S>
   car?: CarDef
   trouble?: TroubleDef
   footer: string

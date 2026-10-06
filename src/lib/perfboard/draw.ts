@@ -218,6 +218,22 @@ function ceramic(a: Pt, b: Pt): string {
   return along(a, b, `<ellipse rx="${PITCH * 0.55}" ry="${PITCH * 0.32}" fill="#e08a2b" stroke="#8a4b10"/>`)
 }
 
+function to92(legs: Pt[], face: string, val: string): string {
+  const c = legs[1]
+  const vertical = legs[0].x === legs[2].x
+  const toward = face === 'left' || face === 'up' ? -1 : 1
+  const r = PITCH * 0.95
+  const arc = vertical
+    ? `M${c.x} ${c.y - r} A${r} ${r} 0 0 ${toward > 0 ? 0 : 1} ${c.x} ${c.y + r} Z`
+    : `M${c.x - r} ${c.y} A${r} ${r} 0 0 ${toward > 0 ? 1 : 0} ${c.x + r} ${c.y} Z`
+  const shift = vertical ? `translate(${-toward * 4} 0)` : `translate(0 ${-toward * 4})`
+  const tx = vertical ? c.x - toward * PITCH * 0.42 : c.x
+  const ty = vertical ? c.y + 3 : c.y - toward * PITCH * 0.42 + 3
+  return `<path d="${arc}" transform="${shift}" fill="#1b1b1b" stroke="#555"/>` +
+    `<text x="${tx}" y="${ty}" class="pf-chip" font-size="7"${vertical ? ` transform="rotate(-90 ${tx} ${ty})"` : ''}>${esc(val)}</text>` +
+    legs.map(legDot).join('')
+}
+
 function to220(legs: Pt[], face: string, val: string): string {
   const c = legs[1]
   const vertical = legs[0].x === legs[2].x
@@ -238,7 +254,7 @@ function to220(legs: Pt[], face: string, val: string): string {
     legs.map(legDot).join('')
 }
 
-function dip(legs: Pt[], inserted: boolean): string {
+function dip(legs: Pt[], inserted: boolean, chip: string): string {
   const xs = legs.map(p => p.x)
   const ys = legs.map(p => p.y)
   const isVertical = legs[0].x === legs[6].x
@@ -250,7 +266,7 @@ function dip(legs: Pt[], inserted: boolean): string {
   const cy = (y0 + y1) / 2
   const rotate = isVertical ? ` transform="rotate(-90 ${cx} ${cy})"` : ''
   const inner = inserted
-    ? `<rect x="${x0 + (isVertical ? 8 : 4)}" y="${y0 + (isVertical ? 4 : 8)}" width="${x1 - x0 - (isVertical ? 16 : 8)}" height="${y1 - y0 - (isVertical ? 8 : 16)}" rx="2" fill="#141414"/><text x="${cx}" y="${cy + 4}" class="pf-chip"${rotate}>CD40106</text>`
+    ? `<rect x="${x0 + (isVertical ? 8 : 4)}" y="${y0 + (isVertical ? 4 : 8)}" width="${x1 - x0 - (isVertical ? 16 : 8)}" height="${y1 - y0 - (isVertical ? 8 : 16)}" rx="2" fill="#141414"/><text x="${cx}" y="${cy + 4}" class="pf-chip"${rotate}>${esc(chip)}</text>`
     : `<text x="${cx}" y="${cy + 4}" class="pf-chip dim"${rotate}>قاعدة فاضية</text>`
   const notch = isVertical ? `<path d="M${cx - 7} ${y0} a7 7 0 0 0 14 0" fill="#666"/>` : `<path d="M${x0} ${cy - 7} a7 7 0 0 1 0 14" fill="#666"/>`
   const dot = { x: legs[0].x + Math.sign(cx - legs[0].x) * PITCH * 0.6, y: legs[0].y + Math.sign(cy - legs[0].y) * PITCH * 0.6 }
@@ -264,7 +280,10 @@ function pad(part: PerfPart, layout: PerfLayout, at: Project): string {
   const [x, y] = part.legs[0]
   const onSideEdge = x === 0 || x === layout.cols - 1
   const exitLeft = p.x < boardSize(layout).w / 2
-  const end = !onSideEdge && y === 0 ? { x: p.x, y: 0 } : { x: exitLeft ? 0 : boardSize(layout).w, y: p.y }
+  const size = boardSize(layout)
+  const end = !onSideEdge && y === 0 ? { x: p.x, y: 0 }
+    : !onSideEdge && y === layout.rows - 1 ? { x: p.x, y: size.h }
+      : { x: exitLeft ? 0 : size.w, y: p.y }
   const color = part.color ?? '#888'
   const line = `x1="${p.x}" y1="${p.y}" x2="${end.x}" y2="${end.y}"`
   return `<line ${line} stroke="#000" stroke-width="8" stroke-linecap="round"/><line ${line} stroke="${color}" stroke-width="5.5" stroke-linecap="round"/>` +
@@ -292,7 +311,8 @@ function partBody(part: PerfPart, layout: PerfLayout, view: PerfView, at: Projec
     case 'can': return electrolytic(legs[0], legs[1], span)
     case 'ceramic': return ceramic(legs[0], legs[1])
     case 'to220': return to220(legs, part.face ?? 'down', part.val)
-    case 'dip': return dip(legs, view.icInserted)
+    case 'dip': return dip(legs, view.icInserted, part.chip ?? 'CD40106')
+    case 'to92': return to92(legs, part.face ?? 'right', part.val)
     case 'pad': return pad(part, layout, at)
     case 'wire': return wireBody(part, legs, view.net === part.nets[0])
   }
@@ -316,6 +336,7 @@ function labelPos(part: PerfPart, at: Project): Pt {
     case 'pad': return { x: pts[0].x + (pts[0].x < 60 ? 16 : -16), y: pts[0].y - 9 }
     case 'resUp': return { x: pts[0].x - 2, y: pts[0].y + PITCH * 0.95 }
     case 'to220': return isVertical ? { x: c.x + PITCH * 1.05, y: c.y + 4 } : { x: c.x, y: c.y + PITCH * 1.2 }
+    case 'to92': return isVertical ? { x: c.x + (part.face === 'left' ? PITCH * 0.9 : -PITCH * 0.9), y: c.y - PITCH * 1.1 } : { x: c.x, y: c.y + PITCH * 1.3 }
     case 'can': return canCenter(part, at)
     default: return isVertical ? { x: c.x + PITCH * 0.75, y: c.y + 4 } : { x: c.x, y: c.y - PITCH * 0.55 }
   }
@@ -336,14 +357,15 @@ function bottomLabels(layout: PerfLayout, view: PerfView, at: Project): string {
     const p = at(part.legs[0])
     return `<text x="${p.x}" y="${p.y - PITCH * 0.45}" class="pf-blab" data-id="${part.id}">${esc(part.lab)}</text>`
   })
-  const dipPart = layout.parts.find(p => p.k === 'dip' && p.s <= view.stage)
-  const pts = (dipPart?.legs ?? []).map(at)
-  const center = pts.length ? { x: pts.reduce((t, p) => t + p.x, 0) / pts.length, y: pts.reduce((t, p) => t + p.y, 0) / pts.length } : { x: 0, y: 0 }
-  const isVertical = pts.length > 7 && pts[0].x === pts[6].x
-  const pins = pts.map((p, i) => {
-    const x = isVertical ? p.x + Math.sign(center.x - p.x) * PITCH * 0.6 : p.x
-    const y = isVertical ? p.y + 3 : p.y + Math.sign(center.y - p.y) * PITCH * 0.62 + 3
-    return `<text x="${x}" y="${y}" class="pf-pin">${i + 1}</text>`
+  const pins = layout.parts.filter(p => p.k === 'dip' && p.s <= view.stage).flatMap(dipPart => {
+    const pts = dipPart.legs.map(at)
+    const center = { x: pts.reduce((t, p) => t + p.x, 0) / pts.length, y: pts.reduce((t, p) => t + p.y, 0) / pts.length }
+    const isVertical = pts.length > 7 && pts[0].x === pts[6].x
+    return pts.map((p, i) => {
+      const x = isVertical ? p.x + Math.sign(center.x - p.x) * PITCH * 0.6 : p.x
+      const y = isVertical ? p.y + 3 : p.y + Math.sign(center.y - p.y) * PITCH * 0.62 + 3
+      return `<text x="${x}" y="${y}" class="pf-pin">${i + 1}</text>`
+    })
   })
   return legsOf.join('') + pins.join('')
 }
@@ -365,7 +387,7 @@ export function perfboardSvg(layout: PerfLayout, view: PerfView): string {
   return layers.join('') + rulers(layout, at, view.lettersFrom ?? 'left')
 }
 
-const THUMB_PAD: Partial<Record<PerfPart['k'], number>> = { to220: 2.1, dip: 1.2, can: 1.2, pad: 1.4 }
+const THUMB_PAD: Partial<Record<PerfPart['k'], number>> = { to220: 2.1, to92: 1.4, dip: 1.2, can: 1.2, pad: 1.4 }
 
 export function partThumbnail(layout: PerfLayout, part: PerfPart): { viewBox: string; svg: string } {
   const at = projector(layout, 'top')

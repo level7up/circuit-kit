@@ -4,15 +4,28 @@ export function dipTopViewSvg(title: string, partNo: string, roles: Record<numbe
   let s = `<svg viewBox="0 0 400 340" xmlns="http://www.w3.org/2000/svg"><text x="200" y="16" text-anchor="middle" fill="#ffb547" font-size="14" font-weight="700">${title}</text>`
   s += `<rect x="150" y="30" width="100" height="290" rx="8" fill="#1a2133" stroke="#e2e8f6" stroke-width="2"/><path d="M188,30 A12,12 0 0 0 212,30" fill="#0b0f17" stroke="#e2e8f6" stroke-width="2"/><circle cx="166" cy="50" r="4" fill="#e2e8f6"/>`
   s += `<text x="200" y="180" text-anchor="middle" fill="#8f9bb6" font-size="12" transform="rotate(-90 200 180)">${partNo}</text>`
-  for (let i = 0; i < 7; i++) {
-    const y = 58 + i * 40
+  const count = Object.keys(roles).length
+  const half = count / 2
+  const pitch = 240 / (half - 1)
+  for (let i = 0; i < half; i++) {
+    const y = 58 + i * pitch
     const l = i + 1
-    const r = 14 - i
+    const r = count - i
     s += `<rect x="132" y="${y - 7}" width="18" height="14" fill="#c9d3ea"/><rect x="250" y="${y - 7}" width="18" height="14" fill="#c9d3ea"/>`
     s += `<text x="160" y="${y + 4}" font-size="11" fill="#ffb547" font-weight="700">${l}</text><text x="240" y="${y + 4}" font-size="11" fill="#ffb547" font-weight="700" text-anchor="end">${r}</text>`
     s += `<text x="126" y="${y + 4}" font-size="11.5" text-anchor="end" fill="${roles[l][1]}">${roles[l][0]}</text><text x="274" y="${y + 4}" font-size="11.5" fill="${roles[r][1]}">${roles[r][0]}</text>`
   }
   return s + `<text x="200" y="336" text-anchor="middle" fill="#8f9bb6" font-size="11">${footer}</text></svg>`
+}
+
+export function to92Svg(title: string, names: string[], roles: string[], note: string): string {
+  let s = `<svg viewBox="0 0 220 290" xmlns="http://www.w3.org/2000/svg"><text x="110" y="16" text-anchor="middle" fill="#ffb547" font-size="14" font-weight="700">${title}</text>`
+  s += `<path d="M60 150 V80 A50 50 0 0 1 160 80 V150 Z" fill="#1a2133" stroke="#e2e8f6" stroke-width="2"/><text x="110" y="122" text-anchor="middle" fill="#cbd5ea" font-size="13" font-weight="700">${title}</text>`
+  s += `<text x="110" y="142" text-anchor="middle" fill="#8f9bb6" font-size="10">الوش المسطح ناحيتك</text>`
+  ;[80, 110, 140].forEach((x, i) => {
+    s += `<rect x="${x - 3}" y="150" width="6" height="74" fill="#c9d3ea"/><text x="${x}" y="244" text-anchor="middle" fill="#ffb547" font-size="13" font-weight="700">${names[i]}</text><text x="${x}" y="262" text-anchor="middle" fill="#8f9bb6" font-size="9.5">${roles[i]}</text>`
+  })
+  return s + `<text x="110" y="284" text-anchor="middle" fill="#ff5d5d" font-size="10.5" font-weight="700">${note}</text></svg>`
 }
 
 export function to220Svg(title: string, names: string[], roles: string[], tabNote: string, tabColor: string): string {

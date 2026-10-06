@@ -23,7 +23,7 @@ interface Row {
 
 const KIND_NAME: Record<string, string> = {
   res: 'مقاومة', resUp: 'مقاومة واقفة', diode: 'دايود', tvs: 'دايود حماية', ceramic: 'مكثف صغير',
-  can: 'مكثف كيميائي', to220: 'ترانزستور / منظّم', dip: 'IC', pad: 'سلك خارج', wire: 'سلكة معزولة من فوق'
+  can: 'مكثف كيميائي', to220: 'ترانزستور / منظّم', to92: 'ترانزستور صغير', dip: 'IC', pad: 'سلك خارج', wire: 'سلكة معزولة من فوق'
 }
 
 const phaseOf = (s: number) => props.phases.findIndex(p => p.s === s) + 1
@@ -33,7 +33,7 @@ const netName = (n: string) => props.layout.nets[n]?.n ?? 'مش متوصلة'
 const partRows = (layout: PerfLayout): Row[] => layout.parts.map(p => {
   const holes = p.legs.map(h => holeName(layout, h))
   const where = p.k === 'dip'
-    ? ['رجل 1: ' + holes[0], 'رجل 7: ' + holes[6], 'رجل 8: ' + holes[7], 'رجل 14: ' + holes[13]]
+    ? [1, holes.length / 2, holes.length / 2 + 1, holes.length].map(n => 'رجل ' + n + ': ' + holes[n - 1])
     : holes.map((hole, i) => hole + ' (' + netName(p.nets[i]) + ')')
   const isLead = p.k === 'wire'
   return {
