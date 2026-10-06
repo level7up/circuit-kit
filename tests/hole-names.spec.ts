@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { assembly as angelAssembly } from '../src/circuits/angel-eye/assembly'
 import { assembly } from '../src/circuits/parking-flicker/assembly'
 import { holeName, holeText } from '../src/lib/perfboard/draw'
 import { expandPath } from '../src/lib/perfboard/grid'
@@ -25,7 +26,7 @@ function usedNames(board: AssemblyBoard): Set<string> {
 const texts = (board: AssemblyBoard) =>
   [board.note, ...board.phases.flatMap(p => [p.b, p.x, p.m, ...p.c]), ...board.layout.parts.map(p => p.tip)]
 
-describe.each(assembly.boards.map(b => [b.label, b] as const))('hole names in %s', (_, board) => {
+describe.each([...assembly.boards, ...angelAssembly.boards].map(b => [b.label, b] as const))('hole names in %s', (_, board) => {
   const used = usedNames(board)
 
   it('tags only holes the layout actually uses', () => {

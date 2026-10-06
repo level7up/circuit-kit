@@ -15,7 +15,8 @@ import SectionHead from './SectionHead.vue'
 defineProps<{ num: number }>()
 const circuit = useCircuit()
 const asm = circuit.assembly!
-const bb = circuit.board!
+const bb = circuit.board
+const DEFAULT_GLOW = '#fff1c4'
 const sim = useSim()
 const LAMP_PANEL = 150
 const MIN_GLOW = 0.05
@@ -114,8 +115,8 @@ const svg = computed(() => perfboardSvg(layout.value, {
   focusCut: item.value?.kind === 'cut' ? item.value.index : undefined,
   lettersFrom: lettersFrom.value,
   ghosts: removedSet.value,
-  gone: bb.dynamics.hidden(sim.params.value),
-  ohmOf: id => bb.dynamics.ohm(id, sim.params.value)
+  gone: bb?.dynamics.hidden(sim.params.value),
+  ohmOf: id => bb?.dynamics.ohm(id, sim.params.value)
 }))
 const removedSet = computed(() => new Set(sim.removed.value))
 
@@ -132,7 +133,7 @@ const lamp = computed(() => {
     plus: { x: edge, y: holePoint(layout.value, plus.legs[0]).y },
     minus: { x: edge, y: holePoint(layout.value, minus.legs[0]).y },
     name: String(sim.params.value.lampName ?? ''),
-    color: bb.dynamics.glowColor(sim.params.value),
+    color: bb?.dynamics.glowColor(sim.params.value) ?? String(sim.params.value.lampGlow ?? DEFAULT_GLOW),
     level: MIN_GLOW + (1 - MIN_GLOW) * sim.brightness.value,
     removed: removedSet.value.has('LAMP')
   }
@@ -141,15 +142,15 @@ const viewWidth = computed(() => size.value.w + (lamp.value ? LAMP_PANEL : 0))
 
 const svgBox = ref<HTMLDivElement | null>(null)
 const popover = ref<{ id: string; x: number; y: number; width: number } | null>(null)
-const popoverPart = computed(() => (popover.value ? bb.parts.find(p => p.id === popover.value?.id) : undefined))
+const popoverPart = computed(() => (popover.value ? bb?.parts.find(p => p.id === popover.value?.id) : undefined))
 const closePopover = () => { popover.value = null }
 onDeactivated(closePopover)
 const openPopover = (id: string, e: MouseEvent) => {
   const box = svgBox.value?.getBoundingClientRect()
-  if (!box || !bb.parts.some(p => p.id === id)) return closePopover()
+  if (!box || !bb?.parts.some(p => p.id === id)) return closePopover()
   popover.value = popover.value?.id === id ? null : { id, x: e.clientX - box.left, y: e.clientY - box.top, width: box.width }
 }
-const chooseAlt = (key: string, index: number) => sim.setSwap(key, index, bb.alternatives)
+const chooseAlt = (key: string, index: number) => bb && sim.setSwap(key, index, bb.alternatives)
 const showSideInfo = () => {
   closePopover()
   document.querySelector('#assembly .asm-side')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -235,7 +236,7 @@ const onBoardClick = (e: MouseEvent) => {
           </div>
         </div>
         <p v-if="side === 'bottom'" class="asm-hint">ده شكل البورد <b>وهو مقلوب في إيدك</b>: الشمال بقى يمين. الخطوط الفضي = قصدير أو سلك عريان. دوس على أي خط عشان تعرف هو إيه.</p>
-        <p v-if="stripInfo" class="asm-hint warn">
+        <p v-if="stripInfo && stripInfo.cuts" class="asm-hint warn">
           فيرو: اقطع النحاس من تحت في <b>{{ stripInfo.cuts }}</b> مكان (الدواير الحمرا: لف بنطة 3–4 مم بإيدك في الخرم)، وركّب <b>{{ stripInfo.links }}</b> سلوك معزولة من فوق.
         </p>
         <div class="asm-work">
@@ -244,7 +245,7 @@ const onBoardClick = (e: MouseEvent) => {
             <g v-html="svg" />
             <BoardLamp v-if="lamp" v-bind="lamp" />
           </svg>
-          <PartPopover v-if="popover && popoverPart" :key="popover.id" :board="bb" :part="popoverPart" :easy="true" :swaps="sim.swaps.value" :removed="removedSet.has(popover.id)"
+          <PartPopover v-if="bb && popover && popoverPart" :key="popover.id" :board="bb" :part="popoverPart" :easy="true" :swaps="sim.swaps.value" :removed="removedSet.has(popover.id)"
             :x="popover.x" :y="popover.y" :area-width="popover.width" @close="closePopover" @choose="chooseAlt" @toggle-removed="sim.toggleRemoved" @details="showSideInfo" />
         </div>
         <BuildStepper :layout="layout" :item="item" :index="itemIndex" :count="items.length" :phase-title="'المرحلة ' + (phase + 1) + ': ' + current.t"
@@ -302,8 +303,8 @@ const onBoardClick = (e: MouseEvent) => {
     </div>
 
     <div class="gap" />
-    <h3 class="asm-h">🚗 المحاكي: شوف النتيجة قبل ما تلحم</h3>
-    <p class="asm-sub">نفس الدايرة اللي بتجمّعها، شغالة لايف بالشريط الـ 20 لمبة. اختار شكل الرعشة، والنتيجة هتبان على أنوار الركن. أي تغيير هنا بيتطبّق كمان في تبويب البريد بورد والمحاكي.</p>
+    <h3 class="asm-h">{{ asm.simTitle }}</h3>
+    <p class="asm-sub">{{ asm.simSub }}</p>
     <SimPresets v-if="circuit.presets" :presets="circuit.presets" />
     <CarFaceSim />
 

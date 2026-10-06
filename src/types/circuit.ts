@@ -354,6 +354,8 @@ export interface AssemblyDef {
   boards: AssemblyBoard[]
   skills: TitledCard[]
   mistakes: KindCard[]
+  simTitle: string
+  simSub: string
 }
 
 export interface MiniStage {
@@ -389,6 +391,19 @@ export interface SimPreset<P> {
   parts: PresetPart[]
 }
 
+export interface CarFacePower<P> {
+  get: (p: P) => number
+  set: (p: P, v: number) => P
+}
+
+export interface CarFaceDef<P> {
+  look: 'lamp' | 'ring'
+  plate: string
+  tag: string
+  note: Html
+  power?: CarFacePower<P>
+}
+
 export interface Circuit<P, S> {
   id: string
   title: string
@@ -405,6 +420,7 @@ export interface Circuit<P, S> {
   assembly?: AssemblyDef
   miniBoard?: MiniBoardDef
   presets?: SimPreset<P>[]
+  carFace?: CarFaceDef<P>
   car?: CarDef
   trouble?: TroubleDef
   footer: string
