@@ -1,5 +1,6 @@
 import type { AssemblyDef, AssemblyPhase } from '../../types/circuit'
 import { assembly as flickerAssembly } from '../parking-flicker/assembly'
+import { tvBoards } from './tv-boards'
 import { dotLayout, LEADS, PARTS, veroLayout } from './vero'
 
 const prep = (board: string, extra: string): AssemblyPhase => ({
@@ -43,14 +44,15 @@ const dotNote = 'مفيش خطوط نحاس: كل خط في الرسمة (من �
 
 export const assembly: AssemblyDef = {
   title: 'التجميع على البورد',
-  sub: 'بورد صغير أوي: 3 قطع و4 سلوك على حتة 2.5 × 1.3 سم. لو أول مرة تلحم، ابدأ بيه.',
+  sub: 'الأصلي <b>📺 رعشة تلفزيون</b>: نفس دايرة الرعشة على بورد نقط 3×7، بقيم التلفزيون (R1 220k · R2 47k · R3 10k · C8 1µF) والحلقتين مكان الشريط. ولو عايزها <b>⭕ ثابتة</b>: بورد حماية صغير 3 قطع بس.',
   intro: [
-    { kind: 'ok', title: '🧩 الفكرة في جملة', body: 'تلات صفوف: الدخل فوق، و+12V في النص، والأرضي تحت. D1 بين الدخل و+12V، وD2 وC1 بين +12V والأرضي، والحلقتين على +12V والأرضي.' },
-    { kind: 'warn', title: '🔄 قطعتين ليهم اتجاه', body: 'D1 (الشريطة لتحت ناحية +12V) وD2 (الشريطة لفوق ناحية +12V). المكثف 104 ملوش اتجاه.' }
+    { kind: 'ok', title: '📺 رعشة تلفزيون (الأصلي)', body: 'اختار <b>📺 بورد نقط</b> أو <b>📺 فيرو</b> فوق الرسمة: دايرة الرعشة كاملة بنفس الأماكن، بس 4 قيم متغيّرة: <b>R1 220k</b> و<b>R2 47k</b> و<b>R3 10k</b> و<b>C8 1µF</b>. الحلقتين على RING+ وRING−، والـ 3 × 68Ω زي ما هي.' },
+    { kind: 'warn', title: '⭕ ثابت (من غير رعشة)', body: 'اختار <b>⭕ ثابت</b>: تلات صفوف بس. D1 بين الدخل و+12V، وD2 وC1 بين +12V والأرضي، والحلقتين على +12V والأرضي. D1 وD2 ليهم اتجاه، والمكثف 104 لأ.' }
   ],
   boards: [
-    { id: 'dot', label: 'بورد نقط · 10 × 5', layout: dotLayout, note: dotNote, phases: [prep('بورد النقط كل خرم لوحده.', '<li>جهّز سلكة عريانة (أو رجول مقصوصة) للخطوط اللي تحت.</li>'), ...shared] },
-    { id: 'vero', label: 'فيرو (خطوط) · 10 × 5', layout: veroLayout, note: veroNote, phases: [prep('امسكها والخطوط النحاس <b>بالعرض</b> من تحت.', ''), ...shared] }
+    ...tvBoards,
+    { id: 'dot', label: '⭕ ثابت · بورد نقط 10 × 5', layout: dotLayout, note: dotNote, phases: [prep('بورد النقط كل خرم لوحده.', '<li>جهّز سلكة عريانة (أو رجول مقصوصة) للخطوط اللي تحت.</li>'), ...shared] },
+    { id: 'vero', label: '⭕ ثابت · فيرو 10 × 5', layout: veroLayout, note: veroNote, phases: [prep('امسكها والخطوط النحاس <b>بالعرض</b> من تحت.', ''), ...shared] }
   ],
   skills: flickerAssembly.skills,
   mistakes: [

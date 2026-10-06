@@ -149,7 +149,50 @@ describe('angel eye interactive steps', () => {
   })
 
   it('opens the dot board first in both circuits', () => {
-    expect(angel.assembly!.boards[0].id).toBe('dot')
+    expect(angel.assembly!.boards[0].id).toBe('tv-dot')
     expect(flicker.assembly!.boards[0].id).toBe('dot37')
+  })
+})
+
+describe('angel eye old TV board and parts list', () => {
+  const angel = circuits.find(c => c.id === 'angel-eye')!
+  const tvBoardsOnly = angel.assembly!.boards.filter(b => b.id.startsWith('tv-'))
+  const valueOf = (board: (typeof tvBoardsOnly)[number], id: string) => board.layout.parts.find(p => p.id === id)?.val
+
+  it('offers the full flicker circuit on dot and vero boards', () => {
+    expect(tvBoardsOnly.map(b => b.id)).toEqual(['tv-dot', 'tv-vero'])
+  })
+
+  it('uses the old TV values on the board', () => {
+    tvBoardsOnly.forEach(b => {
+      expect([valueOf(b, 'R1'), valueOf(b, 'R2'), valueOf(b, 'R3'), valueOf(b, 'C8')], b.id).toEqual(['220kΩ', '47kΩ', '10kΩ', '1µF'])
+      expect(valueOf(b, 'Q1'), b.id).toBe('TIP122')
+    })
+  })
+
+  it('never mentions the candle values in the TV board texts', () => {
+    tvBoardsOnly.forEach(b => {
+      const texts = [b.note, ...b.phases.flatMap(p => [p.t, p.m, p.b, p.x, ...p.c]), ...b.layout.parts.flatMap(p => [p.val, p.tip])].join(' ')
+      expect(texts, b.id).not.toMatch(/1MΩ|390k|100kΩ|22µF|\b1M\b/)
+    })
+  })
+
+  it('keeps the TV boards wired exactly like the flicker boards', () => {
+    tvBoardsOnly.forEach(b => {
+      const problems = b.layout.strips && b.layout.look !== 'breadboard' ? verifyStripLayout(b.layout) : verifyPerfboard(b.layout)
+      expect(problems, b.id).toEqual([])
+    })
+  })
+
+  it('lists every TV value in the parts list', () => {
+    const items = angel.bom!.rows.filter((r): r is Extract<typeof r, { n: string }> => 'n' in r)
+    const specs = items.map(r => r.s).join(' | ')
+    expect(specs).toContain('220kΩ')
+    expect(specs).toContain('CD40106')
+    expect(specs).toContain('TIP122')
+    expect(specs).not.toMatch(/1MΩ|390kΩ|100kΩ|22µF/)
+    expect(items.find(r => r.s.startsWith('1µF'))?.q).toBe(4)
+    expect(items.find(r => r.s.startsWith('10kΩ'))?.q).toBe(3)
+    expect(items.find(r => r.s.startsWith('47kΩ'))?.q).toBe(2)
   })
 })
