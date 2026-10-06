@@ -27,7 +27,7 @@ export const STEADY = 0
 export const OLD_TV = 1
 export const TV_R = [220e3, 47e3, 10e3]
 export const TV_CN = 1e-6
-export const TV_EMITTER = [33, 33, 33]
+export const TV_EMITTER = [68, 68, 68]
 
 export const DIODE_DROP = 0.7
 export const SEG_KNEE = 9
@@ -62,7 +62,7 @@ export const defaults: AngelParams = withLook({
   segments: 6,
   rings: 2,
   power: POWER_ON,
-  style: STEADY,
+  style: OLD_TV,
   color: 0,
   lampName: '',
   lampGlow: ''

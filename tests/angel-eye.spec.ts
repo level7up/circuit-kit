@@ -53,16 +53,16 @@ describe('angel eye board', () => {
 
 describe('angel eye simulator', () => {
   it('lights fully as soon as the parking lights are on', () => {
-    expect(run({ ...defaults, power: POWER_ON }, 0.002).br).toBe(1)
+    expect(run({ ...defaults, style: STEADY, power: POWER_ON }, 0.002).br).toBe(1)
   })
 
   it('goes dark as soon as the parking lights are off', () => {
-    const lit = run({ ...defaults, power: POWER_ON }, 0.5)
-    expect(run({ ...defaults, power: POWER_OFF }, 0.002, lit).br).toBe(0)
+    const lit = run({ ...defaults, style: STEADY, power: POWER_ON }, 0.5)
+    expect(run({ ...defaults, style: STEADY, power: POWER_OFF }, 0.002, lit).br).toBe(0)
   })
 
-  it('stays at one steady brightness with no animation', () => {
-    const p = { ...defaults, power: POWER_ON }
+  it('stays at one steady brightness with no animation in steady style', () => {
+    const p = { ...defaults, style: STEADY, power: POWER_ON }
     const levels = new Set<number>()
     let s = run(p, 0.01)
     for (let i = 0; i < 50; i++) {
@@ -101,9 +101,9 @@ describe('angel eye simulator', () => {
 })
 
 describe('angel eye light styles', () => {
-  it('starts steady', () => {
-    expect(defaults.style).toBe(STEADY)
-    expect(lightStyles.filter(s => s.isActive(defaults)).map(s => s.id)).toEqual(['steady'])
+  it('starts as an old TV flicker', () => {
+    expect(defaults.style).toBe(OLD_TV)
+    expect(lightStyles.filter(s => s.isActive(defaults)).map(s => s.id)).toEqual(['tv'])
   })
 
   it('makes each style active once applied', () => {
