@@ -105,10 +105,17 @@ export interface BuildStep {
   scene?: SceneFrame[]
 }
 
+export interface StepsVariant {
+  id: string
+  label: string
+  items: BuildStep[]
+}
+
 export interface StepsDef {
   title: string
   sub: Html
   items: BuildStep[]
+  variants?: StepsVariant[]
 }
 
 export interface WireGroup {

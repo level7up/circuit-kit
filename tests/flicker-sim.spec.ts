@@ -276,3 +276,18 @@ describe('angel eye rings on the flicker circuit', () => {
     })
   })
 })
+
+describe('5 mm LED rings on the flicker circuit', () => {
+  const share = (text: string) => {
+    const p = alternatives.lamp.find(o => o.t.startsWith(text))!.fx!(defaults)
+    return Math.min(1, maxLampCurrent(p) / lampLimits(p).limit)
+  }
+
+  it('drives one 5 mm ring fully', () => {
+    expect(share('حلقة Angel eye من LED 5mm')).toBe(1)
+  })
+
+  it('reaches about 87% with two 5 mm rings on the kit resistors', () => {
+    expect(share('حلقتين Angel eye من LED 5mm')).toBeCloseTo(0.87, 1)
+  })
+})

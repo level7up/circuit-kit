@@ -185,3 +185,47 @@ export function ringGlyph(cx: number, cy: number, r: number, lit = true): string
   return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#3a4252" stroke-width="${Math.max(5, r * 0.22)}"/>` +
     glow
 }
+
+export function led5(x: number, y: number, lit = false, r = 9): string {
+  const glow = lit ? `<circle cx="${x}" cy="${y}" r="${r * 2}" fill="${COLORS.glow}" opacity=".55" filter="url(#sc-blur)"/>` : ''
+  return glow + `<circle cx="${x}" cy="${y}" r="${r}" fill="${lit ? COLORS.ledOn : '#dfe6ee'}" stroke="#8a96a8" stroke-width="1.5"/>` +
+    `<circle cx="${x - r * 0.3}" cy="${y - r * 0.3}" r="${r * 0.3}" fill="#fff" opacity=".7"/>`
+}
+
+export function ledSide(x: number, y: number, lit = false, size = 1): string {
+  const w = 22 * size
+  const h = 30 * size
+  const glow = lit ? `<ellipse cx="${x}" cy="${y - h * 0.4}" rx="${w * 1.3}" ry="${h * 0.9}" fill="${COLORS.glow}" opacity=".55" filter="url(#sc-blur)"/>` : ''
+  return glow +
+    `<line x1="${x - w * 0.22}" y1="${y + h * 0.5}" x2="${x - w * 0.22}" y2="${y + h * 1.9}" stroke="#b8c0cc" stroke-width="${2.4 * size}"/>` +
+    `<line x1="${x + w * 0.22}" y1="${y + h * 0.5}" x2="${x + w * 0.22}" y2="${y + h * 2.5}" stroke="#b8c0cc" stroke-width="${2.4 * size}"/>` +
+    `<path d="M${x - w / 2} ${y + h * 0.5} V${y - h * 0.2} A${w / 2} ${w / 2} 0 0 1 ${x + w / 2} ${y - h * 0.2} V${y + h * 0.5} Z" fill="${lit ? COLORS.ledOn : '#e6edf5'}" stroke="#8a96a8" stroke-width="1.5" opacity=".95"/>` +
+    `<rect x="${x - w * 0.62}" y="${y + h * 0.42}" width="${w * 1.24}" height="${h * 0.14}" rx="2" fill="#cfd8e3" stroke="#8a96a8"/>`
+}
+
+export function resistor(x1: number, y1: number, x2: number, y2: number, ohm = 220): string {
+  const bands = ohm === 220 ? ['#d42a2a', '#d42a2a', '#7a4a1e', '#c9a227'] : ['#7a4a1e', '#161616', '#d42a2a', '#c9a227']
+  const len = Math.hypot(x2 - x1, y2 - y1)
+  const rot = (Math.atan2(y2 - y1, x2 - x1) * 180) / Math.PI
+  const body = Math.min(34, len * 0.6)
+  const start = (len - body) / 2
+  return `<g transform="translate(${x1} ${y1}) rotate(${rot})">` +
+    `<line x1="0" y1="0" x2="${len}" y2="0" stroke="#b8c0cc" stroke-width="2.2"/>` +
+    `<rect x="${start}" y="-6" width="${body}" height="12" rx="5" fill="#e6cf9c" stroke="#8b6d3a"/>` +
+    bands.map((c, i) => `<rect x="${start + body * (0.18 + i * 0.2)}" y="-6" width="${body * 0.09}" height="12" fill="${c}"/>`).join('') +
+    `</g>`
+}
+
+export interface LedRingPoint {
+  led: Pt
+  plus: Pt
+  minus: Pt
+}
+
+export function ledRingPoints(cx: number, cy: number, r: number, count: number, legGap = 9): LedRingPoint[] {
+  return Array.from({ length: count }, (_, i) => {
+    const a = (i / count) * Math.PI * 2 - Math.PI / 2
+    const at = (rr: number): Pt => [cx + rr * Math.cos(a), cy + rr * Math.sin(a)]
+    return { led: at(r), plus: at(r + legGap), minus: at(r - legGap) }
+  })
+}

@@ -3,7 +3,7 @@ import { circuits } from '../src/circuits'
 import { lightStyles } from '../src/circuits/angel-eye/styles'
 import { SCHEMATIC, dotLayout, veroLayout } from '../src/circuits/angel-eye/vero'
 import {
-  OLD_TV, POWER_OFF, POWER_ON, STEADY, angelSim, defaults, perSegment, ringCurrent, ringDiameterCm,
+  LED_RING, OLD_TV, POWER_OFF, POWER_ON, STEADY, angelSim, withLook, defaults, perSegment, ringCurrent, ringDiameterCm,
   type AngelParams, type AngelState
 } from '../src/circuits/angel-eye/simulate'
 import { verifyPerfboard } from '../src/lib/perfboard/grid'
@@ -194,5 +194,37 @@ describe('angel eye old TV board and parts list', () => {
     expect(items.find(r => r.s.startsWith('1µF'))?.q).toBe(4)
     expect(items.find(r => r.s.startsWith('10kΩ'))?.q).toBe(3)
     expect(items.find(r => r.s.startsWith('47kΩ'))?.q).toBe(2)
+  })
+})
+
+describe('angel eye 5 mm LED ring option', () => {
+  const angel = circuits.find(c => c.id === 'angel-eye')!
+
+  it('offers both ring methods in the steps tab', () => {
+    expect(angel.steps!.variants!.map(v => v.id)).toEqual(['strip', 'leds'])
+  })
+
+  it('illustrates every 5 mm step and shares the circuit and car steps', () => {
+    const [strip, leds] = angel.steps!.variants!
+    leds.items.forEach(s => expect(s.scene?.length, s.t).toBeGreaterThan(0))
+    expect(leds.items.slice(-4).map(s => s.t)).toEqual(strip.items.slice(-4).map(s => s.t))
+  })
+
+  it('keeps 5 mm scene points inside the drawing', () => {
+    angel.steps!.variants![1].items.flatMap(s => s.scene ?? []).flatMap(f => f.spots ?? []).forEach(spot => {
+      expect(spot.x, spot.t).toBeGreaterThanOrEqual(0)
+      expect(spot.x, spot.t).toBeLessThanOrEqual(SCENE_W)
+      expect(spot.y, spot.t).toBeGreaterThanOrEqual(0)
+      expect(spot.y, spot.t).toBeLessThanOrEqual(SCENE_H)
+    })
+  })
+
+  it('runs each 3-LED group near 19 mA with the engine running', () => {
+    const p = { ...defaults, style: STEADY, ringType: LED_RING, Vin: 13.8 }
+    expect(perSegment(p, ringCurrent(p, true))).toBeCloseTo(0.0186, 3)
+  })
+
+  it('names the 5 mm ring so the drawings show a ring', () => {
+    expect(withLook({ ...defaults, ringType: LED_RING }).lampName).toBe('حلقتين 18 LED 5mm')
   })
 })

@@ -3,7 +3,7 @@ import { assembly } from './assembly'
 import { bom } from './bom'
 import { car, carFace, footer, hero, overview, pinouts } from './content'
 import { angelSim, type AngelParams, type AngelState } from './simulate'
-import { steps } from './steps'
+import { stepVariants, steps } from './steps'
 import { lightStyles } from './styles'
 import { trouble, wiring } from './wiring'
 
@@ -27,8 +27,9 @@ export const angelEye: Circuit<AngelParams, AngelState> = {
   },
   steps: {
     title: 'خطوات التنفيذ: من الشريط للفانوس',
-    sub: 'الحلقة الأول، وبعدين الدايرة، وبعدين العربية. <b>جرّب على الأدابتر بعد كل خطوة.</b>',
-    items: steps
+    sub: 'اختار الحلقة هتتعمل من إيه: <b>حتت شريط LED</b> (مسدس) أو <b>LED 5mm</b> في غطا مخروم (دايرة حقيقية). وبعدين الدايرة والعربية. <b>جرّب على الأدابتر بعد كل خطوة.</b>',
+    items: steps,
+    variants: stepVariants
   },
   wiring: {
     title: 'قائمة التوصيلات',
