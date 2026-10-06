@@ -170,6 +170,8 @@ export const eduOf: Record<string, string> = {
 
 const T10 = { lampKind: 'led' as const, lampFull: 0.06, lampTau: 0, lampName: 'T10 LED', lampGlow: '#ffd27a', emitter: [68, 68] }
 const STRIP_20 = { lampKind: 'led' as const, lampFull: 0.14, lampTau: 0, lampName: 'شريط 20 لمبة', lampGlow: '#fff1c4' }
+const RING = { lampKind: 'led' as const, lampFull: 0.12, lampTau: 0, lampName: 'حلقة 18 لمبة', lampGlow: '#eef5ff' }
+const TWO_RINGS = { ...RING, lampFull: 0.24, lampName: 'حلقتين 18 لمبة' }
 
 export const alternatives: Record<string, AltOption<FlickerParams>[]> = {
   adapter: [
@@ -457,6 +459,9 @@ export const alternatives: Record<string, AltOption<FlickerParams>[]> = {
     { t: "شريط LED 2835 · 20 لمبة + 4 × 100Ω", st: "ok", fx: p => ({ ...p, ...STRIP_20, emitter: [100, 100, 100, 100] }), r: "لو معاكش 68Ω: الأربعة مع بعض = 25Ω، والشريط بيوصل لحوالي 97% من نوره. ركّبهم في R8 وR9 وR10 وR11." },
     { t: "شريط LED 2835 · 20 لمبة + 2 × 68Ω بس", st: "warn", fx: p => ({ ...p, ...STRIP_20, emitter: [68, 68] }), r: "الـ 20 لمبة محتاجين حوالي 140mA، و2 × 68Ω مش بيعدّوا غير حوالي 95mA. فالشريط بيوصل لحوالي 70% بس في أعلى نقطة." },
     { t: "شريط LED 2835 · 10 لمبات + 2 × 68Ω", st: "ok", fx: p => ({ ...p, ...STRIP_20, lampFull: 0.07, lampName: 'شريط 10 لمبات', emitter: [68, 68] }), r: "الـ 10 لمبات بيسحبوا حوالي 70mA، فـ 2 × 68Ω كفاية وبيوصلوه لآخر نوره، والرعشة من حوالي 35% لـ 100%. مع 3 × 68Ω الشريط بيتشبّع أكتر والرعشة بتبقى أهدى." },
+    { t: "حلقة Angel eye واحدة (18 لمبة) + 3 × 68Ω", st: "ok", fx: p => ({ ...p, ...RING, emitter: [68, 68, 68] }), r: "الحلقة من تبويب Angel eye: 6 حتت × 3 لمبات. بتسحب حوالي 120mA، أقل من الشريط الـ 20 لمبة، فبتوصل لآخر نورها وبترعش زيه بالظبط. وصّل + على الأصفر و− على الأزرق." },
+    { t: "حلقتين Angel eye (الفانوسين) + 3 × 68Ω", st: "warn", fx: p => ({ ...p, ...TWO_RINGS, emitter: [68, 68, 68] }), r: "الحلقتين محتاجين حوالي 240mA، و3 × 68Ω مش بيعدّوا غير حوالي 140mA، فبيوصلوا لحوالي 58% بس في أعلى نقطة. الرعشة شغالة بس أهدى. زوّد 68Ω رابعة في R11." },
+    { t: "حلقتين Angel eye + 4 × 68Ω (R8 لحد R11)", st: "ok", fx: p => ({ ...p, ...TWO_RINGS, emitter: [68, 68, 68, 68] }), r: "الأربعة مع بعض = 17Ω، فبيعدّوا حوالي 190mA والحلقتين بيوصلوا لحوالي 78% في أعلى نقطة. + الحلقتين مع بعض على الأصفر و− مع بعض على الأزرق. حط مشتت حراري معزول للـ TIP122." },
     { t: "T10 LED 12V · لمبة واحدة (التصميم الأصلي)", st: "ok", fx: p => ({ ...p, ...T10 }), r: "التصميم الأصلي: لمبة T10 LED واحدة و2 × 68Ω. بتسحب حوالي 60mA والرعشة من حوالي 40% لـ 100%." },
     { t: "أي T10 أو W5W LED عادية", st: "ok", fx: p => ({ ...p, ...T10 }), r: "زي التصميم الأصلي بالظبط." },
     { t: "T10 CANbus", st: "warn", fx: p => ({ ...p, ...T10, lampName: 'T10 CANbus' }), r: "بتشتغل، بس جواها مقاومة بتسحب تيار زيادة، فهي والـ TIP122 بيسخنوا أكتر." },

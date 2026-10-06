@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { applySwaps } from '../src/composables/useSimulation'
 import { board } from '../src/circuits/parking-flicker/board'
-import { defaults, flickerSim, type FlickerParams } from '../src/circuits/parking-flicker/simulate'
+import { alternatives } from '../src/circuits/parking-flicker/edu'
+import { defaults, flickerSim, lampLimits, maxLampCurrent, type FlickerParams } from '../src/circuits/parking-flicker/simulate'
 
 interface Stats { min: number; max: number; avg: number; offShare: number; slowFlips: number }
 
@@ -247,5 +248,31 @@ describe('parking flicker simulation', () => {
     const r = run(swap('lamp', pick('lamp', '20 لمبة + 4 × 100Ω')))
     expect(r.max).toBeGreaterThan(0.95)
     expect(r.offShare).toBe(0)
+  })
+})
+
+describe('angel eye rings on the flicker circuit', () => {
+  const ringOption = (text: string) => alternatives.lamp.find(o => o.t.startsWith(text))!
+  const peakShare = (text: string) => {
+    const p = ringOption(text).fx!(defaults)
+    return Math.min(1, maxLampCurrent(p) / lampLimits(p).limit)
+  }
+
+  it('drives one ring to full brightness with the kit resistors', () => {
+    expect(peakShare('حلقة Angel eye واحدة')).toBe(1)
+  })
+
+  it('reaches about 58% with two rings on 3 x 68 ohm', () => {
+    expect(peakShare('حلقتين Angel eye (الفانوسين)')).toBeCloseTo(0.58, 1)
+  })
+
+  it('reaches about 78% with two rings on 4 x 68 ohm', () => {
+    expect(peakShare('حلقتين Angel eye + 4')).toBeCloseTo(0.78, 1)
+  })
+
+  it('names every ring option so the board and car face draw rings', () => {
+    ['حلقة Angel eye واحدة', 'حلقتين Angel eye (الفانوسين)', 'حلقتين Angel eye + 4'].forEach(t => {
+      expect(ringOption(t).fx!(defaults).lampName).toContain('حلق')
+    })
   })
 })

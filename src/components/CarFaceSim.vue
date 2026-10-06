@@ -19,7 +19,7 @@ const HEADLIGHTS = [245, 555]
 const circuit = useCircuit()
 const sim = useSim()
 const face = circuit.carFace
-const isRing = face?.look === 'ring'
+const isRing = computed(() => face?.look === 'ring' || String(sim.params.value.lampName ?? '').includes('حلق'))
 const power = face?.power
 const localOn = ref(true)
 const powerLevel = computed(() => (power ? power.get(sim.params.value) : localOn.value ? POWER_ON : POWER_OFF))
