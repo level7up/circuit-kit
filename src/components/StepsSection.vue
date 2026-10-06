@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue'
 import { useCircuit, useGuide } from '../composables/context'
 import SectionHead from './SectionHead.vue'
+import StepScene from './StepScene.vue'
 
 defineProps<{ num: number }>()
 const st = useCircuit().steps!
@@ -27,6 +28,8 @@ const toggle = (j: number) => {
       </div>
     </div>
     <div class="progress"><i :style="{ width: progress + '%' }" /></div>
+    <div class="st-work" :class="{ 'has-scene': current.scene }">
+    <div v-if="current.scene" class="card st-scene"><StepScene :frames="current.scene" /></div>
     <div class="card step">
       <span class="tag">الخطوة {{ step + 1 }} من {{ st.items.length }}</span>
       <h3>{{ current.t }}</h3>
@@ -43,5 +46,13 @@ const toggle = (j: number) => {
         <button class="btn pri" :disabled="step === st.items.length - 1" @click="step++">التالية ←</button>
       </div>
     </div>
+    </div>
   </section>
 </template>
+
+<style scoped>
+.st-work.has-scene{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:14px;align-items:start}
+.st-work.has-scene .step{margin-top:0}
+.st-scene{padding:12px;position:sticky;top:64px}
+@media(max-width:960px){.st-work.has-scene{grid-template-columns:minmax(0,1fr)}.st-scene{position:static}}
+</style>

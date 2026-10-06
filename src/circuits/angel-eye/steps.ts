@@ -1,6 +1,10 @@
-import type { BuildStep } from '../../types/circuit'
+import type { BuildStep, SceneFrame } from '../../types/circuit'
+import { boardScene, carScene, fadeTestScene, sealScene } from './scenes-circuit'
+import { baseScene, cutScene, drawScene, joinScene, leadsScene, testScene } from './scenes-ring'
 
-export const steps: BuildStep[] = [
+const SCENES: SceneFrame[][] = [testScene, drawScene, cutScene, joinScene, baseScene, leadsScene, boardScene, fadeTestScene, carScene, sealScene]
+
+const plainSteps: BuildStep[] = [
   {
     t: 'جرّب الشريط الأول',
     m: '⏱ 10 دقايق · الشريط + أدابتر 12V',
@@ -72,3 +76,5 @@ export const steps: BuildStep[] = [
     x: 'بعد مشوار نص ساعة بالليل: الحلقتين ثابتين ومفيش حتة طفت.'
   }
 ]
+
+export const steps: BuildStep[] = plainSteps.map((step, i) => ({ ...step, scene: SCENES[i] }))

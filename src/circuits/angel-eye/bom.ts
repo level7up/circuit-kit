@@ -11,7 +11,7 @@ export const bom: BomRow[] = [
   { n: 'مكثف كيميائي', s: '100µF / 50V · C2 (مكثف الفيد)', q: 1, p: 1.5, u: MK + 'capacitor-100uf-50v-6x12mm', on: 1 },
   { n: 'مقاومة', s: '10kΩ ¼W · R1', q: 1, p: 0.15, u: MK + '2pcs-carbon-resistor-10k%cf%89-0-25w-thr/', on: 1 },
   { n: 'مقاومة', s: '22kΩ ¼W · R2', q: 1, p: 0.15, u: MK + 'carbon-resistor-22k%cf%89-0-25w-through/', on: 1 },
-  { n: 'بورد مثقّب', s: 'حتة 16 × 8 خرم من فيرو 3×7 سم', q: 1, p: 10, est: 1, u: 'https://makerselectronics.com/product-category/breadboards-pcb-boards/page/2/', on: 1 },
+  { n: 'بورد مثقّب', s: 'حتة 16 × 8 خرم من بورد نقط 3×7 سم (أو فيرو)', q: 1, p: 10, est: 1, u: 'https://makerselectronics.com/product-category/breadboards-pcb-boards/page/2/', on: 1 },
   { g: 'الحلقة' },
   { n: 'شريط LED', s: 'شريط 12V أبيض 2835 · 60 لمبة/متر · نص متر يكفي حلقتين', q: 1, p: 35, est: 1, on: 1 },
   { g: 'من البيت (ببلاش)' },

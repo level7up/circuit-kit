@@ -7,6 +7,7 @@ import {
   type AngelParams, type AngelState
 } from '../src/circuits/angel-eye/simulate'
 import { verifyPerfboard } from '../src/lib/perfboard/grid'
+import { SCENE_H, SCENE_W } from '../src/lib/scene/draw'
 import { verifyStripLayout } from '../src/lib/perfboard/strips'
 import type { PerfLayout } from '../src/types/circuit'
 
@@ -121,5 +122,35 @@ describe('angel eye fade styles', () => {
 describe('circuit list', () => {
   it('offers the angel eye next to the flicker', () => {
     expect(circuits.map(c => c.id)).toEqual(['parking-flicker', 'angel-eye'])
+  })
+})
+
+describe('angel eye interactive steps', () => {
+  const angel = circuits.find(c => c.id === 'angel-eye')!
+  const flicker = circuits.find(c => c.id === 'parking-flicker')!
+
+  it('gives every build step an illustrated walkthrough', () => {
+    angel.steps!.items.forEach(s => {
+      expect(s.scene?.length, s.t).toBeGreaterThan(0)
+      s.scene!.forEach(f => {
+        expect(f.svg.length).toBeGreaterThan(0)
+        expect(f.say).not.toMatch(/undefined|NaN/)
+        expect(f.svg).not.toMatch(/undefined|NaN/)
+      })
+    })
+  })
+
+  it('keeps every tappable point inside the drawing', () => {
+    angel.steps!.items.flatMap(s => s.scene ?? []).flatMap(f => f.spots ?? []).forEach(spot => {
+      expect(spot.x, spot.t).toBeGreaterThanOrEqual(0)
+      expect(spot.x, spot.t).toBeLessThanOrEqual(SCENE_W)
+      expect(spot.y, spot.t).toBeGreaterThanOrEqual(0)
+      expect(spot.y, spot.t).toBeLessThanOrEqual(SCENE_H)
+    })
+  })
+
+  it('opens the dot board first in both circuits', () => {
+    expect(angel.assembly!.boards[0].id).toBe('dot')
+    expect(flicker.assembly!.boards[0].id).toBe('dot37')
   })
 })

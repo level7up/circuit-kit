@@ -57,8 +57,8 @@ export const assembly: AssemblyDef = {
     { kind: 'warn', title: '🔄 3 قطع ليها اتجاه', body: 'D1 وD2 (الشريطة لتحت)، وC2 (الطويلة على S)، والـ TIP122 (الكتابة ناحية اليمين). راجعهم قبل اللحام.' }
   ],
   boards: [
-    { id: 'vero', label: 'فيرو (خطوط) · 16 × 8', layout: veroLayout, note: veroNote, phases: [prep('امسكها والخطوط النحاس <b>بالعرض</b> من تحت.', ''), ...shared] },
-    { id: 'dot', label: 'بورد نقط · 16 × 8', layout: dotLayout, note: dotNote, phases: [prep('بورد النقط كل خرم لوحده.', '<li>جهّز سلكة عريانة (أو رجول مقصوصة) للخطوط اللي تحت.</li>'), ...shared] }
+    { id: 'dot', label: 'بورد نقط · 16 × 8', layout: dotLayout, note: dotNote, phases: [prep('بورد النقط كل خرم لوحده.', '<li>جهّز سلكة عريانة (أو رجول مقصوصة) للخطوط اللي تحت.</li>'), ...shared] },
+    { id: 'vero', label: 'فيرو (خطوط) · 16 × 8', layout: veroLayout, note: veroNote, phases: [prep('امسكها والخطوط النحاس <b>بالعرض</b> من تحت.', ''), ...shared] }
   ],
   skills: flickerAssembly.skills,
   mistakes: [

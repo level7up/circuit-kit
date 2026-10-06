@@ -83,12 +83,26 @@ export interface BomDef {
   footnote: Html
 }
 
+export interface SceneSpot {
+  x: number
+  y: number
+  t: string
+  d: Html
+}
+
+export interface SceneFrame {
+  say: Html
+  svg: string
+  spots?: SceneSpot[]
+}
+
 export interface BuildStep {
   t: string
   m: string
   b: Html
   c: string[]
   x: Html
+  scene?: SceneFrame[]
 }
 
 export interface StepsDef {
