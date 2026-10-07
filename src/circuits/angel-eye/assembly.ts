@@ -2,6 +2,7 @@ import type { AssemblyDef, AssemblyPhase } from '../../types/circuit'
 import { assembly as flickerAssembly } from '../parking-flicker/assembly'
 import { tvBoards } from './tv-boards'
 import { dotLayout, LEADS, PARTS, veroLayout } from './vero'
+import { welcomeBoard } from './welcome-assembly'
 
 const prep = (board: string, extra: string): AssemblyPhase => ({
   s: 1,
@@ -52,7 +53,8 @@ export const assembly: AssemblyDef = {
   boards: [
     ...tvBoards,
     { id: 'dot', label: '⭕ ثابت · بورد نقط 10 × 5', layout: dotLayout, note: dotNote, phases: [prep('بورد النقط كل خرم لوحده.', '<li>جهّز سلكة عريانة (أو رجول مقصوصة) للخطوط اللي تحت.</li>'), ...shared] },
-    { id: 'vero', label: '⭕ ثابت · فيرو 10 × 5', layout: veroLayout, note: veroNote, phases: [prep('امسكها والخطوط النحاس <b>بالعرض</b> من تحت.', ''), ...shared] }
+    { id: 'vero', label: '⭕ ثابت · فيرو 10 × 5', layout: veroLayout, note: veroNote, phases: [prep('امسكها والخطوط النحاس <b>بالعرض</b> من تحت.', ''), ...shared] },
+    welcomeBoard
   ],
   skills: flickerAssembly.skills,
   mistakes: [

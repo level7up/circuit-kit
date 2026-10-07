@@ -2,8 +2,9 @@ import type { BuildStep, SceneFrame, StepsVariant } from '../../types/circuit'
 import { ledBusScene, ledFinishScene, ledGroupScene, ledHoleScene, ledMarkScene, ledTestScene } from './scenes-leds'
 import { benchScene, boardScene, carScene, sealScene } from './scenes-circuit'
 import { baseScene, cutScene, drawScene, joinScene, leadsScene, testScene } from './scenes-ring'
+import { welcomeCarScene, welcomeIdeaScene } from './scenes-welcome'
 
-const SCENES: SceneFrame[][] = [testScene, drawScene, cutScene, joinScene, baseScene, leadsScene, boardScene, benchScene, carScene, sealScene]
+const SCENES: SceneFrame[][] = [testScene, drawScene, cutScene, joinScene, baseScene, leadsScene, boardScene, benchScene, carScene, sealScene, welcomeIdeaScene, welcomeCarScene]
 
 const plainSteps: BuildStep[] = [
   {
@@ -75,6 +76,20 @@ const plainSteps: BuildStep[] = [
     b: '<ul><li>البورد في <b>علبة بلاستيك صغيرة</b> أو جلبة حرارية كبيرة، وسيليكون على فتحة السلوك.</li><li>سيليكون على ضهر الحلقة ونقط لحامها عشان المية والرطوبة.</li><li>بعد يومين بص على الحلقة: لو اللزق بدأ يسيح أو الحتت بتقع، غيّر الشمع بسيليكون.</li></ul>',
     c: ['العلبة مقفولة', 'الحلقتين معزولين', 'جرّبت بعد مشوار طويل'],
     x: 'بعد مشوار نص ساعة بالليل: الحلقتين ثابتين ومفيش حتة طفت.'
+  },
+  {
+    t: 'اختياري: بورد الترحيب',
+    m: '⏱ ساعة ونص · CD40106 + موسفت IRF9540N',
+    b: '<p>🔒 عايز الحلقتين ينوّروا <b>5 ثواني</b> لما تقفل أو تفتح العربية؟ ده بورد لوحده جنب بورد الحلقتين.</p><ol><li>افتح تبويب <b>التجميع على البورد</b> واختار <b>🔒 الترحيب مع السنتر لوك</b>: البورد كله خطوة بخطوة.</li><li>جرّبه على المكتب: الأدابتر على <b>BAT+</b> و<b>GND</b>، و<b>OUT</b> (الأصفر) على الأحمر بتاع بورد الحلقتين.</li><li>المس سلك <b>LOCK</b> في + الأدابتر لمسة.</li></ol>',
+    c: ['البورد اتجمّع واتجرّب', 'الحلقتين مطفيين لوحدهم', 'لمسة على LOCK = نور 5 ثواني', 'لمسة على UNLOCK = نور 5 ثواني'],
+    x: 'الحلقتين ينوّروا حوالي <b>5 ثواني</b> ويطفوا مرة واحدة لوحدهم. لو عايزها أطول: R13 100k (حوالي 9 ثواني).'
+  },
+  {
+    t: 'اختياري: الترحيب في العربية',
+    m: '⏱ ساعة · 2 Tap + فيوز 1A + D7',
+    b: '<ol><li><b>افصل سالب البطارية.</b></li><li>دوّر على سلكين <b>القفل</b> و<b>الفتح</b> عند علبة السنتر لوك (أو موتور باب السواق): 0V وهي ساكنة، و12V لحظة وانت بتقفل أو بتفتح.</li><li>Tap على كل سلك: القفل لـ <b>LOCK</b> (أخضر) والفتح لـ <b>UNLOCK</b> (بنفسجي).</li><li><b>BAT+</b> من البطارية على طول بفيوز 1A.</li><li><b>OUT</b> (الأصفر) على السلك الأحمر بتاع بورد الحلقتين، و<b>D7</b> في سلك الركن قبله (الشريطة ناحية الأحمر).</li></ol>',
+    c: ['السالب مفصول وانت شغال', 'LOCK وUNLOCK على السلكين الصح', 'الفيوز على BAT+', 'D7 في سلك الركن'],
+    x: 'اقفل بالريموت: الحلقتين ينوّروا 5 ثواني. افتح: نفس الحكاية. ولّع الركن: ينوّروا على طول، ولمبات الركن مش بتنوّر مع الترحيب.'
   }
 ]
 

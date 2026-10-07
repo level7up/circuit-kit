@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useCircuit, useSim } from '../composables/context'
+import type { CarFaceToggle } from '../types/circuit'
 
 type Sides = 'both' | 'left'
 
@@ -27,7 +28,9 @@ const setPower = (v: number) => {
   if (power) sim.setParams(power.set(sim.base.value, v))
   else localOn.value = v !== POWER_OFF
 }
-const lightsOn = computed(() => powerLevel.value !== POWER_OFF)
+const lightsOn = computed(() => powerLevel.value !== POWER_OFF || (power !== undefined && sim.brightness.value > 0))
+const toggles = computed(() => (face?.toggles ?? []).filter(t => t.show?.(sim.params.value) ?? true))
+const setToggle = (t: CarFaceToggle<Record<string, unknown>>, v: number) => sim.setParams(t.set(sim.base.value, v))
 const sides = ref<Sides>('both')
 const night = ref(true)
 
@@ -49,6 +52,9 @@ const halo = (level: number) => ({ opacity: (level * 0.85).toFixed(3) })
       <div class="seg" role="group" aria-label="أنوار الركن">
         <button :class="{ on: powerLevel === POWER_ON }" @click="setPower(POWER_ON)">💡 أنوار الركن شغالة</button>
         <button :class="{ on: powerLevel === POWER_OFF }" @click="setPower(POWER_OFF)">مطفية</button>
+      </div>
+      <div v-for="t in toggles" :key="t.label" class="seg" role="group" :aria-label="t.label">
+        <button v-for="o in t.options" :key="o.v" :class="{ on: t.get(sim.params.value) === o.v }" @click="setToggle(t, o.v)">{{ o.text }}</button>
       </div>
       <div v-if="!isRing" class="seg" role="group" aria-label="الجنبين">
         <button :class="{ on: sides === 'both' }" @click="sides = 'both'">الجنبين بيرعشوا</button>

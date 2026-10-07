@@ -1,6 +1,10 @@
 import type { SimControl, SimModel } from '../../types/circuit'
-import { fmtV } from '../../lib/format'
+import { fmtR, fmtV } from '../../lib/format'
 import { defaults as flickerDefaults, step as flickerStep, type FlickerParams, type FlickerState } from '../parking-flicker/simulate'
+import {
+  LOCKED, UNLOCKED, WELCOME_OFF, WELCOME_ON, WELCOME_R, WELCOME_R_OPTIONS, welcomeInit, welcomeLeft, welcomeSeconds, welcomeStep,
+  type WelcomeInput, type WelcomeState
+} from './welcome'
 
 export interface AngelParams {
   Vin: number
@@ -10,6 +14,9 @@ export interface AngelParams {
   style: number
   ringType: number
   color: number
+  welcome: number
+  lock: number
+  wR: number
   lampName: string
   lampGlow: string
 }
@@ -17,9 +24,11 @@ export interface AngelParams {
 export interface AngelState {
   t: number
   on: boolean
+  parking: boolean
   I: number
   br: number
   fl: FlickerState
+  w: WelcomeState
 }
 
 export const POWER_OFF = 0
@@ -76,6 +85,9 @@ export const defaults: AngelParams = withLook({
   style: OLD_TV,
   ringType: STRIP_RING,
   color: 0,
+  welcome: WELCOME_ON,
+  lock: LOCKED,
+  wR: WELCOME_R,
   lampName: '',
   lampGlow: ''
 })
@@ -106,9 +118,14 @@ export const tvCircuit = (p: AngelParams): FlickerParams => ({
 
 const flickerOff = (fl: FlickerState): FlickerState => ({ ...fl, I: 0, br: 0, glow: 0 })
 
+export const welcomeInput = (p: AngelParams): WelcomeInput => ({ enabled: p.welcome === WELCOME_ON, lock: p.lock, R: p.wR, vdd: supplyOf(p, true) })
+export const welcomeTime = (p: AngelParams): number => welcomeSeconds(p.wR, supplyOf(p, true))
+
 export function step(s: AngelState, p: AngelParams, dt: number): void {
   s.t += dt
-  s.on = p.power === POWER_ON
+  welcomeStep(s.w, welcomeInput(p), dt)
+  s.parking = p.power === POWER_ON
+  s.on = s.parking || s.w.on
   if (p.style === OLD_TV && s.on) flickerStep(s.fl, tvCircuit(p), dt)
   else s.fl = flickerOff(s.fl)
   s.I = p.style === OLD_TV ? Math.min(s.fl.I, ringCurrent(p, s.on)) : ringCurrent(p, s.on)
@@ -116,6 +133,7 @@ export function step(s: AngelState, p: AngelParams, dt: number): void {
 }
 
 const fmtMa = (a: number) => Math.round(a * 1000) + ' mA'
+const fmtSec = (t: number) => t.toFixed(1) + ' ثانية'
 
 function choice(key: keyof AngelParams, label: string, options: number[], format: (v: number) => string, hint: (p: AngelParams) => string, look = false): SimControl<AngelParams> {
   return {
@@ -137,32 +155,45 @@ const controls: SimControl<AngelParams>[] = [
   choice('segments', 'حجم الحلقة', [4, 5, 6, 8], v => v + ' حتت / مجموعات', p => ledsPerRing(p) + ' لمبة · القطر ≈ ' + ringDiameterCm(p.segments).toFixed(1) + ' سم' + (p.ringType === LED_RING ? ' · لمبة كل ' + ledSpacingCm(p).toFixed(1) + ' سم' : ''), true),
   choice('rings', 'عدد الحلقات', [2, 1], v => (v === 2 ? 'حلقتين (الفانوسين)' : 'حلقة واحدة'), p => 'التيار كله ≈ ' + fmtMa(ringCurrent(p, true)), true),
   choice('Vin', 'جهد العربية', [12, 12.6, 13.8, 14.4], v => v + 'V' + (v >= 13.8 ? ' (الموتور دوّار)' : ' (الموتور واقف)'), p => fmtMa(perSegment(p, ringCurrent(p, true))) + ' لكل ' + segmentWord(p)),
-  choice('color', 'لون الشريط', RING_COLORS.map((_, i) => i), i => RING_COLORS[i].name, () => 'الأبيض هو الأسلم قانونياً', true)
+  choice('color', 'لون الشريط', RING_COLORS.map((_, i) => i), i => RING_COLORS[i].name, () => 'الأبيض هو الأسلم قانونياً', true),
+  choice('welcome', 'الترحيب مع السنتر لوك', [WELCOME_ON, WELCOME_OFF], v => (v === WELCOME_ON ? '🔒 تنوّر لما تقفل أو تفتح' : 'من غير ترحيب'), p => (p.welcome === WELCOME_ON ? 'بورد الترحيب + موسفت IRF9540N' : 'مع أنوار الركن بس')),
+  choice('lock', 'السنتر لوك', [LOCKED, UNLOCKED], v => (v === LOCKED ? '🔒 مقفولة' : '🔓 مفتوحة'), p => (p.welcome === WELCOME_ON ? 'غيّرها: الحلقتين ينوّروا ' + fmtSec(welcomeTime(p)) : 'شغّل الترحيب الأول')),
+  choice('wR', 'R13 · مدة الترحيب', WELCOME_R_OPTIONS, fmtR, p => '≈ ' + fmtSec(welcomeTime(p)) + ' مع C9 100µF')
 ]
 
 const NET_READINGS: Record<string, (s: AngelState, p: AngelParams) => string> = {
   IN: (s, p) => fmtV(s.on ? p.Vin : 0),
   VP: (s, p) => fmtV(supplyOf(p, s.on)),
-  GND: () => '0.00 V'
+  GND: () => '0.00 V',
+  BAT: (_s, p) => fmtV(p.Vin),
+  VW: (_s, p) => fmtV(supplyOf(p, true)),
+  WT: s => fmtV(s.w.vt),
+  PG: (s, p) => fmtV(s.w.on ? 0 : supplyOf(p, true)),
+  OUT: (s, p) => fmtV(s.w.on ? supplyOf(p, true) : 0),
+  LK: (s, p) => fmtV(s.w.pulse > 0 && p.lock === LOCKED ? p.Vin : 0),
+  UL: (s, p) => fmtV(s.w.pulse > 0 && p.lock === UNLOCKED ? p.Vin : 0)
 }
 
 export const angelSim: SimModel<AngelParams, AngelState> = {
   title: 'المحاكي: الحلقة على العربية',
-  sub: 'ولّع الركن الحلقة تنوّر، اطفيه تطفي. غيّر حجم الحلقة وعددها وجهد العربية وشوف التيار مناسب للشريط ولا لأ.',
+  sub: 'ولّع الركن الحلقة تنوّر، اطفيه تطفي. واطفي الركن وغيّر السنتر لوك (اقفل أو افتح): الحلقتين ينوّروا حوالي 5 ثواني ويطفوا لوحدهم. غيّر حجم الحلقة وعددها وجهد العربية وشوف التيار.',
   note: 'الشريط الـ 12V بيتحمّل جهد العربية لوحده. والموتور دوّار كل حتة بتسحب حوالي 27mA بدل 20mA، وده عادي للشريط في العربيات. الدايود بياخد 0.7V فبيخلّيه أبرد شوية.',
   footnote: 'الأرقام تقريبية: الشريط الـ 12V بيختلف من نوع للتاني.',
   defaults,
   controls,
   traces: [
-    { key: 'in', label: 'أنوار الركن', color: '#ff5d5d', height: 60, max: 15, value: s => (s.on ? 1 : 0) * 15, fill: true },
+    { key: 'in', label: 'أنوار الركن', color: '#ff5d5d', height: 50, max: 15, value: s => (s.parking ? 15 : 0), fill: true },
+    { key: 'lk', label: 'نبضة السنتر لوك', color: '#22c55e', height: 40, max: 15, value: s => (s.w.pulse > 0 ? 15 : 0), fill: true },
+    { key: 'wt', label: 'مكثف الترحيب C9', color: '#7dd3fc', height: 60, max: 14, value: s => s.w.vt, threshold: { value: 5, label: 'تحت الخط بيطفي' } },
     { key: 'br', label: 'سطوع الحلقة', color: '#ffb547', height: 120, max: 1, value: s => s.br, fill: true }
   ],
   readouts: [
     { label: 'الأنوار', value: s => (s.on ? 'شغالة' : 'مطفية') },
     { label: 'تيار الحلقات', value: s => fmtMa(s.I) },
-    { label: 'لكل حتة', value: (s, p) => fmtMa(perSegment(p, s.I)) }
+    { label: 'لكل حتة', value: (s, p) => fmtMa(perSegment(p, s.I)) },
+    { label: 'الترحيب', value: (s, p) => (s.w.on ? 'باقي ' + fmtSec(welcomeLeft(s.w, welcomeInput(p))) : p.welcome === WELCOME_ON ? 'مستني القفل' : 'مقفول') }
   ],
-  init: () => ({ t: 0, on: false, I: 0, br: 0, fl: { ph: [Math.random(), Math.random(), Math.random()], v: [0, 0, 0], vN: 0, I: 0, br: 0, glow: 0, t: 0 } }),
+  init: p => ({ t: 0, on: false, parking: false, I: 0, br: 0, w: welcomeInit(p.lock), fl: { ph: [Math.random(), Math.random(), Math.random()], v: [0, 0, 0], vN: 0, I: 0, br: 0, glow: 0, t: 0 } }),
   step,
   brightness: s => s.br,
   netReading: (net, s, p) => (NET_READINGS[net] ?? (() => '—'))(s, p)

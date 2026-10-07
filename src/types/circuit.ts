@@ -418,12 +418,24 @@ export interface CarFacePower<P> {
   set: (p: P, v: number) => P
 }
 
+export interface CarFaceOption {
+  v: number
+  text: string
+}
+
+export interface CarFaceToggle<P> extends CarFacePower<P> {
+  label: string
+  options: CarFaceOption[]
+  show?: (p: P) => boolean
+}
+
 export interface CarFaceDef<P> {
   look: 'lamp' | 'ring'
   plate: string
   tag: string
   note: Html
   power?: CarFacePower<P>
+  toggles?: CarFaceToggle<P>[]
 }
 
 export interface StripPreviewDef<P, S> {
