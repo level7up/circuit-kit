@@ -5,6 +5,7 @@ import LampBulb from './LampBulb.vue'
 import ScopeCanvas from './ScopeCanvas.vue'
 import SectionHead from './SectionHead.vue'
 import StripPreview from './StripPreview.vue'
+import LivePreview from './LivePreview.vue'
 
 defineProps<{ num: number }>()
 const sim = useSim()
@@ -24,6 +25,7 @@ const onPick = (i: number, e: Event) => {
   <section id="sim">
     <SectionHead :num="num" :title="model.title" :sub="model.sub" />
     <StripPreview v-if="circuit.stripPreview" style="margin-bottom:14px" />
+    <LivePreview v-if="circuit.livePreview" style="margin-bottom:14px" />
     <div class="sim-grid">
       <div class="card ctrl">
         <div class="simtop">

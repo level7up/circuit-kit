@@ -446,6 +446,12 @@ export interface StripPreviewDef<P, S> {
   power?: CarFacePower<P>
 }
 
+export interface LivePreviewDef<P, S> {
+  render: (s: S, p: P) => string
+  note: Html
+  toggles?: CarFaceToggle<P>[]
+}
+
 export interface Circuit<P, S> {
   id: string
   title: string
@@ -464,6 +470,7 @@ export interface Circuit<P, S> {
   presets?: SimPreset<P>[]
   carFace?: CarFaceDef<P>
   stripPreview?: StripPreviewDef<P, S>
+  livePreview?: LivePreviewDef<P, S>
   car?: CarDef
   trouble?: TroubleDef
   footer: string

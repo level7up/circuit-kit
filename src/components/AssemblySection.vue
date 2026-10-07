@@ -9,6 +9,7 @@ import BoardLamp from './BoardLamp.vue'
 import PartPopover from './board/PartPopover.vue'
 import CarFaceSim from './CarFaceSim.vue'
 import StripPreview from './StripPreview.vue'
+import LivePreview from './LivePreview.vue'
 import SimPresets from './SimPresets.vue'
 import PartsTable from './PartsTable.vue'
 import SectionHead from './SectionHead.vue'
@@ -308,6 +309,7 @@ const onBoardClick = (e: MouseEvent) => {
     <p class="asm-sub">{{ asm.simSub }}</p>
     <SimPresets v-if="circuit.presets" :presets="circuit.presets" />
     <StripPreview v-if="circuit.stripPreview" />
+    <LivePreview v-else-if="circuit.livePreview" />
     <CarFaceSim v-else />
 
     <div class="gap" />
