@@ -126,9 +126,11 @@ export function step(s: AngelState, p: AngelParams, dt: number): void {
   welcomeStep(s.w, welcomeInput(p), dt)
   s.parking = p.power === POWER_ON
   s.on = s.parking || s.w.on
-  if (p.style === OLD_TV && s.on) flickerStep(s.fl, tvCircuit(p), dt)
+  const flickering = p.style === OLD_TV && s.parking
+  if (flickering) flickerStep(s.fl, tvCircuit(p), dt)
   else s.fl = flickerOff(s.fl)
-  s.I = p.style === OLD_TV ? Math.min(s.fl.I, ringCurrent(p, s.on)) : ringCurrent(p, s.on)
+  const steady = s.w.on || (s.parking && p.style !== OLD_TV)
+  s.I = steady ? ringCurrent(p, true) : flickering ? Math.min(s.fl.I, ringCurrent(p, true)) : 0
   s.br = glowOf(p, s.I)
 }
 
@@ -169,14 +171,17 @@ const NET_READINGS: Record<string, (s: AngelState, p: AngelParams) => string> = 
   VW: (_s, p) => fmtV(supplyOf(p, true)),
   WT: s => fmtV(s.w.vt),
   PG: (s, p) => fmtV(s.w.on ? 0 : supplyOf(p, true)),
-  OUT: (s, p) => fmtV(s.w.on ? supplyOf(p, true) : 0),
+  MD: (s, p) => fmtV(s.w.on ? supplyOf(p, true) : 0),
+  OUT: (s, p) => fmtV(s.on ? supplyOf(p, true) - (s.w.on ? DIODE_DROP : 0) : 0),
+  WB: s => fmtV(s.w.on ? 1.4 : 0),
+  RN: s => (s.w.on ? fmtV(0.9) : '—'),
   LK: (s, p) => fmtV(s.w.pulse > 0 && p.lock === LOCKED ? p.Vin : 0),
   UL: (s, p) => fmtV(s.w.pulse > 0 && p.lock === UNLOCKED ? p.Vin : 0)
 }
 
 export const angelSim: SimModel<AngelParams, AngelState> = {
   title: 'المحاكي: الحلقة على العربية',
-  sub: 'ولّع الركن الحلقة تنوّر، اطفيه تطفي. واطفي الركن وغيّر السنتر لوك (اقفل أو افتح): الحلقتين ينوّروا حوالي 5 ثواني ويطفوا لوحدهم. غيّر حجم الحلقة وعددها وجهد العربية وشوف التيار.',
+  sub: 'ولّع الركن الحلقة تنوّر، اطفيه تطفي. واطفي الركن وغيّر السنتر لوك (اقفل أو افتح): الحلقتين ينوّروا <b>ثابتين</b> حوالي 5 ثواني (من غير رعشة) ويطفوا لوحدهم. غيّر حجم الحلقة وعددها وجهد العربية وشوف التيار.',
   note: 'الشريط الـ 12V بيتحمّل جهد العربية لوحده. والموتور دوّار كل حتة بتسحب حوالي 27mA بدل 20mA، وده عادي للشريط في العربيات. الدايود بياخد 0.7V فبيخلّيه أبرد شوية.',
   footnote: 'الأرقام تقريبية: الشريط الـ 12V بيختلف من نوع للتاني.',
   defaults,

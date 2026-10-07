@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { POWER_OFF, POWER_ON, angelSim, defaults, welcomeTime, type AngelParams, type AngelState } from '../src/circuits/angel-eye/simulate'
+import { OLD_TV, POWER_OFF, POWER_ON, angelSim, defaults, welcomeTime, type AngelParams, type AngelState } from '../src/circuits/angel-eye/simulate'
 import { LOCKED, UNLOCKED, WELCOME_OFF } from '../src/circuits/angel-eye/welcome'
 import { welcomeLayout, welcomeSchematic } from '../src/circuits/angel-eye/welcome-board'
 import { verifyPerfboard } from '../src/lib/perfboard/grid'
@@ -55,6 +55,31 @@ describe('angel eye welcome light', () => {
     }
     const lit = levels.filter(b => b > 0)
     expect(Math.min(...lit)).toBeCloseTo(Math.max(...lit), 5)
+  })
+
+  it('stays steady instead of flickering when the rings sit on the old-TV board', () => {
+    const tv = { ...parked, style: OLD_TV }
+    const s = run(angelSim.init(tv), tv, 1)
+    const open = { ...tv, lock: UNLOCKED }
+    run(s, open, 0.2)
+    const levels: number[] = []
+    for (let t = 0; t < 4; t += STEP) {
+      angelSim.step(s, open, STEP)
+      levels.push(s.br)
+    }
+    expect(Math.min(...levels)).toBeGreaterThan(0)
+    expect(Math.min(...levels)).toBeCloseTo(Math.max(...levels), 5)
+  })
+
+  it('still flickers with the parking lights on and no welcome', () => {
+    const tv = { ...parked, style: OLD_TV, power: POWER_ON }
+    const s = run(angelSim.init(tv), tv, 1)
+    const levels: number[] = []
+    for (let t = 0; t < 4; t += STEP) {
+      angelSim.step(s, tv, STEP)
+      levels.push(s.br)
+    }
+    expect(Math.max(...levels) - Math.min(...levels)).toBeGreaterThan(0.1)
   })
 
   it('reports a time close to the simulated one', () => {
