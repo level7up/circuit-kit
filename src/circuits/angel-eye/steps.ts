@@ -3,8 +3,9 @@ import { ledBusScene, ledFinishScene, ledGroupScene, ledHoleScene, ledMarkScene,
 import { benchScene, boardScene, carScene, sealScene } from './scenes-circuit'
 import { baseScene, cutScene, drawScene, joinScene, leadsScene, testScene } from './scenes-ring'
 import { welcomeCarScene, welcomeIdeaScene } from './scenes-welcome'
+import { buttonScene } from './scenes-button'
 
-const SCENES: SceneFrame[][] = [testScene, drawScene, cutScene, joinScene, baseScene, leadsScene, boardScene, benchScene, carScene, sealScene, welcomeIdeaScene, welcomeCarScene]
+const SCENES: SceneFrame[][] = [testScene, drawScene, cutScene, joinScene, baseScene, leadsScene, boardScene, benchScene, carScene, sealScene, welcomeIdeaScene, welcomeCarScene, buttonScene]
 
 const plainSteps: BuildStep[] = [
   {
@@ -90,6 +91,13 @@ const plainSteps: BuildStep[] = [
     b: '<ol><li><b>افصل سالب البطارية.</b></li><li>دوّر على سلكين <b>القفل</b> و<b>الفتح</b> عند علبة السنتر لوك (أو موتور باب السواق): 0V وهي ساكنة، و12V لحظة وانت بتقفل أو بتفتح.</li><li>Tap على كل سلك: القفل لـ <b>LOCK</b> (أخضر) والفتح لـ <b>UNLOCK</b> (بنفسجي).</li><li><b>BAT+</b> من البطارية على طول بفيوز 1A.</li><li><b>RING+</b> (الأصفر) على + الحلقتين و<b>RING−</b> (الأزرق) على − الحلقتين، جنب سلوك بورد الحلقتين.</li></ol>',
     c: ['السالب مفصول وانت شغال', 'LOCK وUNLOCK على السلكين الصح', 'الفيوز على BAT+', 'RING+ وRING− على الحلقتين'],
     x: 'اقفل بالريموت: الحلقتين ينوّروا <b>ثابتين</b> 5 ثواني، من غير رعشة. افتح: نفس الحكاية. ولّع الركن: يرجعوا يرعشوا (أو ثابتين لو اخترت الثابت) زي الأول.'
+  },
+  {
+    t: 'اختياري: زرار رعشة / ثابت',
+    m: '⏱ 20 دقيقة · زرار ضغط بيقفل + سلكين',
+    b: '<p>🔘 عايز تختار بين <b>الرعشة</b> و<b>الثابت</b> وانت سايق؟ زرار واحد على الطبلون، من غير برمجة ومن غير شريحة جديدة. ده لدايرة الرعشة بس.</p><ol><li><b>افصل سالب البطارية.</b></li><li>اسحب فرع من السلك <b>الأزرق (RING−)</b> بـ Tap أو لحام، لرجل من رجلين الزرار.</li><li>الرجل التانية على <b>الأرضي</b> (مسمار شاسيه أو السلك الأسود).</li><li>ركّب الزرار في مكان قريب منك في الطبلون أو الكونسول.</li></ol>',
+    c: ['الزرار من النوع اللي بيقفل', 'رجل على الأزرق ورجل على الأرضي', 'الوصلات معزولة'],
+    x: 'ولّع الركن: الزرار طالع = الحلقتين <b>بيرعشوا</b>، الزرار مضغوط = <b>ثابتين</b>. وبالملتيميتر والزرار مضغوط: بين الأزرق والأرضي ≈ <b>0V</b>.'
   }
 ]
 

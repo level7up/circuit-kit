@@ -1,8 +1,9 @@
 import type { CarDef, CarFaceDef, HeroMeta, OverviewDef, PinoutDef } from '../../types/circuit'
 import { dipTopViewSvg, to220Svg, type PinRole } from '../../lib/pinouts'
 import { carSvg } from './car-svg'
-import { POWER_OFF, POWER_ON, type AngelParams } from './simulate'
+import { OLD_TV, POWER_OFF, POWER_ON, type AngelParams } from './simulate'
 import { LOCKED, UNLOCKED, WELCOME_ON } from './welcome'
+import { BUTTON_IN, BUTTON_OUT } from './mode-button'
 
 export const hero: HeroMeta = {
   tag: 'مشروع DIY · عربية 12V · من حاجات البيت',
@@ -28,6 +29,7 @@ export const overview: OverviewDef = {
   cards: [
     { kind: 'warn', title: '⚠️ القانون: اللون والمكان', body: 'خليها <b>أبيض</b> (أو أبيض دافي). <b>الأزرق والأحمر قدام ممنوعين</b> في أغلب البلاد، وممكن تتخالف أو الرخصة تقف. ومتخليهاش أقوى من نور الكشافات.' },
     { kind: 'warn', title: '🔥 الحرارة جوه الفانوس', body: 'جوه الفانوس الهالوجين الحرارة بتعدّي 80°C: <b>الشمع (Hot glue) بيسيح</b> والشريط بيقع. للتجربة استخدم الشمع، بس للتركيب استخدم <b>سيليكون شفاف</b> أو <b>إيبوكسي</b>. والأسهل للمبتدئ إنك تركّب الحلقة <b>برّه</b> حوالين الفانوس أو الكشاف، من غير ما تفتحه.' },
+    { kind: 'ok', title: '🔘 اختياري: زرار رعشة / ثابت', body: 'زرار ضغط بيقفل على الطبلون بين السلك <b>الأزرق</b> والأرضي: طالع = الحلقتين <b>بيرعشوا</b>، مضغوط = <b>ثابتين</b>. من غير برمجة ومن غير شريحة. الخطوة 13.' },
     { kind: 'ok', title: '🔒 اختياري: ترحيب مع السنتر لوك', body: 'تقفل أو تفتح العربية بالريموت، الحلقتين ينوّروا <b>5 ثواني</b> ويطفوا لوحدهم. بورد صغير بـ <b>CD40106</b> واحدة (من غير برمجة) بياخد النبضة من سلك القفل أو الفتح، و<b>موسفت IRF9540N</b> مع <b>TIP122</b> بيوصّلوا الحلقتين بالبطارية الـ 5 ثواني دول. النور <b>ثابت</b> من غير رعشة، حتى لو اخترت التلفزيون القديم. من غير ريلاي. الخطوات 11 و12، والبورد في تبويب <b>التجميع</b>.' },
     { kind: 'ok', title: '♻️ من بواقي كيت الرعشة', body: 'الحماية كلها من قطع كيت رعشة لمبة الركن: 1N4007، وP6KE18A، و100nF. لو الكيت الأولاني متركب في العربية، هتحتاج نسخة تانية منهم بحوالي 3 جنيه.' }
   ]
@@ -67,6 +69,12 @@ export const carFace: CarFaceDef<AngelParams> = {
     set: (p, v) => ({ ...p, power: POWER_LEVELS.includes(v) ? v : POWER_ON })
   },
   toggles: [{
+    label: 'زرار الشكل',
+    options: [{ v: BUTTON_OUT, text: '📺 رعشة' }, { v: BUTTON_IN, text: '⭕ ثابت' }],
+    get: p => p.button,
+    set: (p, v) => ({ ...p, button: v === BUTTON_IN ? BUTTON_IN : BUTTON_OUT }),
+    show: p => p.style === OLD_TV
+  }, {
     label: 'السنتر لوك',
     options: [{ v: LOCKED, text: '🔒 اقفل' }, { v: UNLOCKED, text: '🔓 افتح' }],
     get: p => p.lock,

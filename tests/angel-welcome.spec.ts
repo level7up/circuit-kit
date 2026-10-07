@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { OLD_TV, POWER_OFF, POWER_ON, angelSim, defaults, welcomeTime, type AngelParams, type AngelState } from '../src/circuits/angel-eye/simulate'
 import { LOCKED, UNLOCKED, WELCOME_OFF } from '../src/circuits/angel-eye/welcome'
+import { BUTTON_IN, BUTTON_OUT } from '../src/circuits/angel-eye/mode-button'
 import { welcomeLayout, welcomeSchematic } from '../src/circuits/angel-eye/welcome-board'
 import { verifyPerfboard } from '../src/lib/perfboard/grid'
 import type { PerfLayout } from '../src/types/circuit'
@@ -117,5 +118,34 @@ describe('angel eye welcome board', () => {
   it('fits a piece cut from a 5x7 cm board', () => {
     expect(welcomeLayout.cols * 2.54).toBeLessThanOrEqual(70)
     expect(welcomeLayout.rows * 2.54).toBeLessThanOrEqual(50)
+  })
+})
+
+describe('angel eye mode button', () => {
+  const levelsOf = (p: AngelParams): number[] => {
+    const s = run(angelSim.init(p), p, 1)
+    const levels: number[] = []
+    for (let t = 0; t < 4; t += STEP) {
+      angelSim.step(s, p, STEP)
+      levels.push(s.br)
+    }
+    return levels
+  }
+  const flickerOn = { ...defaults, style: OLD_TV, power: POWER_ON }
+
+  it('keeps the rings steady while the button is pressed', () => {
+    const levels = levelsOf({ ...flickerOn, button: BUTTON_IN })
+    expect(Math.min(...levels)).toBeGreaterThan(0)
+    expect(Math.min(...levels)).toBeCloseTo(Math.max(...levels), 5)
+  })
+
+  it('flickers again once the button is released', () => {
+    const levels = levelsOf({ ...flickerOn, button: BUTTON_OUT })
+    expect(Math.max(...levels) - Math.min(...levels)).toBeGreaterThan(0.1)
+  })
+
+  it('leaves the rings dark with the parking lights off', () => {
+    const levels = levelsOf({ ...flickerOn, power: POWER_OFF, button: BUTTON_IN })
+    expect(Math.max(...levels)).toBe(0)
   })
 })
