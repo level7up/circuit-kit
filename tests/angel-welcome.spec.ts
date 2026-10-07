@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { OLD_TV, POWER_OFF, POWER_ON, angelSim, defaults, welcomeTime, type AngelParams, type AngelState } from '../src/circuits/angel-eye/simulate'
 import { LOCKED, UNLOCKED, WELCOME_OFF } from '../src/circuits/angel-eye/welcome'
-import { BUTTON_IN, BUTTON_OUT } from '../src/circuits/angel-eye/mode-button'
+import { BUTTON_HOLD, BUTTON_IN, BUTTON_OUT } from '../src/circuits/angel-eye/mode-button'
 import { welcomeLayout, welcomeSchematic } from '../src/circuits/angel-eye/welcome-board'
 import { verifyPerfboard } from '../src/lib/perfboard/grid'
 import type { PerfLayout } from '../src/types/circuit'
@@ -136,6 +136,11 @@ describe('angel eye mode button', () => {
   it('keeps the rings steady while the button is pressed', () => {
     const levels = levelsOf({ ...flickerOn, button: BUTTON_IN })
     expect(Math.min(...levels)).toBeGreaterThan(0)
+    expect(Math.min(...levels)).toBeCloseTo(Math.max(...levels), 5)
+  })
+
+  it('keeps the rings steady while the momentary side is held', () => {
+    const levels = levelsOf({ ...flickerOn, button: BUTTON_HOLD })
     expect(Math.min(...levels)).toBeCloseTo(Math.max(...levels), 5)
   })
 

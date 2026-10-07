@@ -5,7 +5,7 @@ import {
   LOCKED, UNLOCKED, WELCOME_OFF, WELCOME_ON, WELCOME_R, WELCOME_R_OPTIONS, welcomeInit, welcomeLeft, welcomeSeconds, welcomeStep,
   type WelcomeInput, type WelcomeState
 } from './welcome'
-import { BUTTON_IN, BUTTON_OUT } from './mode-button'
+import { BUTTON_HOLD, BUTTON_IN, BUTTON_OUT, isSteadyButton } from './mode-button'
 
 export interface AngelParams {
   Vin: number
@@ -129,7 +129,7 @@ export function step(s: AngelState, p: AngelParams, dt: number): void {
   welcomeStep(s.w, welcomeInput(p), dt)
   s.parking = p.power === POWER_ON
   s.on = s.parking || s.w.on
-  const flickering = p.style === OLD_TV && s.parking && p.button !== BUTTON_IN
+  const flickering = p.style === OLD_TV && s.parking && !isSteadyButton(p.button)
   if (flickering) flickerStep(s.fl, tvCircuit(p), dt)
   else s.fl = flickerOff(s.fl)
   const steady = s.w.on || (s.parking && !flickering)
@@ -161,7 +161,7 @@ const controls: SimControl<AngelParams>[] = [
   choice('rings', 'عدد الحلقات', [2, 1], v => (v === 2 ? 'حلقتين (الفانوسين)' : 'حلقة واحدة'), p => 'التيار كله ≈ ' + fmtMa(ringCurrent(p, true)), true),
   choice('Vin', 'جهد العربية', [12, 12.6, 13.8, 14.4], v => v + 'V' + (v >= 13.8 ? ' (الموتور دوّار)' : ' (الموتور واقف)'), p => fmtMa(perSegment(p, ringCurrent(p, true))) + ' لكل ' + segmentWord(p)),
   choice('color', 'لون الشريط', RING_COLORS.map((_, i) => i), i => RING_COLORS[i].name, () => 'الأبيض هو الأسلم قانونياً', true),
-  choice('button', 'زرار الشكل (على الرعشة)', [BUTTON_OUT, BUTTON_IN], v => (v === BUTTON_IN ? '⭕ مضغوط: ثابت' : '📺 طالع: رعشة'), p => (p.style !== OLD_TV ? 'الزرار على دايرة الرعشة بس' : p.button === BUTTON_IN ? 'سالب الحلقتين على الأرضي على طول' : 'الرعشة شغالة')),
+  choice('button', 'سويتش الشكل (على الرعشة)', [BUTTON_OUT, BUTTON_IN, BUTTON_HOLD], v => (v === BUTTON_IN ? '⭕ ناحية I: ثابت' : v === BUTTON_HOLD ? '👆 الناحية التانية: ثابت وانت ضاغط' : '📺 في النص: رعشة'), p => (p.style !== OLD_TV ? 'السويتش على دايرة الرعشة بس' : isSteadyButton(p.button) ? 'سالب الحلقتين على الأرضي على طول' : 'الرعشة شغالة')),
   choice('welcome', 'الترحيب مع السنتر لوك', [WELCOME_ON, WELCOME_OFF], v => (v === WELCOME_ON ? '🔒 تنوّر لما تقفل أو تفتح' : 'من غير ترحيب'), p => (p.welcome === WELCOME_ON ? 'بورد الترحيب + موسفت IRF9540N' : 'مع أنوار الركن بس')),
   choice('lock', 'السنتر لوك', [LOCKED, UNLOCKED], v => (v === LOCKED ? '🔒 مقفولة' : '🔓 مفتوحة'), p => (p.welcome === WELCOME_ON ? 'غيّرها: الحلقتين ينوّروا ' + fmtSec(welcomeTime(p)) : 'شغّل الترحيب الأول')),
   choice('wR', 'R13 · مدة الترحيب', WELCOME_R_OPTIONS, fmtR, p => '≈ ' + fmtSec(welcomeTime(p)) + ' مع C9 100µF')

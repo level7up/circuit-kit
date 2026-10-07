@@ -25,8 +25,8 @@ const tvCircuit: BomItem[] = [
 export const bom: BomRow[] = [
   { g: '📺 دايرة الرعشة بقيم التلفزيون (الأصلي)' },
   ...tvCircuit,
-  { g: '🔘 اختياري: زرار رعشة / ثابت (لدايرة الرعشة)' },
-  { n: 'زرار', s: 'زرار ضغط بيقفل Self-locking 12–16 مم · 1A أو أكتر', q: 1, p: 10, est: 1, on: 0 },
+  { g: '🔘 اختياري: سويتش رعشة / ثابت (لدايرة الرعشة)' },
+  { n: 'سويتش', s: 'KCD4 Rocker Switch ON-OFF-(ON) · 16A', q: 1, p: 20, u: MK + 'kcd4-rocker-switch-1-momentary/', on: 0 },
   { g: '⭕ لو عايزها ثابتة (بدل الدايرة اللي فوق)' },
   { n: 'دايود', s: '1N4007 · D1', q: 1, p: 0.5, u: MK + '1n4007-diode-1a-1-1v1a-1kv-do-41/', on: 0 },
   { n: 'دايود حماية TVS', s: 'P6KE18A · D2', q: 1, p: 2, u: MK + 'esd-suppressors-tvs-diodes-600w-18v-uni-directional-p6ke18a-e3-73/', on: 0 },
