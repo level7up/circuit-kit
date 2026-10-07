@@ -281,9 +281,11 @@ function pad(part: PerfPart, layout: PerfLayout, at: Project): string {
   const onSideEdge = x === 0 || x === layout.cols - 1
   const exitLeft = p.x < boardSize(layout).w / 2
   const size = boardSize(layout)
-  const end = !onSideEdge && y === 0 ? { x: p.x, y: 0 }
-    : !onSideEdge && y === layout.rows - 1 ? { x: p.x, y: size.h }
-      : { x: exitLeft ? 0 : size.w, y: p.y }
+  const end = part.face === 'up' ? { x: p.x, y: 0 }
+    : part.face === 'down' ? { x: p.x, y: size.h }
+      : !onSideEdge && y === 0 ? { x: p.x, y: 0 }
+        : !onSideEdge && y === layout.rows - 1 ? { x: p.x, y: size.h }
+          : { x: exitLeft ? 0 : size.w, y: p.y }
   const color = part.color ?? '#888'
   const line = `x1="${p.x}" y1="${p.y}" x2="${end.x}" y2="${end.y}"`
   return `<line ${line} stroke="#000" stroke-width="8" stroke-linecap="round"/><line ${line} stroke="${color}" stroke-width="5.5" stroke-linecap="round"/>` +

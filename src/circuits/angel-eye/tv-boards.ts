@@ -32,7 +32,28 @@ const tvPart = (p: PerfPart): PerfPart => ({
   tip: toTv(p.tip)
 })
 
-const tvLayout = (layout: PerfLayout): PerfLayout => ({ ...layout, parts: layout.parts.map(tvPart) })
+const lastStage = (layout: PerfLayout): number => Math.max(...layout.parts.map(p => p.s))
+
+const buttonPads = (s: number): PerfPart[] => [
+  { id: 'BTN1', k: 'pad', s, legs: [[21, 8]], nets: ['C'], lab: 'زرار', val: 'سلك للزرار', color: '#9aa6bd', face: 'down', optional: true,
+    tip: 'اختياري: سلك من رجل الزرار الأولى في ⟦V9⟧، على نفس خط الأزرق (RING−).' },
+  { id: 'BTN2', k: 'pad', s, legs: [[21, 1]], nets: ['GND'], lab: 'زرار', val: 'سلك للزرار', color: '#9aa6bd', face: 'up', optional: true,
+    tip: 'اختياري: سلك من رجل الزرار التانية في ⟦V2⟧، على خط الأرضي.' }
+]
+
+const buttonPhase = (s: number): AssemblyPhase => ({
+  s,
+  t: 'اختياري: سلكين زرار رعشة / ثابت',
+  m: '⏱ 10 دقايق · زرار ضغط بيقفل + سلكين',
+  b: '<ol><li>سلك من رجل الزرار الأولى في <b>⟦V9⟧</b>: على نفس خط الأزرق (RING−).</li><li>سلك من رجل الزرار التانية في <b>⟦V2⟧</b>: على خط الأرضي.</li><li>الزرار نفسه في الطبلون جنبك، والسلكين لحد البورد.</li></ol>',
+  c: ['سلك في ⟦V9⟧', 'سلك في ⟦V2⟧', 'الزرار من النوع اللي بيقفل'],
+  x: 'ولّع الركن: الزرار طالع = الحلقتين <b>بيرعشوا</b>، مضغوط = <b>ثابتين</b>. وبالصفارة والزرار مضغوط: ⟦V9⟧ مع ⟦V2⟧ <b>يصفّر</b>.'
+})
+
+const tvLayout = (layout: PerfLayout): PerfLayout => ({
+  ...layout,
+  parts: [...layout.parts.map(tvPart), ...buttonPads(lastStage(layout) + 2)]
+})
 
 const tvPhase = (phase: AssemblyPhase): AssemblyPhase => ({
   ...phase,
@@ -52,5 +73,5 @@ export const tvBoards: AssemblyBoard[] = flickerAssembly.boards
     label: '📺 ' + b.label,
     layout: tvLayout(b.layout),
     note: toTv(b.note),
-    phases: b.phases.map(tvPhase)
+    phases: [...b.phases.map(tvPhase), buttonPhase(lastStage(b.layout) + 2)]
   }))
