@@ -34,7 +34,8 @@ export const DIODE_DROP = 0.7
 export const SEG_KNEE = 9
 export const SEG_OHMS = 150
 export const SEG_FULL = 0.02
-export const LEDS_PER_SEG = 3
+export const STRIP_LEDS_PER_PIECE = 5
+export const LEDS_PER_GROUP = 3
 export const SEG_CM = 5
 export const STRIP_RING = 0
 export const LED_RING = 1
@@ -52,8 +53,14 @@ export const RING_COLORS: RingColor[] = [
   { name: 'تلجي (أزرق فاتح)', glow: '#9fd8ff' }
 ]
 
-const ringName = (p: Pick<AngelParams, 'segments' | 'rings' | 'ringType'>) =>
-  (p.rings === 2 ? 'حلقتين' : 'حلقة') + ' ' + p.segments * LEDS_PER_SEG + (p.ringType === LED_RING ? ' LED 5mm' : ' لمبة')
+type RingShape = Pick<AngelParams, 'segments' | 'ringType'>
+
+export const ledsPerSegment = (p: Pick<AngelParams, 'ringType'>): number => (p.ringType === LED_RING ? LEDS_PER_GROUP : STRIP_LEDS_PER_PIECE)
+export const ledsPerRing = (p: RingShape): number => p.segments * ledsPerSegment(p)
+const segmentWord = (p: Pick<AngelParams, 'ringType'>) => (p.ringType === LED_RING ? 'مجموعة' : 'حتة')
+
+const ringName = (p: RingShape & Pick<AngelParams, 'rings'>) =>
+  (p.rings === 2 ? 'حلقتين' : 'حلقة') + ' ' + ledsPerRing(p) + (p.ringType === LED_RING ? ' LED 5mm' : ' لمبة')
 
 export const withLook = (p: AngelParams): AngelParams => ({
   ...p,
@@ -81,7 +88,7 @@ const groupOhms = (p: AngelParams): number => (p.ringType === LED_RING ? LED_GRO
 const segmentCurrent = (p: AngelParams, v: number): number => Math.max(0, (v - SEG_KNEE) / groupOhms(p))
 
 export const ringCurrent = (p: AngelParams, on: boolean): number => segmentCount(p) * segmentCurrent(p, supplyOf(p, on))
-export const ledSpacingCm = (p: AngelParams): number => (Math.PI * ringDiameterCm(p.segments)) / (p.segments * LEDS_PER_SEG)
+export const ledSpacingCm = (p: AngelParams): number => (Math.PI * ringDiameterCm(p.segments)) / ledsPerRing(p)
 export const perSegment = (p: AngelParams, I: number): number => I / segmentCount(p)
 export const glowOf = (p: AngelParams, I: number): number => Math.min(1, Math.sqrt(perSegment(p, I) / SEG_FULL))
 
@@ -126,10 +133,10 @@ function choice(key: keyof AngelParams, label: string, options: number[], format
 const controls: SimControl<AngelParams>[] = [
   choice('power', 'أنوار الركن', [POWER_ON, POWER_OFF], v => (v ? 'شغالة' : 'مطفية'), p => (p.power ? 'الحلقة منوّرة' : 'الحلقة مطفية')),
   choice('style', 'شكل النور', [STEADY, OLD_TV], v => (v === OLD_TV ? '📺 بترعش زي التلفزيون القديم' : 'ثابت'), p => (p.style === OLD_TV ? 'على دايرة الرعشة' : 'على بورد الحماية بس')),
-  choice('ringType', 'الحلقة معمولة من', [STRIP_RING, LED_RING], v => (v === LED_RING ? '💡 LED 5mm في غطا مخروم' : '✂️ حتت شريط LED'), p => (p.ringType === LED_RING ? 'كل 3 لمبات + 220Ω' : 'كل حتة 3 لمبات (5 سم)'), true),
-  choice('segments', 'حجم الحلقة', [4, 5, 6, 8], v => v * LEDS_PER_SEG + ' لمبة (' + v + ' مجموعات × 3)', p => 'القطر ≈ ' + ringDiameterCm(p.segments).toFixed(1) + ' سم' + (p.ringType === LED_RING ? ' · لمبة كل ' + ledSpacingCm(p).toFixed(1) + ' سم' : ''), true),
+  choice('ringType', 'الحلقة معمولة من', [STRIP_RING, LED_RING], v => (v === LED_RING ? '💡 LED 5mm في غطا مخروم' : '✂️ حتت شريط LED'), p => (p.ringType === LED_RING ? 'كل ' + LEDS_PER_GROUP + ' لمبات + 220Ω' : 'كل حتة ' + STRIP_LEDS_PER_PIECE + ' لمبات (حوالي 5 سم)'), true),
+  choice('segments', 'حجم الحلقة', [4, 5, 6, 8], v => v + ' حتت / مجموعات', p => ledsPerRing(p) + ' لمبة · القطر ≈ ' + ringDiameterCm(p.segments).toFixed(1) + ' سم' + (p.ringType === LED_RING ? ' · لمبة كل ' + ledSpacingCm(p).toFixed(1) + ' سم' : ''), true),
   choice('rings', 'عدد الحلقات', [2, 1], v => (v === 2 ? 'حلقتين (الفانوسين)' : 'حلقة واحدة'), p => 'التيار كله ≈ ' + fmtMa(ringCurrent(p, true)), true),
-  choice('Vin', 'جهد العربية', [12, 12.6, 13.8, 14.4], v => v + 'V' + (v >= 13.8 ? ' (الموتور دوّار)' : ' (الموتور واقف)'), p => fmtMa(perSegment(p, ringCurrent(p, true))) + ' لكل 3 لمبات'),
+  choice('Vin', 'جهد العربية', [12, 12.6, 13.8, 14.4], v => v + 'V' + (v >= 13.8 ? ' (الموتور دوّار)' : ' (الموتور واقف)'), p => fmtMa(perSegment(p, ringCurrent(p, true))) + ' لكل ' + segmentWord(p)),
   choice('color', 'لون الشريط', RING_COLORS.map((_, i) => i), i => RING_COLORS[i].name, () => 'الأبيض هو الأسلم قانونياً', true)
 ]
 
@@ -142,7 +149,7 @@ const NET_READINGS: Record<string, (s: AngelState, p: AngelParams) => string> = 
 export const angelSim: SimModel<AngelParams, AngelState> = {
   title: 'المحاكي: الحلقة على العربية',
   sub: 'ولّع الركن الحلقة تنوّر، اطفيه تطفي. غيّر حجم الحلقة وعددها وجهد العربية وشوف التيار مناسب للشريط ولا لأ.',
-  note: 'الشريط الـ 12V بيتحمّل جهد العربية لوحده. والموتور دوّار كل 3 لمبات بيسحبوا حوالي 27mA بدل 20mA، وده عادي للشريط في العربيات. الدايود بياخد 0.7V فبيخلّيه أبرد شوية.',
+  note: 'الشريط الـ 12V بيتحمّل جهد العربية لوحده. والموتور دوّار كل حتة بتسحب حوالي 27mA بدل 20mA، وده عادي للشريط في العربيات. الدايود بياخد 0.7V فبيخلّيه أبرد شوية.',
   footnote: 'الأرقام تقريبية: الشريط الـ 12V بيختلف من نوع للتاني.',
   defaults,
   controls,
@@ -153,7 +160,7 @@ export const angelSim: SimModel<AngelParams, AngelState> = {
   readouts: [
     { label: 'الأنوار', value: s => (s.on ? 'شغالة' : 'مطفية') },
     { label: 'تيار الحلقات', value: s => fmtMa(s.I) },
-    { label: 'لكل 3 لمبات', value: (s, p) => fmtMa(perSegment(p, s.I)) }
+    { label: 'لكل حتة', value: (s, p) => fmtMa(perSegment(p, s.I)) }
   ],
   init: () => ({ t: 0, on: false, I: 0, br: 0, fl: { ph: [Math.random(), Math.random(), Math.random()], v: [0, 0, 0], vN: 0, I: 0, br: 0, glow: 0, t: 0 } }),
   step,

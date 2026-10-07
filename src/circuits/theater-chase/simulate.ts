@@ -24,7 +24,7 @@ export const POWER_OFF = 0
 export const POWER_ON = 1
 export const PHASES = 3
 export const PIECE_PHASE = [0, 1, 2, 0]
-export const LEDS_PER_PIECE = 3
+export const LEDS_PER_PIECE = 5
 
 const SCHMITT_PERIOD = 0.81
 const V5 = 5

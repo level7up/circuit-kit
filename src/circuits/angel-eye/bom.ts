@@ -31,7 +31,7 @@ export const bom: BomRow[] = [
   { n: 'مكثف سيراميك', s: '100nF (104) / 50V · C1', q: 1, p: 0.5, u: MK + 'ceramic-capacitor-100nf-50v/', on: 0 },
   { n: 'بورد مثقّب', s: 'حتة 10 × 5 خرم من بورد نقط 3×7 سم', q: 1, p: 10, est: 1, u: 'https://makerselectronics.com/product-category/breadboards-pcb-boards/page/2/', on: 0 },
   { g: 'الحلقة' },
-  { n: 'شريط LED', s: 'شريط 12V أبيض 2835 · 60 لمبة/متر · نص متر يكفي حلقتين', q: 1, p: 35, est: 1, on: 1 },
+  { n: 'شريط LED', s: 'شريط 12V أبيض · 5 لمبات في كل حتة (حوالي 5 سم) · حلقتين محتاجين 60 سم', q: 1, p: 35, est: 1, on: 1 },
   { g: '💡 لو الحلقة من LED 5mm (بدل الشريط)' },
   { n: 'LED', s: 'LED أبيض 5mm (Straw Hat أحسن) · 18 لكل حلقة', q: 36, p: 0.5, est: 1, on: 0 },
   { n: 'مقاومة', s: '220Ω ¼W (أحمر أحمر بني) · 6 لكل حلقة', q: 12, p: 0.15, est: 1, on: 0 },

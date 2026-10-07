@@ -24,7 +24,10 @@ export interface PieceOpts {
   len?: number
   lit?: boolean
   pulseMarks?: boolean
+  leds?: number
 }
+
+export const STRIP_LEDS = 5
 
 const PIECE_H = 30
 const PAD_W = 9
@@ -38,21 +41,22 @@ export function label(x: number, y: number, text: string, opts: { size?: number;
 }
 
 export function piece(x: number, y: number, rot: number, opts: PieceOpts = {}): string {
-  const { len = 150, lit = false } = opts
+  const { len = 150, lit = false, leds = STRIP_LEDS } = opts
+  const ledW = Math.min(LED_W, (len / leds) * 0.62)
   const pads = [0, len - PAD_W].map(px =>
     `<rect x="${px}" y="${-PAD_H - 3}" width="${PAD_W}" height="${PAD_H}" fill="${COLORS.copper}"/>` +
     `<rect x="${px}" y="3" width="${PAD_W}" height="${PAD_H}" fill="${COLORS.copper}"/>`).join('')
-  const leds = [1, 3, 5].map(k => {
-    const cx = (len * k) / 6
+  const chips = Array.from({ length: leds }, (_, i) => {
+    const cx = (len * (2 * i + 1)) / (2 * leds)
     const halo = lit ? `<circle cx="${cx}" cy="0" r="16" fill="${COLORS.glow}" opacity=".55" filter="url(#sc-blur)"/>` : ''
-    return halo + `<rect x="${cx - LED_W / 2}" y="${-LED_H / 2}" width="${LED_W}" height="${LED_H}" rx="2" fill="${lit ? COLORS.ledOn : COLORS.ledOff}" stroke="#a49d84"/>`
+    return halo + `<rect x="${cx - ledW / 2}" y="${-LED_H / 2}" width="${ledW}" height="${LED_H}" rx="2" fill="${lit ? COLORS.ledOn : COLORS.ledOff}" stroke="#a49d84"/>`
   }).join('')
   const signs = label(PAD_W + 7, -5, '+', { size: 10, color: '#8a4b10' }) + label(PAD_W + 7, 12, '−', { size: 10, color: '#8a4b10' })
   return `<g transform="translate(${x} ${y}) rotate(${rot})">` +
     `<rect x="0" y="${-PIECE_H / 2}" width="${len}" height="${PIECE_H}" rx="2" fill="${COLORS.pcb}" stroke="#bdb6a0"/>` +
     `<line x1="${PAD_W}" y1="-12" x2="${len - PAD_W}" y2="-12" stroke="${COLORS.copper}" stroke-width="1.2" opacity=".6"/>` +
     `<line x1="${PAD_W}" y1="12" x2="${len - PAD_W}" y2="12" stroke="${COLORS.copper}" stroke-width="1.2" opacity=".6"/>` +
-    pads + leds + signs + `</g>`
+    pads + chips + signs + `</g>`
 }
 
 export function cutMark(x: number, y: number, pulse = false): string {

@@ -3,7 +3,7 @@ import { circuits } from '../src/circuits'
 import { lightStyles } from '../src/circuits/angel-eye/styles'
 import { SCHEMATIC, dotLayout, veroLayout } from '../src/circuits/angel-eye/vero'
 import {
-  LED_RING, OLD_TV, POWER_OFF, POWER_ON, STEADY, angelSim, withLook, defaults, perSegment, ringCurrent, ringDiameterCm,
+  LED_RING, OLD_TV, POWER_OFF, POWER_ON, STEADY, angelSim, withLook, defaults, ledsPerRing, perSegment, ringCurrent, ringDiameterCm,
   type AngelParams, type AngelState
 } from '../src/circuits/angel-eye/simulate'
 import { verifyPerfboard } from '../src/lib/perfboard/grid'
@@ -226,5 +226,13 @@ describe('angel eye 5 mm LED ring option', () => {
 
   it('names the 5 mm ring so the drawings show a ring', () => {
     expect(withLook({ ...defaults, ringType: LED_RING }).lampName).toBe('حلقتين 18 LED 5mm')
+  })
+})
+
+describe('angel eye LED counts', () => {
+  it('counts 5 LEDs per strip piece and 3 per 5mm LED group', () => {
+    expect(ledsPerRing(defaults)).toBe(30)
+    expect(ledsPerRing({ ...defaults, ringType: LED_RING })).toBe(18)
+    expect(defaults.lampName).toContain('30')
   })
 })
