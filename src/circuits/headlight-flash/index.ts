@@ -2,21 +2,21 @@ import type { Circuit } from '../../types/circuit'
 import { assembly } from './assembly'
 import { bom } from './bom'
 import { footer, hero, livePreview, overview, pinouts } from './content'
-import { patternSim, type PatternParams, type PatternState } from './simulate'
+import { flashSim, type FlashParams, type FlashState } from './simulate'
 import { steps } from './steps'
 import { trouble, wiring } from './wiring'
 
-export const headlightPatterns: Circuit<PatternParams, PatternState> = {
-  id: 'headlight-patterns',
-  title: 'كشافات LED بأربع أشكال',
+export const headlightFlash: Circuit<FlashParams, FlashState> = {
+  id: 'headlight-flash',
+  title: 'كشافات LED دبل فلاش',
   card: {
-    icon: '🎛️',
-    summary: 'كشافين LED منفصلين بيعملوا 4 أشكال بسويتش دوّار: تبادل، ومع بعض، ودبل فلاش، وشمال ← يمين. ساعة + عدّاد + 16 دايود + موسفتين. للعرض والعربية راكنة.',
-    level: 'متقدم · شريحتين و16 دايود'
+    icon: '⚡',
+    summary: 'كشافين LED منفصلين بيعملوا دبل فلاش: ومضتين شمال وومضتين يمين. ساعة + عدّاد + 4 دايودات + موسفتين. للعرض والعربية راكنة.',
+    level: 'متوسط · شريحتين'
   },
   hero,
   overview,
-  sim: patternSim,
+  sim: flashSim,
   pinouts,
   bom: {
     title: 'المكونات والتكلفة',
