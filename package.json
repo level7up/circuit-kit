@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "typecheck": "vue-tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:firmware": "mkdir -p firmware/fuel_bench/test/build && c++ -std=c++17 -Wall -Wextra -Werror -o firmware/fuel_bench/test/build/controller_test firmware/fuel_bench/test/controller_test.cpp && firmware/fuel_bench/test/build/controller_test"
   },
   "dependencies": {
     "vue": "^3.5.43"

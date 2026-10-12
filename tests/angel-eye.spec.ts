@@ -120,7 +120,7 @@ describe('angel eye light styles', () => {
 
 describe('circuit list', () => {
   it('offers the angel eye next to the flicker', () => {
-    expect(circuits.map(c => c.id)).toEqual(['parking-flicker', 'angel-eye', 'theater-chase', 'usb-charger', 'headlight-flash'])
+    expect(circuits.map(c => c.id)).toEqual(['parking-flicker', 'angel-eye', 'theater-chase', 'usb-charger', 'headlight-flash', 'fuel-bench'])
   })
 })
 
