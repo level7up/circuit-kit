@@ -13,7 +13,8 @@ export const angelEye: Circuit<AngelParams, AngelState> = {
   card: {
     icon: '⭕',
     summary: 'حلقة نور حوالين الفانوس من شريط LED وغطا علبة بلاستيك، بترعش زي التلفزيون القديم على دايرة الرعشة، أو ثابتة على بورد حماية صغير.',
-    level: 'مبتدئ · أول لحام'
+    level: 'مبتدئ · أول لحام',
+    categories: ['car', 'lighting', 'beginner', 'no-code']
   },
   hero,
   overview,

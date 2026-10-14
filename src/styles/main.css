@@ -315,6 +315,12 @@ footer{padding:30px 0 50px;color:var(--muted);font-size:13px;text-align:center}
 .kit-stat b{color:var(--amber)}
 .kit-foot{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:12px}
 .kit-level{font-size:13px;color:var(--green)}
+.kit-filter{display:flex;flex-wrap:wrap;gap:8px;margin:26px 0 4px}
+.kit-filter .chip{padding:6px 13px;font-size:14px}
+.kit-filter .chip b{font-size:12px;color:var(--muted);font-weight:600}
+.kit-filter .chip.on b{color:var(--amber)}
+.kit-cats{display:flex;flex-wrap:wrap;gap:6px}
+.kit-cat{font-size:12px;color:var(--muted)}
 html{background:var(--bg)}
 body{min-height:100vh}
 .kit-card .tag{align-self:flex-start}

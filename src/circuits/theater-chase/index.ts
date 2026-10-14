@@ -13,7 +13,8 @@ export const theaterChase: Circuit<ChaseParams, ChaseState> = {
   card: {
     icon: '🎭',
     summary: 'شريط LED عادي 20 سم بيتقطّع 4 حتت، والنور بيجري عليهم زي لمبات المسرح. ساعة + عدّاد + 3 ترانزستورات، من غير برمجة.',
-    level: 'متوسط · شريحتين'
+    level: 'متوسط · شريحتين',
+    categories: ['car', 'lighting', 'no-code']
   },
   hero,
   overview,

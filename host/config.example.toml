@@ -1,0 +1,12 @@
+project_dir = "~/code/my-project"
+port = ""
+speak = true
+voice = ""
+rate = 0
+max_spoken_chars = 600
+language = "auto"
+microphone = "0"
+whisper_model = "~/.cache/whisper/ggml-base.bin"
+continue_conversation = true
+claude_timeout_s = 300
+keep_audio = false

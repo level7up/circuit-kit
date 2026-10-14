@@ -12,7 +12,8 @@ export const headlightFlash: Circuit<FlashParams, FlashState> = {
   card: {
     icon: '⚡',
     summary: 'كشافين LED منفصلين بيعملوا دبل فلاش: ومضتين شمال وومضتين يمين. ساعة + عدّاد + 4 دايودات + موسفتين. للعرض والعربية راكنة.',
-    level: 'متوسط · شريحتين'
+    level: 'متوسط · شريحتين',
+    categories: ['car', 'lighting', 'no-code']
   },
   hero,
   overview,

@@ -17,7 +17,8 @@ export const parkingFlicker: Circuit<FlickerParams, FlickerState> = {
   card: {
     icon: '🕯️',
     summary: 'لمبة الركن في العربية بترعش زي لهب الشمعة، من غير أي برمجة: 3 مذبذبات بتتخلط مع بعض.',
-    level: 'مبتدئ · مناسب كأول مشروع'
+    level: 'مبتدئ · مناسب كأول مشروع',
+    categories: ['car', 'lighting', 'beginner', 'no-code']
   },
   hero,
   overview,

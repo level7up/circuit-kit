@@ -1,6 +1,19 @@
 <script setup lang="ts">
+import { computed, ref } from 'vue'
 import { circuitHref, circuits } from '../circuits'
+import { ALL, categories, categoryHref, categoryOf, inCategory, parseCategory, type CategoryFilter } from '../circuits/categories'
 import { lessonMeta } from '../learn/breadboard-lesson'
+
+const filter = ref<CategoryFilter>(parseCategory(new URLSearchParams(location.search).get('cat')))
+const shown = computed(() => inCategory(circuits, filter.value))
+const chips = [
+  { id: ALL as CategoryFilter, icon: '🗂️', label: 'الكل', count: circuits.length },
+  ...categories.map(c => ({ ...c, count: inCategory(circuits, c.id).length })).filter(c => c.count > 0)
+]
+const pick = (id: CategoryFilter) => {
+  filter.value = id
+  history.replaceState(null, '', categoryHref(id))
+}
 
 document.title = 'معمل الدواير – اختار دايرتك'
 </script>
@@ -37,13 +50,21 @@ document.title = 'معمل الدواير – اختار دايرتك'
         </div>
       </a>
     </div>
-    <h2 class="home-count">{{ circuits.length }} {{ circuits.length === 1 ? 'دايرة متاحة' : 'دواير متاحة' }}</h2>
+    <div class="kit-filter" role="group" aria-label="فلتر حسب النوع">
+      <button v-for="c in chips" :key="c.id" class="chip" :class="{ on: filter === c.id }" :aria-pressed="filter === c.id" @click="pick(c.id)">
+        <span aria-hidden="true">{{ c.icon }}</span>{{ c.label }}<b>{{ c.count }}</b>
+      </button>
+    </div>
+    <h2 class="home-count">{{ shown.length }} {{ shown.length === 1 ? 'دايرة متاحة' : 'دواير متاحة' }}</h2>
     <div class="kit-grid">
-      <a v-for="c in circuits" :key="c.id" class="card kit-card" :href="circuitHref(c.id)">
+      <a v-for="c in shown" :key="c.id" class="card kit-card" :href="circuitHref(c.id)">
         <div class="kit-icon" aria-hidden="true">{{ c.card.icon }}</div>
         <span class="tag">{{ c.hero.tag }}</span>
         <h3>{{ c.title }}</h3>
         <p>{{ c.card.summary }}</p>
+        <div class="kit-cats">
+          <span v-for="id in c.card.categories" :key="id" class="kit-cat">{{ categoryOf(id).icon }} {{ categoryOf(id).label }}</span>
+        </div>
         <div class="kit-stats">
           <span v-for="s in c.hero.stats" :key="s.label" class="kit-stat"><b>{{ s.value }}</b> {{ s.label }}</span>
         </div>

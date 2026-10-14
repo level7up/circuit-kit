@@ -303,10 +303,19 @@ export interface SimModel<P, S> {
   netReading: (net: string, s: S, p: P) => string
 }
 
+export type CategoryId = 'car' | 'lighting' | 'power' | 'beginner' | 'no-code' | 'code' | 'desk' | 'ai'
+
+export interface Category {
+  id: CategoryId
+  icon: string
+  label: string
+}
+
 export interface CircuitCard {
   icon: string
   summary: string
   level: string
+  categories: CategoryId[]
 }
 
 export type Hole = [x: number, y: number]

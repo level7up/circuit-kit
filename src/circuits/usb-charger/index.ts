@@ -12,7 +12,8 @@ export const usbCharger: Circuit<ChargerParams, ChargerState> = {
   card: {
     icon: '🔌',
     summary: 'مخرجين USB لحد 3A وشاشة بتقرا جهد البطارية، بيشتغلوا مع الكونتاكت بس. موديول جاهز + بورد حماية 3 قطع.',
-    level: 'مبتدئ · موديولات جاهزة'
+    level: 'مبتدئ · موديولات جاهزة',
+    categories: ['car', 'power', 'beginner', 'no-code']
   },
   hero,
   overview,

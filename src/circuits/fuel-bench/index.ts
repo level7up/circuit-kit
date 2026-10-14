@@ -12,7 +12,8 @@ export const fuelBench: Circuit<FuelParams, FuelState> = {
   card: {
     icon: '⛽',
     summary: 'Arduino Nano بيراقب حساس ضغط ويتحكم في "طرمبة" (لمبة 5W) بمقبض، وأي عطل يقفل الخرج لحد Reset مقصود. تدريب على المكتب بس، من غير بنزين.',
-    level: 'متقدم · Arduino + كود'
+    level: 'متقدم · Arduino + كود',
+    categories: ['code', 'desk']
   },
   hero,
   overview,
