@@ -6,13 +6,15 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
+    "build:device": "vite build --config vite.device.config.ts && node scripts/pack-device.mjs",
     "preview": "vite preview",
     "typecheck": "vue-tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:firmware": "npm run test:firmware:fuel && npm run test:firmware:voice",
+    "test:firmware": "npm run test:firmware:fuel && npm run test:firmware:voice && npm run test:firmware:tempra",
     "test:firmware:fuel": "mkdir -p firmware/fuel_bench/test/build && c++ -std=c++17 -Wall -Wextra -Werror -o firmware/fuel_bench/test/build/controller_test firmware/fuel_bench/test/controller_test.cpp && firmware/fuel_bench/test/build/controller_test",
     "test:firmware:voice": "mkdir -p firmware/claude_voice_terminal/test/build && c++ -std=c++17 -Wall -Wextra -Werror -o firmware/claude_voice_terminal/test/build/device_test firmware/claude_voice_terminal/test/device_test.cpp && firmware/claude_voice_terminal/test/build/device_test",
+    "test:firmware:tempra": "mkdir -p firmware/tempra_diag/test/build && c++ -std=c++17 -Wall -Wextra -Werror -o firmware/tempra_diag/test/build/session_test firmware/tempra_diag/test/session_test.cpp && firmware/tempra_diag/test/build/session_test && c++ -std=c++17 -Wall -Wextra -Werror -o firmware/tempra_diag/test/build/link_test firmware/tempra_diag/test/link_test.cpp && firmware/tempra_diag/test/build/link_test",
     "test:host": "PYTHONPATH=host/src python3 -m unittest discover -s host/tests"
   },
   "dependencies": {

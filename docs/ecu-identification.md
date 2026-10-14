@@ -168,4 +168,6 @@ Main risks: wiring to the wrong 3-pin plug; a home-made adapter shorting K-line 
 
 **Decision (updated 2026-10-14):** the ECU is MA1.7, so the project follows architecture A→B. ECU-side wiring stays unspecified until the 3-pin plug pinout is measured. Do not order the BOM.
 
+Design work done against the *expected* readings: [tempra-protocol.md](tempra-protocol.md), [tempra-hardware.md](tempra-hardware.md), [tempra-wiring-guide.md](tempra-wiring-guide.md).
+
 **Next action for the owner:** get a basic digital multimeter and take the three measurements in section 4. Buy the KKL cable (FTDI-based "VAG-COM 409.1 KKL", not ELM327) only after the pinout is known.

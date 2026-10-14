@@ -1,0 +1,6 @@
+hello	{"t":"hello","fw":"tempra_diag 2"}
+state_ready	{"t":"state","ph":"ready","f":"none","rc":0,"id":"0261200721BOSCH MA17","bat":12.4,"ssid":"TEMPRA-1A2B","wc":1,"bc":0}
+state_retry	{"t":"state","ph":"backoff","f":"no-sync","rc":3,"id":"","bat":11.9,"ssid":"TEMPRA-1A2B","wc":0,"bc":1}
+faults	{"t":"faults","rej":0,"b":[[2,10,30],[2,3,30]]}
+sensors	{"t":"sensors","rej":0,"b":[[81,96,13,154,128,127,128,34,164,0]]}
+faults_rejected	{"t":"faults","rej":1,"b":[]}

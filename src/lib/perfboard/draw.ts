@@ -257,7 +257,7 @@ function to220(legs: Pt[], face: string, val: string): string {
 function dip(legs: Pt[], inserted: boolean, chip: string): string {
   const xs = legs.map(p => p.x)
   const ys = legs.map(p => p.y)
-  const isVertical = legs[0].x === legs[6].x
+  const isVertical = legs[0].x === legs[legs.length / 2 - 1].x
   const x0 = Math.min(...xs) - PITCH * (isVertical ? 0.45 : 0.55)
   const x1 = Math.max(...xs) + PITCH * (isVertical ? 0.45 : 0.55)
   const y0 = Math.min(...ys) - PITCH * (isVertical ? 0.55 : 0.45)

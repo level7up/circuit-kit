@@ -25,7 +25,7 @@ describe('kit categories', () => {
 
   it('filters by category', () => {
     expect(inCategory(circuits, 'ai').map(c => c.id)).toEqual(['claude-voice'])
-    expect(inCategory(circuits, 'code').map(c => c.id)).toEqual(['fuel-bench', 'claude-voice'])
+    expect(inCategory(circuits, 'code').map(c => c.id)).toEqual(['fuel-bench', 'claude-voice', 'tempra-diag'])
   })
 
   it('reads the filter from the URL and falls back to all', () => {
